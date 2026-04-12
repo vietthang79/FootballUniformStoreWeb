@@ -13,7 +13,7 @@ effort: 4d
 - [Tech Stack Research — Email + Excel](../reports/researcher-260412-1321-tech-stack.md)
 
 ## Overview
-Server-side order creation, Excel player list generation, email to shop with all order details + attachments.
+Server-side order creation, Excel player list generation, email to shop with all order details + attachments, and admin dashboard for order management.
 
 ## Requirements
 - POST `/api/orders` — create order from cart data
@@ -37,6 +37,12 @@ Checkout Submit → POST /api/orders
   ├── Send email to shop (Resend) with attachments
   ├── Send email to customer (Resend)
   └── Return order confirmation
+
+Admin Dashboard:
+  ├── GET /admin/orders - List all orders with status
+  ├── GET /admin/orders/[id] - Order details (same as email content)
+  ├── PUT /admin/orders/[id]/status - Update order status
+  └── POST /admin/orders/[id]/notes - Add admin notes
 ```
 
 ## Excel Template Design
@@ -55,15 +61,22 @@ Headers styled: bold white text, blue background. Auto-width columns.
 ## Related Code Files
 
 ### Create
-- `src/app/api/orders/route.ts` — POST handler
-- `src/lib/order-number.ts` — generate sequential order number
-- `src/lib/excel-generator.ts` — ExcelJS player list generator
-- `src/lib/mockup-exporter.ts` — server-side Canvas mockup render
-- `src/lib/email/send-shop-notification.ts` — shop email with Resend
-- `src/lib/email/send-customer-confirmation.ts` — customer email
-- `src/lib/email/templates/shop-order-email.tsx` — React Email template (shop)
-- `src/lib/email/templates/customer-order-email.tsx` — React Email template (customer)
-- `src/app/order-confirmation/[orderId]/page.tsx` — confirmation page
+- `src/app/api/orders/route.ts` - POST handler
+- `src/app/admin/orders/page.tsx` - admin order list
+- `src/app/admin/orders/[id]/page.tsx` - admin order details
+- `src/app/api/admin/orders/[id]/status/route.ts` - update order status
+- `src/app/api/admin/orders/[id]/notes/route.ts` - add admin notes
+- `src/components/admin/order-list-table.tsx` - order list with status badges
+- `src/components/admin/order-detail-view.tsx` - detailed order view
+- `src/components/admin/status-update-form.tsx` - status update form
+- `src/lib/order-number.ts` - generate sequential order number
+- `src/lib/excel-generator.ts` - ExcelJS player list generator
+- `src/lib/mockup-exporter.ts` - server-side Canvas mockup render
+- `src/lib/email/send-shop-notification.ts` - shop email with Resend
+- `src/lib/email/send-customer-confirmation.ts` - customer email
+- `src/lib/email/templates/shop-order-email.tsx` - React Email template (shop)
+- `src/lib/email/templates/customer-order-email.tsx` - React Email template (customer)
+- `src/app/order-confirmation/[orderId]/page.tsx` - confirmation page
 
 ## Implementation Steps
 
@@ -80,8 +93,12 @@ Headers styled: bold white text, blue background. Auto-width columns.
 6. Create `send-shop-notification.ts` — Resend API call with Excel + logo attachments
 7. Create `send-customer-confirmation.ts` — Resend API call
 8. Trigger emails after order creation (in API route, non-blocking)
-9. Create order confirmation page — shows order number, summary, "email đã được gửi"
+9. Create order confirmation page — shows order number, summary, "email telah dikirim"
 10. Update checkout page to call `/api/orders` and redirect to confirmation
+11. **Admin Dashboard**: Create order list page with filtering and status badges
+12. **Admin Dashboard**: Create order detail page showing same content as email
+13. **Admin Dashboard**: Create API routes for status updates and notes
+14. **Admin Dashboard**: Add authentication middleware for admin routes
 
 ## Todo
 - [ ] Order number generator
@@ -95,6 +112,10 @@ Headers styled: bold white text, blue background. Auto-width columns.
 - [ ] Order confirmation page
 - [ ] Wire checkout form → API → confirmation redirect
 - [ ] Error handling (payment failed, email failed)
+- [ ] **Admin Dashboard**: Order list page with status filtering
+- [ ] **Admin Dashboard**: Order detail page with full information
+- [ ] **Admin Dashboard**: API routes for status/notes updates
+- [ ] **Admin Dashboard**: Authentication middleware for admin access
 
 ## Success Criteria
 - Checkout → order created in DB with correct totals
@@ -102,6 +123,8 @@ Headers styled: bold white text, blue background. Auto-width columns.
 - Shop receives email with Excel + logo attachments within 30s
 - Customer receives confirmation email
 - Order confirmation page shows order number
+- **Admin Dashboard**: Shop can view all orders and update status
+- **Admin Dashboard**: Order details show same content as email attachments
 
 ## Risk
 - Resend rate limits (free: 100 emails/day) → sufficient for MVP

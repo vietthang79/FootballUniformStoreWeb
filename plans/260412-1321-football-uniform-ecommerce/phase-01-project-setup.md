@@ -94,6 +94,7 @@ model Order {
   customerPhone   String
   shippingAddress String
   note            String?
+  adminNote       String? // Note for shop admin (e.g., logo quality issues)
 
   subtotal        Float
   printingSurcharge Float @default(0)
@@ -142,6 +143,9 @@ model CustomOrder {
   sponsorLogoUrl  String?
   leagueLogoUrl   String?
   flagPatchUrl    String?
+
+  // Logo quality notes
+  logoQualityNote String? // Auto-generated note for low quality logos
 
   // Print config — front
   printClubLogo       Boolean @default(false) // ngực trái

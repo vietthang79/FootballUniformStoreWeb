@@ -23,6 +23,8 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 - **Tay áo logo**: Khách chọn tay trái / phải / cả hai
 - **Ngôn ngữ**: Tiếng Việt thuần, không i18n
 - **Dịch vụ in riêng**: Defer hoàn toàn sang Phase 2, không có form liên hệ
+- **Logo quality**: Chấp nhận logo chất lượng kém, tự động thêm note "nếu đước thì shop làm nét lại (nếu có thể)"
+- **Admin Dashboard**: Email chỉ để thông báo, Admin dashboard để quản lý toàn bộ đơn hàng, cập nhật trạng thái, xem chi tiết
 
 ## Phases
 

@@ -501,7 +501,7 @@ Alternative: Vercel + Vercel Postgres (if want single platform)
 
 1. **Order shipping management**: Should integrate with Vietnam logistics APIs (Giao Hàng Nhanh/ViettelPost) for auto label generation?
 2. **Inventory sync**: Real-time stock across multiple warehouses (Vietnam + overseas)?
-3. **Admin dashboard**: Basic Django/Strapi or custom Next.js admin panel?
+3. **Admin dashboard**: Custom Next.js admin panel (email notifications + dashboard for order management)
 4. **Multi-language**: Vietnamese + English from start, or Vietnamese-only MVP?
 5. **SEO content**: Product descriptions auto-translated or manually curated?
 6. **Warranty/returns**: Complex return flow for customized jerseys?

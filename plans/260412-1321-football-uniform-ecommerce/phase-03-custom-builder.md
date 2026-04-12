@@ -58,6 +58,7 @@ interface CustomBuilderData {
   sponsorLogoUrl: string | null
   leagueLogoUrl: string | null
   flagPatchUrl: string | null
+  logoQualityNote: string | null // Auto-generated for low quality logos
 
   // Step 3 — players
   players: {
@@ -124,7 +125,7 @@ function calculatePrintingSurcharge(playerCount: number, subtotal: number): { ra
 2. Setup React Hook Form with FormProvider + defaultValues from product
 3. Build step navigation (stepper UI with back/next, step validation)
 4. **Step 1**: Color set selector — grid of color set images, click to select
-5. **Step 2**: Logo upload widget — dropzone, Cloudinary upload, dimension validation (warn <500px), preview thumbnail
+5. **Step 2**: Logo upload widget - dropzone, Cloudinary upload, dimension validation (warn <500px), preview thumbnail, auto-generate quality note for low-res logos
 6. Create `/api/upload` route — receives file, uploads to Cloudinary, returns URL
 7. **Step 3**: Player list table
    - useFieldArray for dynamic rows

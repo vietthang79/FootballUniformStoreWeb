@@ -813,6 +813,43 @@ No: Redux, Formik, Fabric.js (MVP), Handsontable
 
 ---
 
+## LOGO QUALITY HANDLING
+
+### Business Requirement
+- Accept low-quality logos (customer experience priority)
+- Auto-generate note: "nêu dâ thì shop làm nét lai (nêu co the)"
+- No rejection of orders due to logo quality
+
+### Technical Implementation
+
+```typescript
+// Logo quality detection
+function detectLogoQuality(file: File): {
+  isLowQuality: boolean;
+  note?: string;
+} {
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+  
+  return new Promise(resolve => {
+    img.onload = () => {
+      const { width, height } = img;
+      const isLowQuality = width < 300 || height < 300;
+      
+      resolve({
+        isLowQuality,
+        note: isLowQuality ? "nếu được thì shop làm nét lai (nêu co the)" : undefined
+      });
+    };
+  });
+}
+```
+
+### Storage Strategy
+- Store original file (no compression)
+- Add quality note to order metadata
+- Admin can review and enhance logos manually
+
 ## UNRESOLVED QUESTIONS
 
 1. **Logo storage:** Upload to R2/S3 or embed as base64? (Affects serialization strategy)
