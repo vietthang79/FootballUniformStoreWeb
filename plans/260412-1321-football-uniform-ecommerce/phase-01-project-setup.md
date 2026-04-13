@@ -18,12 +18,16 @@ Bootstrap Next.js 15 project, configure Prisma + PostgreSQL, setup Better Auth, 
 - Next.js 15 App Router with TypeScript
 - PostgreSQL via Railway (dev: local Docker or Railway dev)
 - Prisma ORM with complete schema
-- Better Auth with anonymous plugin (guest checkout)
+- Better Auth configured (emailAndPassword + admin plugins — full setup in Phase 2)
 - Cloudinary SDK configured
 - Tailwind CSS + **shadcn/ui** + base layout (header, footer, responsive)
+- **Montserrat font** configured (brand font)
+- **Brand colors theme** configured (src/lib/theme.ts with custom colors)
+- **Mobile responsive** from Phase 1 (all pages mobile-friendly)
 - ESLint + Prettier configured
 - Environment variables (.env.example)
 <!-- Updated: Validation Session 1 - shadcn/ui added to stack; stock field kept in schema but no auto-decrement logic -->
+<!-- Updated: Session 2026-04-13 - Montserrat font, brand colors theme, mobile responsive from Phase 1, 4 image angles -->
 
 ## DB Schema Design
 
@@ -31,7 +35,7 @@ Bootstrap Next.js 15 project, configure Prisma + PostgreSQL, setup Better Auth, 
 
 ```prisma
 model Product {
-  id            String   @id @default(cuid())
+  id            Int      @id @default(autoincrement())
   name          String
   slug          String   @unique
   description   String?
@@ -50,8 +54,8 @@ model Product {
 }
 
 model ProductVariant {
-  id        String  @id @default(cuid())
-  productId String
+  id        Int     @id @default(autoincrement())
+  productId Int
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   size      String  // "S", "M", "L", "XL", "2XL"
   type      String  // "jersey", "shorts"
@@ -61,39 +65,43 @@ model ProductVariant {
 }
 
 model ProductImage {
-  id        String  @id @default(cuid())
-  productId String
+  id        Int     @id @default(autoincrement())
+  productId Int
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   url       String  // Cloudinary URL
-  angle     String  // "front", "back", "shorts", "detail"
-  colorSetId String?
+  angle     String  // "front", "back", "sleeve", "shorts" (4 angles per ColorSet)
+  colorSetId Int?
   colorSet  ColorSet? @relation(fields: [colorSetId], references: [id])
   sortOrder Int     @default(0)
 }
 
+// ColorSet = bộ màu sản phẩm do admin định sẵn (không phải color picker tự do).
+// Relationship: ColorSet 1-N ProductImage (mỗi ColorSet có nhiều ảnh theo 4 góc: front/back/sleeve/shorts).
+// Admin upload ảnh thật cho mỗi bộ màu theo từng góc.
+// Khách chỉ được chọn trong các ColorSet admin đã tạo cho sản phẩm đó.
+// primary/secondary hex chỉ dùng để hiện chip màu trong UI — KHÔNG dùng để render màu.
 model ColorSet {
-  id          String  @id @default(cuid())
-  productId   String
+  id          Int     @id @default(autoincrement())
+  productId   Int
   product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   name        String  // "Xanh Navy + Trắng"
   slug        String
-  primary     String  // hex
-  secondary   String  // hex
-  images      ProductImage[]
+  primary     String  // hex — chỉ để hiện chip màu trong UI
+  secondary   String  // hex — chỉ để hiện chip màu trong UI
+  images      ProductImage[] // ảnh thật sản phẩm theo 4 góc cho bộ màu này (front/back/sleeve/shorts)
 
   @@unique([productId, slug])
 }
 
 model Order {
-  id              String   @id @default(cuid())
+  id              Int      @id @default(autoincrement())
   orderNumber     String   @unique // human-readable: ORD-20260412-001
-  userId          String?
-  sessionId       String?  // guest checkout
+  userId          String   // NOT NULL — mandatory login (Phase 2)
   customerName    String
   customerEmail   String
   customerPhone   String
   shippingAddress String
-  note            String?
+  note            String? // Customer note for the order
   adminNote       String? // Note for shop admin (e.g., logo quality issues)
 
   subtotal        Float
@@ -101,7 +109,7 @@ model Order {
   shippingFee     Float   @default(0)
   totalPrice      Float
 
-  paymentMethod   String  // "vnpay", "momo", "cod"
+  paymentMethod   String  // "cod" (MVP - VNPay/MoMo deferred to Phase 2)
   paymentStatus   String  @default("pending") // "pending", "paid", "failed", "refunded"
   orderStatus     String  @default("new") // "new", "confirmed", "processing", "shipped", "delivered", "cancelled"
 
@@ -116,10 +124,10 @@ model Order {
 }
 
 model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
+  id        Int     @id @default(autoincrement())
+  orderId   Int
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
+  productId Int
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   unitPrice Float
@@ -130,10 +138,10 @@ model OrderItem {
 }
 
 model CustomOrder {
-  id              String   @id @default(cuid())
-  orderId         String
+  id              Int      @id @default(autoincrement())
+  orderId         Int
   order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId       String
+  productId       Int
   product         Product  @relation(fields: [productId], references: [id])
   colorSetName    String
   teamName        String?
@@ -166,10 +174,11 @@ model CustomOrder {
   printShortsNumber   Boolean @default(false)
   shortsNumberSide    String? // "left", "right"
 
+  // Full print config with transform data (for admin preview)
+  printConfigJson     Json?   // Stores position/scale/rotation for all elements
+
   // Generated files
   excelFileUrl        String?
-  mockupFrontUrl      String?
-  mockupBackUrl       String?
 
   playerCount         Int
   printingSurcharge   Float   @default(0)
@@ -179,8 +188,8 @@ model CustomOrder {
 }
 
 model Player {
-  id            String      @id @default(cuid())
-  customOrderId String
+  id            Int         @id @default(autoincrement())
+  customOrderId Int
   customOrder   CustomOrder @relation(fields: [customOrderId], references: [id], onDelete: Cascade)
   sortOrder     Int
   playerName    String
@@ -198,20 +207,25 @@ model Player {
 2. Install deps: `prisma @prisma/client better-auth zustand react-hook-form cloudinary resend exceljs`; init shadcn/ui: `npx shadcn@latest init`
 3. `npx prisma init` — configure schema above
 4. Setup `.env.example` with all required vars
-5. Create base layout: `src/app/layout.tsx` with header (logo, nav, cart icon) + footer
-6. Configure Better Auth — `src/lib/auth.ts`
-7. Configure Prisma client — `src/lib/db.ts`
-8. Configure Cloudinary — `src/lib/cloudinary.ts`
-9. Seed script — `prisma/seed.ts` with sample products + color sets
-10. Verify: `npm run dev` → homepage renders, DB connected
+5. Configure **Montserrat font**: add to `tailwind.config.ts` and `src/app/layout.tsx`
+6. Create **brand colors theme**: `src/lib/theme.ts` with brand colors (Đỏ #E31E26, Vàng #FDD017, Xanh dương #00AEEF, Xám #A7A9AC); update `tailwind.config.ts`
+7. Create base layout: `src/app/layout.tsx` with header (logo, nav, cart icon) + footer (mobile responsive)
+8. Configure Better Auth base — `src/lib/auth.ts` (plugins configured in Phase 2)
+9. Configure Prisma client — `src/lib/db.ts`
+10. Configure Cloudinary — `src/lib/cloudinary.ts`
+11. Create `src/lib/constants.ts` — sizes, categories, printing fee tiers
+12. Seed script — `prisma/seed.ts` with sample products + color sets (dev/test only — production products managed via CSV import in Phase 8)
+13. Verify: `npm run dev` → homepage renders, DB connected, mobile responsive
 
 ## Files to Create
-- `src/app/layout.tsx` — root layout
+- `src/app/layout.tsx` — root layout (with Montserrat font, mobile responsive)
 - `src/app/page.tsx` — homepage
 - `src/lib/db.ts` — Prisma client singleton
 - `src/lib/auth.ts` — Better Auth config
 - `src/lib/cloudinary.ts` — Cloudinary config
+- `src/lib/theme.ts` — brand colors constants
 - `src/lib/constants.ts` — sizes, categories, printing fee tiers
+- `tailwind.config.ts` — update with Montserrat font + brand colors
 - `prisma/schema.prisma` — full schema
 - `prisma/seed.ts` — sample data
 - `.env.example`
@@ -221,18 +235,24 @@ model Player {
 - [ ] Install all dependencies
 - [ ] Write Prisma schema
 - [ ] Run initial migration
-- [ ] Configure Better Auth with anonymous plugin
+- [ ] Configure Montserrat font (tailwind.config.ts + layout.tsx)
+- [ ] Create src/lib/theme.ts with brand colors
+- [ ] Update tailwind.config.ts with brand colors
+- [ ] Configure Better Auth base (plugins + auth pages in Phase 2)
 - [ ] Setup Cloudinary SDK
-- [ ] Create base layout (header + footer + nav)
+- [ ] Create base layout (header + footer + nav, mobile responsive)
 - [ ] Create seed script with 5-10 sample products
-- [ ] Verify dev server runs clean
+- [ ] Verify dev server runs clean + mobile responsive
 
 ## Success Criteria
 - `npm run dev` works
 - `npx prisma db push` succeeds
-- Seed data visible in Prisma Studio
+- Seed data visible in Prisma Studio (dev/test only — production products via CSV import in Phase 8)
 - Base layout renders on all routes
+- Montserrat font applied globally
+- Brand colors configured in theme
+- Mobile responsive (test on mobile viewport)
 
 ## Risk
-- Better Auth anonymous plugin API may change — pin version
+- Better Auth version — pin version; full plugin setup in Phase 2
 - Railway PostgreSQL connection string format — test early

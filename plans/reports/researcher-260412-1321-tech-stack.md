@@ -86,8 +86,7 @@ model PlayerListItem {
 // Order & checkout
 model Order {
   id              String @id @default(cuid())
-  userId          String? // NULL for guest checkout
-  sessionId       String? // For guest tracking
+  userId          String  // NOT NULL - mandatory login
   items           OrderItem[]
   customOrder     CustomOrder?
   paymentMethod   String // "vnpay", "momo", "cod"
@@ -136,25 +135,29 @@ model User {
 ### Recommendation: **Better Auth** ✅ (NextAuth.js is EOL for new projects)
 
 **Why:**
-- **Built-in guest checkout**: Anonymous plugin handles guest → authenticated user conversion seamlessly.
 - **Active development**: Auth.js team now maintains Better Auth (NextAuth v5+ is legacy).
 - **MFA out-of-box**: Email 2FA, passwordless magic links (important for e-commerce trust).
 - **Simple setup**: 5-line integration vs NextAuth's 30-line boilerplate.
+- **Email + password**: Built-in emailAndPassword plugin for mandatory login.
 
-**Implementation pattern for guest checkout:**
+**Implementation pattern for mandatory login:**
 
 ```typescript
-// Guest session → Order creation (no sign-up required)
-// User cart stored in DB with `sessionId` (UUID)
-// On checkout: create Order linked to sessionId
-// Optional: send login link in order confirmation email
-// On login: merge guest orders to user account
+// Mandatory login before checkout
+// User must register/login → session created
+// On checkout: create Order linked to userId
+// Better Auth emailAndPassword + admin plugins
 
-// Better Auth anonymous plugin handles this natively
+betterAuth({
+  plugins: [
+    emailAndPassword({ requireEmailVerification: false }),
+    admin()
+  ]
+})
 ```
 
 **Alternative (NextAuth.js):**
-- Requires manual JWT + cookie handling for guest sessions.
+- Requires manual JWT + cookie handling.
 - Mature but no longer actively developed for new features.
 
 **Cost:** Free (open source).
@@ -440,8 +443,7 @@ Alternative: Vercel + Vercel Postgres (if want single platform)
 ```
 
 **External services:**
-- **Better Auth**: Guest + authenticated sessions, stored in PostgreSQL.
-- **VNPay/MoMo**: Redirect payment gateway (returns confirmation webhook).
+- **Better Auth**: Email + password authentication, stored in PostgreSQL.
 - **Resend**: Email API (order confirmations + Excel attachments).
 - **ExcelJS**: Server-side generation (no external call needed).
 
@@ -453,12 +455,12 @@ Alternative: Vercel + Vercel Postgres (if want single platform)
 |-------|----------|-------------|
 | **Setup** | Days 1-2 | Next.js + Prisma + PostgreSQL + Better Auth |
 | **Products** | Days 3-4 | Product listing, search, categories |
-| **Cart + Checkout** | Days 5-6 | Guest checkout, Better Auth integration |
-| **Payment** | Days 7-8 | VNPay + MoMo webhook handling |
-| **Custom Orders** | Days 9-10 | Player list form + Excel generation |
+| **Cart + Checkout** | Days 5-6 | Mandatory login, Better Auth integration |
+| **Payment** | Days 7 | COD integration (VNPay/MoMo deferred to Phase 2) |
+| **Custom Orders** | Days 8-10 | Player list form + Excel generation |
 | **Email** | Days 11 | Order confirmation + Excel attachment via Resend |
 | **Deployment** | Days 12-13 | Vercel + Railway production setup |
-| **Testing** | Days 14-15 | E2E tests (payment sandbox), UAT |
+| **Testing** | Days 14-15 | E2E tests, UAT |
 
 **Total: 2-3 weeks core development + 1 week polish = ~1 month MVP.**
 
@@ -488,11 +490,11 @@ Alternative: Vercel + Vercel Postgres (if want single platform)
 |----------|--------|-----|
 | Framework | Next.js 15 | Best SEO + performance for e-commerce |
 | Database | PostgreSQL + Prisma | Type-safe, scales, excellent DX |
-| Auth | Better Auth | Native guest checkout, active development |
+| Auth | Better Auth | Email + password, active development |
 | Images | Cloudinary free → S3 | Free start, no DevOps, upgradeable |
 | Email | Resend | Clean API, great DX, affordable |
 | Excel | ExcelJS | Professional formatting, streaming |
-| Payment | VNPay + MoMo + COD | All major Vietnam methods, webhooks |
+| Payment | COD only (MVP) | Simple for MVP, VNPay/MoMo deferred to Phase 2 |
 | Hosting | Vercel + Railway | Zero DevOps, auto-scaling, solo dev friendly |
 
 ---

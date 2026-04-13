@@ -1,8 +1,8 @@
-# Custom Builder Research Report: Football Uniform Customization
+# Custom Mockup Builder Research Report: Real-time Positioning
 
 **Date:** April 12, 2026  
-**Focus:** Production-ready, simplified solutions (no over-engineering)  
-**Principle:** YAGNI + KISS + DRY
+**Focus:** Click-thả tự do vào vị trí bất kỳ trên sản phẩm thật  
+**Principle:** Real-time positioning + Unlimited positions + 360° preview
 
 ---
 
@@ -19,20 +19,22 @@
 
 ### Detailed Analysis
 
-#### CSS + Absolute Positioning (Recommended for MVP)
-**Why:** Simplest path to production, GPU-accelerated, no dependencies.
+#### CSS + Click-thả Real-time (Recommended for MVP)
+**Why:** GPU-accelerated real-time positioning, unlimited positions, no dependencies.
 
 **Implementation:**
-- Overlay text/logo in `position: absolute` container over background image
-- Use CSS transforms for GPU acceleration (avoid `left`/`top` animating)
-- Pseudo-elements (`::before`, `::after`) for effects without extra DOM
+- Click-thả để thêm text/logo vào bất kỳ vị trí nào
+- Drag & drop để di chuyển elements
+- Resize & rotate tự do cho từng element
+- Z-index layering cho multiple elements
+- Real-time preview với GPU acceleration
 
 **Trade-offs:**
-- Preview only works on-page; can't bake into shareable image
-- No pixel-perfect text effects
-- Responsive scaling requires media queries or JavaScript
+- Không có interactive rotation (nâng cấp sau nếu cần)
+- Export image cần Canvas (Phase 5)
+- Responsive scaling cần JavaScript tính toán
 
-**Use When:** Live preview during builder session is primary need.
+**Use When:** Custom mockup với vị trí hoàn toàn tự do là yêu cầu chính.
 
 ---
 
@@ -99,19 +101,22 @@
 
 ---
 
-### Recommendation for Football Uniform Builder
+### Recommendation for Football Uniform Custom Mockup
 
-**MVP Phase:** CSS overlay + HTML Canvas export
-- CSS for real-time preview (live input)
-- Canvas for download/share (final mockup)
-- 0 external dependencies, ~150 lines of code
+**MVP Phase:** CSS click-thã + 360° preview + Canvas export
+- CSS cho real-time positioning (click-thã tu do)
+- 360° preview cho moi goc do san pham
+- Canvas cho export/share (final mockup)
+- 0 external dependencies, ~200 lines of code
 
-**Growth Phase:** Upgrade to Fabric.js if users request:
-- Rotating logo/text
-- Interactive repositioning
-- Advanced text effects
+**Key Focus:** Custom mockup voi vi tri hoan toan tu do, khong gioi han vi tri co dinh
 
-**Don't Use:** Konva.js (overkill unless squad builder scales to 50+ simultaneous editors).
+**Growth Phase:** Upgrade to Fabric.js neu users request:
+- Interactive rotation controls
+- Advanced text effects (shadows, gradients)
+- Vector logo support
+
+**Don't Use:** Konva.js (overkill tru neu scale len 50+ simultaneous editors).
 
 ---
 
@@ -327,13 +332,17 @@ interface CustomOrder {
     number: number;
     size: 'XS' | 'S' | 'M' | 'L' | 'XL';
   }[];
-  design: {
+  mockupDesign: {
     logoUrl: string; // CloudFlare R2 URL or base64
     logoX: number;
     logoY: number;
     logoScale: number;
-    colorPrimary: string;
-    colorSecondary: string;
+    textOverlays: {
+      position: 'chest_left' | 'chest_center' | 'back_top' | 'back_number' | 'sleeve_left' | 'sleeve_right';
+      text: string;
+      font: string;
+      color: string;
+    }[];
   };
   uniforms: {
     style: 'jersey' | 'shorts' | 'combo';

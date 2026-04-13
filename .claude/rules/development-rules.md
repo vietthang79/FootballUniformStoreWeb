@@ -3,6 +3,20 @@
 **IMPORTANT:** Analyze the skills catalog and activate the skills that are needed for the task during the process.
 **IMPORTANT:** You ALWAYS follow these principles: **YAGNI (You Aren't Gonna Need It) - KISS (Keep It Simple, Stupid) - DRY (Don't Repeat Yourself)**
 
+## UI/UX Implementation Rule (MANDATORY)
+**CRITICAL:** When implementing ANY UI/UX work (components, pages, layouts, designs), you MUST activate the `ck:ui-ux-pro-max` skill FIRST before starting implementation. This includes:
+- Creating new UI components
+- Building pages or routes
+- Implementing responsive layouts
+- Styling with Tailwind CSS / shadcn/ui
+- Any frontend visual work
+
+**Workflow for UI work:**
+1. Activate `ck:ui-ux-pro-max` skill
+2. Run design system search: `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<product-type> <industry> <keywords>" --design-system`
+3. Apply design guidelines from skill output
+4. Implement UI following recommendations
+
 ## General
 - **File Naming**: Use kebab-case for file names with a meaningful name that describes the purpose of the file, doesn't matter if the file name is long, just make sure when LLMs read the file names while using Grep or other tools, they can understand the purpose of the file right away without reading the file content.
 - **File Size Management**: Keep individual code files under 200 lines for optimal context management

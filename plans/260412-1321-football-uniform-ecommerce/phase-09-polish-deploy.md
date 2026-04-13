@@ -1,12 +1,12 @@
 ---
-phase: 8
+phase: 9
 title: "Polish, SEO, Deploy"
 status: pending
 priority: P2
 effort: 3d
 ---
 
-# Phase 8: Polish, SEO, Deploy
+# Phase 9: Polish, SEO, Deploy
 
 ## Context
 - Depends on all previous phases
@@ -48,8 +48,8 @@ Production readiness: SEO metadata, OG images, performance optimization, error p
    - Environment variables in Vercel
    - Domain setup (DNS)
    - Cloudinary production account
-   - Resend domain verification
-   - VNPay/MoMo production credentials
+- Resend domain verification
+- VNPay/MoMo production credentials (Phase 2 - defer for MVP)
 
 6. **Monitoring**
    - Vercel Analytics (free)

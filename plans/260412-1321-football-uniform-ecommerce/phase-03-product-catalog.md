@@ -1,15 +1,15 @@
 ---
-phase: 2
+phase: 3
 title: "Product Catalog + Normal E-Commerce"
 status: pending
 priority: P1
 effort: 5d
 ---
 
-# Phase 2: Product Catalog + Normal E-Commerce Flow
+# Phase 3: Product Catalog + Normal E-Commerce Flow
 
 ## Context
-- Depends on Phase 1 (DB + layout ready)
+- Depends on Phase 2 (auth — user must be logged in for checkout)
 - [Brainstorm](../reports/brainstorm-260412-1321-football-uniform-ecommerce.md) — Luồng 1: Mua thường
 
 ## Overview
@@ -18,7 +18,9 @@ Product listing, detail page, size/color selection, cart (Zustand), checkout pag
 ## Key Insights
 - Products with `customizable: true` show [Custom] button alongside [Add to Cart]
 - Cart = client-side Zustand + localStorage, no server cart
-- Checkout form collects shipping info, payment method selection (UI only, integration in Phase 6)
+- Checkout form collects shipping info, payment method selection (UI only, integration in Phase 7)
+- **Stock display**: Show stock quantity on product detail page for customers (stock field exists in DB but no auto-decrement)
+- **Mobile responsive**: All pages must be mobile-friendly (from Phase 1 requirement)
 
 ## Architecture
 
@@ -27,7 +29,7 @@ Product listing, detail page, size/color selection, cart (Zustand), checkout pag
 /products               → Product listing with filters (category, price)
 /products/[slug]        → Product detail (images, sizes, color sets, add to cart / custom)
 /cart                   → Cart page (normal items + custom bundles)
-/checkout               → Checkout form (shipping + payment method)
+/checkout               → Checkout form (shipping + payment method) — requires auth
 ```
 
 ## Related Code Files
@@ -55,7 +57,7 @@ Product listing, detail page, size/color selection, cart (Zustand), checkout pag
 interface NormalCartItem {
   type: 'normal'
   id: string
-  productId: string
+  productId: number
   productName: string
   productImage: string
   colorSetName: string
@@ -67,7 +69,7 @@ interface NormalCartItem {
 interface CustomCartItem {
   type: 'custom'
   id: string
-  // Full custom builder state — defined in Phase 3
+  // Full custom builder state — defined in Phase 4
   builderData: CustomBuilderData
   summary: string // "Đội ABC FC — 12 bộ"
   totalPrice: number
@@ -79,12 +81,12 @@ type CartItem = NormalCartItem | CustomCartItem
 ## Implementation Steps
 
 1. Create `src/stores/cart-store.ts` — Zustand with persist middleware
-2. Build product listing page — RSC fetching from Prisma, category filter
+2. Build product listing page — RSC fetching from Prisma, category filter**stock display per size**, 
 3. Build product card component — image, name, price, [Add to Cart], [Custom] badge
-4. Build product detail page — gallery, color set switch, size selector, add to cart
+4. Build product detail page — gallery, color set switch, size selector, stock display per size, add to cart
 5. Build cart page — list items, quantity +/-, remove, subtotal
 6. Build cart icon in header — item count badge
-7. Build checkout page — React Hook Form, shipping fields, payment method radio
+7. Build checkout page — React Hook Form, shipping fields, payment method radio, note textarea (customer notes)
 8. Add category navigation in header/sidebar
 9. Responsive design for all pages
 
@@ -93,7 +95,8 @@ type CartItem = NormalCartItem | CustomCartItem
 - [ ] Homepage with featured products grid
 - [ ] Product listing page with category filter
 - [ ] Product card component
-- [ ] Product detail page with gallery
+- [ ] Product detail page with gallery, stock display per size
+- [ ] Stock indicator (in stock / low stock / out of stock)
 - [ ] Color set selector (swap images on pick)
 - [ ] Size selector
 - [ ] Add to cart functionality
@@ -104,6 +107,7 @@ type CartItem = NormalCartItem | CustomCartItem
 
 ## Success Criteria
 - Browse products → view detail → select size/color → add to cart → see in cart
+- **Stock display visible on product detail page** (stock quantity per size)
 - Cart persists across page reload (localStorage)
 - Checkout form validates and collects all required fields
 - [Custom] button visible only on customizable products
