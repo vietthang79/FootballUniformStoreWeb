@@ -1,19 +1,26 @@
 ---
-phase: 3
-title: "Product Catalog + Normal E-Commerce"
+phase: 10
+title: "Product Catalog + Cart + Checkout"
 status: pending
 priority: P1
 effort: 5d
 ---
 
-# Phase 3: Product Catalog + Normal E-Commerce Flow
+# Phase 10: Product Catalog + Cart + Checkout
 
 ## Context
 - Depends on Phase 2 (auth — user must be logged in for checkout)
 - [Brainstorm](../reports/brainstorm-260412-1321-football-uniform-ecommerce.md) — Luồng 1: Mua thường
 
 ## Overview
-Product listing, detail page, size/color selection, cart (Zustand), checkout page (without payment).
+Product listing with search + filters, detail page with stock display, cart (Zustand), checkout with auto-fill capability. Phase 10 = Product Catalog + Cart + Checkout (5d). Phase 3 = Homepage only (2d). Order confirmation displays order summary without mockup canvas (read-only Phase 5 component).
+
+<!-- Session 8 updates:
+- Stock display per (ColorSet + size), not just per Product
+- Search + Filter: AND logic, URL params ?q=...&category=...
+- Order confirmation: mã đơn + tổng tiền + player size summary (no mockup canvas)
+- Checkout: auto-fill from User.shippingName/Phone/Address; save after successful checkout
+-->
 
 ## Key Insights
 - Products with `customizable: true`: trang product detail hiển thị **builder sections** (gallery → color select → logo upload → mockup preview → player list → add to cart) — KHÔNG có nút [Custom] riêng, KHÔNG redirect sang route khác
@@ -22,7 +29,7 @@ Product listing, detail page, size/color selection, cart (Zustand), checkout pag
 - **Print fee nudge** hiển thị per-CustomOrder riêng lẻ trong cart (không pool tổng). Mỗi custom item có nudge riêng: `<6 bộ +20% | 6-9 bộ +10% | 10+ miễn phí in`. Print fee scope: chỉ tính trên giá CustomOrder, không tính sản phẩm thường.
 - **Phase 3 checkout scope**: POST `/api/orders` tạo Order + OrderItems cho **normal items chỉ**. Phase 6 extends API này thêm CustomOrder handling. Cart có thể chứa mixed items (normal + custom) — checkout 1 lần, 1 đơn hàng.
 - **Order cancel**: khách có thể hủy đơn khi status = `pending` từ trang order history; Phase 6 thêm cancel email notify shop
-- **Stock display**: Show stock per size trên product detail. Khi `stock = 0` cho 1 size: hiện "Hết hàng" + disable size chip đó (không ẩn). Sản phẩm vẫn visible trong catalog.
+- **Stock display**: Show stock per (ColorSet + size) trên product detail — NOT per Product. Selected ColorSet's variants show stock. Khi `stock = 0` cho 1 size: hiện "Hết hàng" + disable size chip đó (không ẩn). Sản phẩm vẫn visible trong catalog.
 - **Mobile responsive**: All pages mobile-friendly; **builder sections desktop-only** (show notice < 768px)
 - **Multiple CustomOrders in cart**: Khách có thể add nhiều đơn đội khác nhau vào cart; mỗi đơn tính print fee độc lập
 
@@ -93,31 +100,31 @@ type CartItem = NormalCartItem | CustomCartItem
 ## Implementation Steps
 
 1. Create `src/stores/cart-store.ts` — Zustand with persist middleware
-2. Build product listing page — RSC fetching from Prisma, category filter, stock display per size
+2. Build product listing page — RSC fetching from Prisma, category filter. Add **search + filter**: URL params `?q=...&category=...` (AND logic). Search: `WHERE name ILIKE '%query%'` (server-side Postgres, no Elasticsearch). Stock display per (ColorSet + size) in product cards.
 3. Build product card — image, name, price; customizable badge
-4. Build product detail page — gallery, color set switch, size selector, stock display; for `customizable=true`: render builder section slots (implemented in Phase 4); mobile < 768px shows "Vui lòng dùng máy tính để thiết kế". Size selector: show all sizes from ProductVariant; disabled + tooltip "Hết hàng" nếu `stock = 0`
+4. Build product detail page — gallery (images per ColorSet+slot), color set switch, size selector with stock per (ColorSet+size); for `customizable=true`: render builder sections (Phase 4); mobile < 768px shows notice. Size selector: show all sizes from ProductVariant; disabled + tooltip "Hết hàng" nếu `stock = 0`. **Auth gate**: `/products/[slug]` is public (no auth required to view); only the add-to-cart action checks session → redirect to `/login?redirect=/products/[slug]` if not authenticated.
 5. Build `print-fee-nudge.tsx` — displays fee tier based on total player count in cart
-6. Build cart page — list items (normal + custom bundles), quantity +/- (normal only), [Xóa] per item (custom bundles: xóa rồi vào lại /products/[slug] custom lại — không có nút Sửa), subtotal, print fee nudge per-CustomOrder
+6. Build cart page — list items (normal + custom bundles), quantity +/- (normal only), [Xóa] per item (custom bundles: xóa rồi vào lại /products/[slug] custom lại — không có nút Sửa), subtotal, print fee nudge per-CustomOrder. Custom bundle cart items show **"Đồng phục tùy chỉnh" badge** (`isCustom`) to distinguish from normal items.
 7. Build cart icon in header — item count badge
-8. Build checkout page — React Hook Form, name/phone/address/note fields, COD confirmation. POST `/api/orders` tạo normal OrderItems; Phase 6 sẽ extend route này cho CustomOrder.
-9. Build order history page — list orders with status badges
-10. Build order detail page — full info + cancel button (if status=pending)
-11. Create cancel order API route — verify ownership + pending status, set `cancelled`
+8. Build checkout page — React Hook Form, name/phone/address/note fields, COD confirmation. **Auto-fill from User.shippingName/Phone/Address if exists**. Save shipping info to User after successful order. POST `/api/orders` tạo normal OrderItems + CustomOrders (Phase 6 extends).
+9. Build order confirmation page — shows mã đơn, tổng tiền, player size summary per custom bundle (no mockup canvas — that's readonly in Phase 5 admin)
+10. Build order history page — list orders with status badges
+11. Build order detail page — full info + cancel button (if status=pending)
+12. Create cancel order API route — verify ownership + pending status, set `cancelled`
 
 ## Todo
 - [ ] Zustand cart store with persist
-- [ ] Homepage with featured products grid
-- [ ] Product listing page with category filter
-- [ ] Product card component
-- [ ] Product detail page with gallery, stock display per size
-- [ ] Stock indicator (in stock / low stock / out of stock)
-- [ ] Color set selector (swap images on pick)
-- [ ] Size selector
+- [ ] Product listing page with search + filter (AND logic, URL params)
+- [ ] Product card component with stock per (ColorSet+size)
+- [ ] Product detail page with gallery, stock display per (ColorSet+size)
+- [ ] Color set selector (swap images + stock on pick)
+- [ ] Size selector with stock per variant
 - [ ] Add to cart functionality (normal products)
 - [ ] Print fee nudge component
 - [ ] Cart page with quantity controls + print fee nudge
 - [ ] Cart icon with badge in header
-- [ ] Checkout form (name, phone, address, note)
+- [ ] Checkout form with auto-fill + save shipping info
+- [ ] Order confirmation page (mã đơn, tổng tiền, player summary)
 - [ ] Order history page
 - [ ] Order detail page
 - [ ] Cancel order API + UI (pending only)

@@ -19,10 +19,11 @@ COD (Cash on Delivery) payment only for MVP. Order created as confirmed immediat
 ## Flow
 
 ```
-Checkout → Create Order (status: confirmed, paymentMethod: "cod", paymentStatus: "pending_payment")
+Checkout → Create Order (orderStatus: "confirmed", paymentMethod: "cod")
   → Send emails (shop notification + customer confirmation)
   → Redirect to order confirmation page
 ```
+<!-- Session 8: No paymentStatus tracking for MVP. COD simply sets orderStatus="confirmed". paymentStatus field not needed. -->
 
 ## Related Code Files
 
@@ -35,8 +36,7 @@ Checkout → Create Order (status: confirmed, paymentMethod: "cod", paymentStatu
 
 1. Update `POST /api/orders`:
    - Set `paymentMethod = "cod"` (hardcoded)
-   - Set `paymentStatus = "pending_payment"`
-   - Set `orderStatus = "confirmed"`
+   - Set `orderStatus = "confirmed"` — no paymentStatus field needed for MVP COD
    - No payment gateway redirect
 2. Update checkout page:
    - Remove payment method selection UI

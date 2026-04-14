@@ -13,44 +13,47 @@ effort: 5d
 - [Custom Builder Research](../reports/researcher-260412-1321-custom-builder.md)
 - [Brainstorm — Project Understanding](../reports/brainstorm-260413-1435-project-understanding.md)
 <!-- Updated: Session 5 (2026-04-14) — Complete rewrite. Wizard removed. Builder is sections embedded in /products/[slug] -->
+<!-- Session 8: Player size field required, overlay structure uses overlays: OverlayElement[][] (indexed by image slot) -->
 
 ## Overview
 Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/[slug]` khi sản phẩm có `customizable = true`. Không có wizard, không có route riêng. Khách tương tác theo thứ tự bất kỳ, add to cart từ nút cuối trang.
 
 **Desktop-only**: Trên mobile < 768px, thay toàn bộ builder bằng thông báo "Vui lòng dùng máy tính để thiết kế đồng phục". Catalog, cart, checkout vẫn responsive bình thường.
 
-**Builder tech**: CSS overlay — logo/text là `absolute` div đè lên ảnh sản phẩm thật. Drag-drop bằng mouse events.
+**Builder tech**: `react-moveable` library — logo/text là `absolute` div đè lên ảnh sản phẩm thật. Drag/resize/rotate handled by `<Moveable />` component (replaces raw mouse events).
 
 ## Page Layout (scroll-through sections)
 
 ```
 /products/[slug]   (customizable=true)
 │
-├── [Section 1] Gallery — 4 angle image thumbnails (front/back/sleeve/shorts)
+├── [Section 1] Gallery — free-form images with thumbnail grid (normal view) vs tabs (builder view)
+│               Dual-mode: thumbnail grid when browsing, tabs when in builder
 │               Click thumbnail → switch main image
 │
 ├── [Section 2] Chọn màu sắc — ColorSet selector
 │               Grid ảnh thật của từng bộ màu admin định sẵn
 │               Click → cập nhật gallery + ảnh nền cho mockup
+│               Giữ overlay positions, đổi ảnh nền. Nếu ColorSet mới ít ảnh hơn → tab thừa ẩn, data preserved
 │
 ├── [Section 3] Logo Library + Tên đội
 │               [+ Upload logo] → Dropzone/button, chấp nhận PNG/JPG/SVG, max 5MB
 │               SVG sanitized trước khi upload (strip scripts/events)
-│               Dimension warning nếu logo < 300px → auto-note "shop sẽ làm nét lại nếu có thể"
+│               Dimension warning nếu logo < 300px → badge "⚠ Chất lượng thấp" + auto-note; không block upload
 │               Hiển thị danh sách logos đã upload (thumbnail grid + tên file + [×] xóa)
 │               Input: tên đội (optional)
 │
 ├── [Section 4] Thiết kế mockup (CORE)
 │               Layout: [Logo Panel bên trái | Canvas + Tabs]
 │               Logo Panel: danh sách logos từ library — drag logo vào canvas
-│               Tab switcher: [Mặt trước] [Mặt sau] [Tay áo] [Quần]
+│               Tab switcher: tabs for each image slot (0, 1, 2...)
 │               Mỗi tab:
-│                 - Ảnh sản phẩm thật làm nền (đúng ColorSet + góc)
+│                 - Ảnh sản phẩm thật làm nền
 │                 - Drag logo từ panel thả vào canvas → xuất hiện element
 │                 - Drag text overlay (tên đội): giống logo
 │                 - Mỗi element: corner handles resize, top handle rotate (snap 0/90/180/270°)
 │                 - Nhiều logos có thể trên cùng 1 tab (club logo + sponsor logo + số nhỏ...)
-│               Positions lưu per-angle + per-element (x%, y%, width%, rotation)
+│               Positions lưu per-image-slot + per-element (x%, y%, width%, rotation)
 │               **Switching ColorSet: giữ nguyên element positions**
 │               Shared <MockupCanvas /> component (interactive mode)
 │
@@ -72,7 +75,7 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
 
 ```
 /products/[slug]/page.tsx (RSC)
-  ├── ProductGallery           (Phase 3 — images by angle)
+  ├── ProductGallery           (Phase 3 — images by slot)
   ├── ColorSetSelector         (Phase 3 — swap images)
   ├── [if !customizable]
   │   ├── SizeSelector
@@ -82,7 +85,7 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
       ├── [hidden on mobile]
       │   ├── LogoUploader     — Phase 4
       │   ├── MockupCanvas     — Phase 4 (interactive)
-      │   │   └── Tab: front/back/sleeve/shorts
+      │   │   └── Tabs: one per image slot
       │   ├── PlayerListEditor — Phase 4
       │   ├── PrintFeeNudge    — Phase 3 (reused)
       │   └── AddToCartButton  (custom)
@@ -99,7 +102,7 @@ interface LogoItem {
   qualityNote?: string  // auto-set nếu width < 300px
 }
 
-// Per-angle overlay element
+// Per-image-slot overlay element
 interface OverlayElement {
   id: string
   type: 'logo' | 'text'
@@ -117,17 +120,12 @@ interface OverlayElement {
 interface CustomConfig {
   teamName?: string
   logos: LogoItem[]           // multi-logo support (club, sponsor, flag patch...)
-  angles: {
-    front: OverlayElement[]
-    back: OverlayElement[]
-    sleeve: OverlayElement[]
-    shorts: OverlayElement[]
-  }
+  overlays: OverlayElement[][]  // indexed by image slot [0], [1], [2]...
   players: {
     sortOrder: number
     playerName?: string
-    playerNumber?: number
-    jerseySize: string    // required — from ProductVariant sizes (disabled if stock=0)
+    playerNumber?: string
+    size: string          // required — from ProductVariant sizes (disabled if stock=0)
     shortsSize?: string
   }[]
 }
@@ -140,7 +138,7 @@ interface CustomCartItem {
   productName: string
   colorSetId: number
   colorSetName: string
-  productImagesByAngle: Record<'front'|'back'|'sleeve'|'shorts', string>
+  productImages: string[]       // images per slot
   config: CustomConfig
   unitPrice: number
   printingSurcharge: number
@@ -167,7 +165,7 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 
 ```
 <MockupCanvas
-  imageUrl={string}          // product image for current angle
+  imageUrl={string}          // product image for current slot
   elements={OverlayElement[]}
   mode="interactive" | "readonly"
   onElementsChange={(els) => void}  // only in interactive mode
@@ -177,29 +175,29 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 - Interactive mode (builder): drag-drop, resize, rotate
 - Read-only mode (admin Phase 5, order confirmation): display only
 
-**Drag interaction** (mouse events, desktop only):
-- `mousedown` on element → start drag, show bounding box + handles
-- `mousemove` → update x, y (clamped to canvas bounds)
-- `mouseup` → commit position
-- Corner handles → resize (maintain aspect ratio)
-- Top-center handle → rotate (snap at 0°/90°/180°/270°)
-- Click outside → deselect
+**Drag interaction** (`react-moveable`, desktop only):
+- Wrap each element with `<Moveable draggable resizable rotatable />`
+- `onDrag` → update x, y (clamped to canvas bounds)
+- `onResize` → update width/height (maintain aspect ratio via keepRatio)
+- `onRotate` → update rotation (snap at 0°/90°/180°/270° via throttleRotate)
+- Click outside → deselect (clear `target` ref)
 
 ## Related Code Files
 
 ### Create
 - `src/components/custom-builder/logo-library-panel.tsx` — sidebar panel: upload logos + display thumbnail grid + drag source
-- `src/components/custom-builder/logo-uploader.tsx` — dropzone + SVG sanitize + Cloudinary upload + quality warning
+- `src/components/custom-builder/logo-uploader.tsx` — dropzone + SVG sanitize + Cloudinary upload + quality warning badge
 - `src/components/custom-builder/mockup-canvas.tsx` — **shared CSS overlay component** (interactive + readonly modes)
 - `src/components/custom-builder/overlay-element.tsx` — single draggable/resizable/rotatable element (references LogoItem)
-- `src/components/custom-builder/angle-tab-switcher.tsx` — [Mặt trước][Mặt sau][Tay áo][Quần] tabs
+- `src/components/custom-builder/image-tab-switcher.tsx` — tabs for each image slot
 - `src/components/custom-builder/player-list-editor.tsx` — table với useFieldArray + paste
-- `src/components/custom-builder/player-row.tsx` — 1 row: tên, số, size áo (required dropdown from ProductVariant), size quần
+- `src/components/custom-builder/player-row.tsx` — 1 row: tên, số, size (required dropdown from ProductVariant), size quần
 - `src/components/custom-builder/mobile-builder-notice.tsx` — notice for < 768px
 - `src/lib/printing-fee.ts` — fee calculation per CustomOrder (shared with Phase 6 server-side)
 - `src/lib/clipboard-parser.ts` — Excel TSV paste: auto-detect columns (pattern matching), fallback mapping dialog
+- `src/components/custom-builder/column-mapping-dialog.tsx` — simple dialog with one `<select>` dropdown per detected column
 - `src/lib/svg-sanitizer.ts` — strip scripts/event handlers from SVG before upload
-- `src/app/api/upload/route.ts` — Cloudinary upload endpoint (validate MIME + size, SVG sanitize)
+- `src/app/api/upload/logo/route.ts` — **server-side** Cloudinary upload endpoint (validate MIME + size, SVG sanitize)
 
 ### Modify
 - `src/app/products/[slug]/page.tsx` — add builder sections for customizable products
@@ -209,18 +207,18 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 ## Implementation Steps
 
 1. Create `src/lib/svg-sanitizer.ts` — strip `<script>`, event attrs (on*), `href=javascript:` from SVG string; return sanitized SVG
-2. Create `src/app/api/upload/route.ts` — validate MIME (image/jpeg, image/png, image/svg+xml, image/webp), max 5MB; sanitize SVG before upload; return Cloudinary URL
+2. Create `src/app/api/upload/logo/route.ts` — validate MIME (image/jpeg, image/png, image/svg+xml), max 5MB; sanitize SVG before upload; return Cloudinary URL
 3. Create `clipboard-parser.ts`:
    - Parse TSV from `navigator.clipboard.readText()`
    - Auto-detect columns by pattern: integers 1-99 → Số áo; S/M/L/XL/XXL tokens → Size áo/quần; long strings → Tên
    - Confidence ≥ 80% → map directly; else → emit `needsMapping: true` with sample data
    - Consumer shows `<ColumnMappingDialog />` when `needsMapping = true`
 4. Create `printing-fee.ts` — `calculatePrintFee(playerCount, subtotal)`: per-CustomOrder, returns `{ rate, amount, nudge }`
-5. Create `logo-uploader.tsx` — dropzone; PNG/JPG/SVG max 5MB; SVG → sanitize via `svg-sanitizer.ts`; dimension check → qualityNote if < 300px; returns `LogoItem`
+5. Create `logo-uploader.tsx` — dropzone; PNG/JPG/SVG max 5MB; SVG → sanitize via `svg-sanitizer.ts`; dimension check → qualityNote if < 300px; quality warning badge + auto-note; returns `LogoItem`
 6. Create `logo-library-panel.tsx` — sidebar showing uploaded `LogoItem[]`; thumbnail grid; [+ Upload] button; [×] remove; drag source (`draggable` attr) for canvas drop
-7. Create `overlay-element.tsx` — absolute-positioned div; interactive: mousedown drag, corner handles resize, top handle rotate (snap 0/90/180/270°); readonly: static; references `logoId` or renders `text`
+7. Create `overlay-element.tsx` — absolute-positioned div; interactive: mousedown drag, corner handles resize, top handle rotate (snap 0/90°/180°/270°); readonly: static; references `logoId` or renders `text`
 8. Create `mockup-canvas.tsx` — container (position:relative) with product image + overlay elements; `onDrop` receives logoId from panel drag; mode prop switches interactivity; positions stay on ColorSet switch
-9. Create `angle-tab-switcher.tsx` — tabs for 4 angles; switching saves/restores elements per angle (state keyed by angle)
+9. Create `image-tab-switcher.tsx` — tabs for each image slot; switching saves/restores elements per slot (state keyed by slot index)
 10. Create `player-list-editor.tsx`:
     - useFieldArray for dynamic rows
     - Default 1 row on mount
@@ -235,18 +233,18 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
     - Fetch ProductVariant sizes for size dropdown in player list
 13. Update `cart-store.ts` — add `CustomCartItem` interface (with `logos: LogoItem[]`) + `addCustomItem`, `removeItem` actions; persist to localStorage
 14. Wire Add to Cart: collect `CustomConfig` (incl. `logos[]`) from state → create `CustomCartItem` → add to store → redirect to `/cart`
-15. Cart page: custom items show bundle summary (team name fallback = product.name if empty, count, total) + [Xóa] only — no Sửa button (Session 7)
+15. Cart page: custom items show bundle summary (team name fallback = product.name if empty, count, total) + [Xóa] only — no Sửa button
 
 ## Todo
 - [ ] SVG sanitizer utility (`svg-sanitizer.ts`)
 - [ ] Cloudinary upload API route (PNG/JPG/SVG, max 5MB, SVG sanitize)
 - [ ] Clipboard TSV parser with auto-detect + mapping dialog fallback
 - [ ] Print fee calculation utility (per-CustomOrder)
-- [ ] LogoUploader (dropzone + SVG sanitize + Cloudinary + quality warning)
+- [ ] LogoUploader (dropzone + SVG sanitize + Cloudinary + quality warning badge)
 - [ ] LogoLibraryPanel (thumbnail grid + drag source + remove)
 - [ ] OverlayElement component (drag/resize/rotate, references logoId)
 - [ ] MockupCanvas (interactive + readonly modes, onDrop from logo panel)
-- [ ] AngleTabSwitcher (4 tabs, per-angle state, positions preserved on ColorSet switch)
+- [ ] ImageTabSwitcher (tabs per slot, per-slot state, positions preserved on ColorSet switch)
 - [ ] PlayerListEditor (useFieldArray + paste + mapping dialog + fee emit, sizes from ProductVariant)
 - [ ] MobileBuilderNotice
 - [ ] Wire builder sections into product detail page
@@ -259,12 +257,12 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 - Mobile (< 768px) shows notice instead of builder
 - Multiple logos uploadable; all appear in logo panel sidebar
 - Drag logo from panel → drops on canvas; drag/resize/rotate works
-- Switch between angle tabs: each tab has independent elements
+- Switch between image tabs: each tab has independent elements
 - Switch ColorSet: element positions preserved
 - Resize (corner handles) + rotate (top handle, snap 0°/90°/180°/270°) work correctly
 - Player list: paste 10 rows from Excel → auto-detect columns → populated; unclear format → mapping dialog
 - Size dropdown shows ProductVariant sizes; stock=0 size is disabled with tooltip
-- Size field required; name/number optional
+- Size field required; name/number/shorts-size optional
 - Print fee nudge shows correct tier per CustomOrder in real-time
 - Add to cart → CustomCartItem (with `logos[]`) in Zustand store → visible in cart
 - Cart shows bundle summary: teamName (fallback = product.name) + player count + total + [Xóa]
@@ -274,7 +272,7 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 - Cloudinary free tier: 25 credits/month → client-side validation first, minimize transforms
 - Large player list (50+ rows) → test useFieldArray performance
 - Paste format varies between Excel/Google Sheets → test both, handle tab vs comma
-- Angle tab switch must preserve element state for each angle independently (use Map or object keyed by angle)
+- Image slot tab switch must preserve element state for each slot independently (use array keyed by slot index)
 
 ## Security
 - Upload endpoint: validate MIME type (image/jpeg, image/png, image/svg+xml only), max 5MB

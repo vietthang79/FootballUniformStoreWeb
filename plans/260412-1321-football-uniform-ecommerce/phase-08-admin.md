@@ -11,14 +11,14 @@ effort: 5d
 ## Context
 - Depends on Phase 6+7 (orders exist in DB)
 - [Brainstorm: CSV Import Flow](../reports/brainstorm-260413-1508-csv-product-import.md)
+<!-- Session 8: Images free-form (sortOrder). Product edit FULL scope (info + images + ColorSet + stock per variant). Status PATCH sends customer email. -->
 
 ## Overview
 Admin panel gồm 2 phần:
-1. **Order Management** — xem + filter + update status đơn hàng
-2. **Product Import** — import sản phẩm từ CSV supplier; edit chi tiết sản phẩm sau import
+1. **Order Management** — xem + filter + update status đơn hàng + send customer emails
+2. **Product Import + Edit** — import sản phẩm từ CSV supplier; full edit capability (info, images, ColorSet, stock)
 
-Không có product CRUD form thủ công. Protected by Better Auth admin role (Phase 2).
-<!-- Updated: Session 2 — replaced Prisma Studio approach with CSV import flow -->
+Protected by Better Auth admin role (Phase 2).
 
 ## Architecture
 
@@ -28,7 +28,7 @@ Không có product CRUD form thủ công. Protected by Better Auth admin role (P
 /admin/orders/[id]              → Order detail + status update
 /admin/products                 → Product list (link to edit/import)
 /admin/products/import          → CSV Import wizard
-/admin/products/[id]/edit       → Product edit (images, colorsets, price, etc.)
+/admin/products/[id]/edit       → Product edit (FULL: info + images + ColorSet + stock)
 ```
 
 ### CSV Import Flow
@@ -49,114 +49,123 @@ Không có product CRUD form thủ công. Protected by Better Auth admin role (P
         ↓
 [4] Preview Table (grouped, all fields shown, inline editable)
     ▼ Áo CLB A  [category] [description]  [☑ Cho phép tùy chỉnh mockup]  ← isCustomizable toggle
-      Xanh Navy | vốn:[__] | bán:[__] | stock:[__] | 🖼 [Upload mặt trước][Upload mặt sau][Upload tay áo][Upload quần]
-      Đỏ Trắng  | vốn:[__] | bán:[250k]| stock:[8]  | 🖼 [thumb_front][thumb_back][+][+]
+      Xanh Navy | vốn:[__] | bán:[__] | stock:[__] | 🖼 [Upload ảnh...] (tự do sortOrder)
+      Đỏ Trắng  | vốn:[__] | bán:[250k]| stock:[8]  | 🖼 [thumb][thumb][+]
     ▼ Giày Nike  [category] [description]  [☐ Cho phép tùy chỉnh mockup]
       Đen/Trắng | vốn:[__] | bán:[__] | stock:[5]  | 🖼 [Upload ảnh...]
         ↓
 [5] Confirm
-    → Upload imageFiles[] per ColorSet per angle → Cloudinary (parallel, blob URLs locally until here)
+    → Upload imageFiles[] per ColorSet → Cloudinary (parallel, blob URLs locally until here)
     → POST /api/admin/products/import (với isCustomizable per product)
-    → prisma.$transaction → Product[] (incl. customizable flag) + ColorSet[] + ProductImage[] (4 angles)
+    → prisma.$transaction → Product[] + ColorSet[] + ProductImage[] (free-form sortOrder)
     → Redirect /admin/products
 ```
 
-**Duplicate product names → create new records (no merge check)**
-**isCustomizable**: admin toggle trong Step 4 preview (per product group). Default = false (unchecked). Sản phẩm đồng phục → check; giày/phụ kiện → không check.
+**Duplicate product names ARE allowed** — system creates new product regardless of name collision. Shop manually deletes duplicates from `/admin/products` if needed.
+**isCustomizable**: admin toggle trong Step 4 preview (per product group). Default = false. Sản phẩm đồng phục → check; giày/phụ kiện → không check.
+**Images**: tự do (sortOrder), không phải 4 angles cố định.
 
+## Related Code Files
 
 ### Create — Orders
 - `src/app/admin/layout.tsx` — admin layout with sidebar + auth guard
-- `src/app/admin/page.tsx` — dashboard (order count, revenue stats)
-- `src/app/admin/orders/page.tsx` — order list
-- `src/app/admin/orders/[id]/page.tsx` — order detail
+- `src/app/admin/page.tsx` — dashboard (stats)
+- `src/app/admin/orders/page.tsx` — order list with filters
+- `src/app/admin/orders/[id]/page.tsx` — order detail + status update
 - `src/components/admin/order-status-badge.tsx`
 - `src/components/admin/order-status-updater.tsx`
-- `src/components/admin/custom-order-preview.tsx` — preview component from Phase 5
-- `src/components/admin/preview-canvas.tsx` — CSS overlay canvas from Phase 5
-- `src/app/api/admin/orders/[id]/status/route.ts` — PATCH status
+- `src/components/admin/custom-order-preview.tsx` — from Phase 5
+- `src/components/admin/preview-canvas.tsx` — from Phase 5
+- `src/app/api/admin/orders/[id]/status/route.ts` — PATCH status (trigger customer email on shipping/delivered)
 
-### Create — Product Import
+### Create — Product Import + Edit
 - `src/app/admin/products/page.tsx` — product list
-- `src/app/admin/products/import/page.tsx` — import wizard orchestrator
-- `src/app/admin/products/[id]/edit/page.tsx` — full product edit
-- `src/components/admin/csv-import/column-mapping-step.tsx` — mapping UI
-- `src/components/admin/csv-import/preview-table.tsx` — grouped preview
-- `src/components/admin/csv-import/product-group-row.tsx` — 1 product row (expandable); includes `[☑ Cho phép tùy chỉnh mockup]` checkbox (sets `isCustomizable`)
-- `src/components/admin/csv-import/colorset-row.tsx` — 1 colorset row (inline edit + 4-angle image upload: front/back/sleeve/shorts)
-- `src/components/admin/product-image-uploader.tsx` — reusable inline upload component
-- `src/app/api/admin/products/import/route.ts` — POST bulk create
-- `src/app/api/admin/products/[id]/route.ts` — GET + PUT for edit
-- `src/lib/csv-column-mapper.ts` — fuzzy auto-suggest mapping logic
-- `src/lib/product-grouper.ts` — group flat rows → ProductDraft[]
+- `src/app/admin/products/import/page.tsx` — import wizard
+- `src/app/admin/products/[id]/edit/page.tsx` — FULL product edit
+- `src/components/admin/csv-import/column-mapping-step.tsx`
+- `src/components/admin/csv-import/preview-table.tsx`
+- `src/components/admin/csv-import/product-group-row.tsx`
+- `src/components/admin/csv-import/colorset-row.tsx`
+- `src/components/admin/product-image-uploader.tsx`
+- `src/app/api/admin/products/import/route.ts`
+- `src/app/api/admin/products/[id]/route.ts`
+- `src/lib/csv-column-mapper.ts`
+- `src/lib/product-grouper.ts`
 
 ### Modify
-- `src/lib/auth.ts` — admin role already configured in Phase 2
+- `src/lib/auth.ts` — already configured
 
 ## Implementation Steps
 
 ### Part A: Orders (2d)
-<!-- Session 7: Phase 6 đã tạo admin API routes (PATCH status, POST notes). Phase 8 chỉ build UI consume các API đó. -->
-1. Admin role already configured in Phase 2 — skip auth setup
-2. Create admin layout with auth guard middleware (check role=admin)
-3. Dashboard: aggregate queries (order count, revenue by status, **doanh thu theo ngày/tuần**, **top 5 sản phẩm bán chạy**)
-4. Order list: paginated table, **filter by status** (pending/processing/shipping/delivered/cancelled), search by order number or customer name
-5. Order detail: customer info, items, player list, download Excel, logo link, status updater (calls Phase 6 PATCH API); show **cancelled** badge if applicable
-6. **Admin preview**: Integrate Phase 5's `<CustomOrderDetail />` for custom orders (readonly MockupCanvas + player table)
+1. Admin auth guard middleware (check role=admin)
+2. Dashboard: order count, revenue by status, doanh thu theo ngày/tuần, top 5 sản phẩm
+3. Order list: paginated table, filter by status, search by order number/customer name
+4. Order detail: customer info, items, player list, download Excel link, logo links, status updater
+5. Admin preview: readonly MockupCanvas + player table for custom orders
+6. Status update API: PATCH /api/admin/orders/[id]/status → send customer email on shipping/delivered
 
-### Part B: Product Import (3d)
-7. `csv-column-mapper.ts` — fuzzy match CSV header → DB field name; returns `{ csvCol, dbField, confidence }[]`
-8. `product-grouper.ts` — group MappedRow[] by `name` (trim + lowercase) → `ProductDraft[]`
-9. `column-mapping-step.tsx` — show CSV cols on left, `<select>` DB field on right, auto-fill defaults
-10. `colorset-row.tsx` — inline inputs for all ColorSet fields; `product-image-uploader.tsx` for 4 angles (front/back/sleeve/shorts) File[] + blob preview
-11. `product-group-row.tsx` — expandable row, product-level fields (name, category, description) + **`isCustomizable` checkbox toggle** (default false), list of colorset rows
-12. `preview-table.tsx` — render ProductDraft[] as grouped table; wire up state mutations (edit field, add/remove image)
-13. `import/page.tsx` — wizard: step 1 = upload + mapping, step 2 = preview (with `isCustomizable` toggle + 4-angle image upload per ColorSet), step 3 = confirm
-    - On Confirm: upload all File[] to Cloudinary in parallel → get URLs → POST to API
-14. `api/admin/products/import/route.ts` — validate body, `prisma.$transaction` bulk create Products (with `customizable` flag) + ColorSets + ProductImages (4 angles: front/back/sleeve/shorts) + ProductVariants (stock per size)
-15. `products/[id]/edit/page.tsx` — full edit form: name, category, price, description; manage ColorSets (add/remove); upload images per ColorSet
-16. `api/admin/products/[id]/route.ts` — GET product with relations; PUT update
+### Part B: Product Import + Edit (3d)
+7. `csv-column-mapper.ts` — fuzzy match CSV header → DB field
+8. `product-grouper.ts` — group rows by product name → ProductDraft[]
+9. `column-mapping-step.tsx` — CSV col → DB field mapping UI
+10. `colorset-row.tsx` — inline edit + free-form image upload (sortOrder-based)
+11. `product-group-row.tsx` — expandable product group + `isCustomizable` toggle
+12. `preview-table.tsx` — grouped product table with state mutations
+13. `import/page.tsx` — wizard: upload → mapping → preview → confirm
+14. `api/admin/products/import/route.ts` — bulk create Products + ColorSets + ProductImages + ProductVariants
+15. **`products/[id]/edit/page.tsx`** — FULL scope:
+    - Product info (name, category, price, description)
+    - Image management: reorder/add/delete per ColorSet (free-form sortOrder)
+    - ColorSet management: add/remove/rename
+    - Stock per (ColorSet + size) variant
+16. **`api/admin/products/[id]/route.ts`** — GET + PUT for all fields above
 
 ## Todo
 
 ### Orders
-- [ ] Admin auth guard (check role=admin from Phase 2 Better Auth config)
+- [ ] Admin auth guard
 - [ ] Dashboard with stats
 - [ ] Order list with filters + search + pagination
-- [ ] Order detail page (player list, logos, status)
-- [ ] Order status update API + customer email notification
+- [ ] Order detail page
+- [ ] Status update PATCH API (with customer email trigger)
 
-### Product Import
-- [ ] `csv-column-mapper.ts` — fuzzy match logic
-- [ ] `product-grouper.ts` — grouping logic
+### Product Management
+- [ ] CSV column mapper
+- [ ] Product grouper
 - [ ] Column mapping step UI
-- [ ] `colorset-row.tsx` — inline edit + 4-angle image upload (front/back/sleeve/shorts)
-- [ ] `product-group-row.tsx` — expandable product group
-- [ ] Preview table with full state management
-- [ ] Import wizard page (upload → mapping → preview with isCustomizable toggle + image upload → confirm)
-- [ ] Confirm flow: Cloudinary upload + bulk import API
-- [ ] Product list page (`/admin/products`) with **stock display**
-- [ ] Product edit page (`/admin/products/[id]/edit`) with **stock field** and **4 image angles per ColorSet**
+- [ ] Colorset row UI (free-form image upload, sortOrder)
+- [ ] Product group row UI
+- [ ] Preview table UI
+- [ ] Import wizard page
+- [ ] Bulk import API
+- [ ] Product list page with stock display
+- [ ] **Product edit page (FULL SCOPE)**:
+  - [ ] Product info form
+  - [ ] Image reorder/add/delete per ColorSet
+  - [ ] ColorSet management (add/remove/rename)
+  - [ ] Stock per variant management
+  - [ ] PUT update API
+
 ## Success Criteria
-- Admin can view all orders, filter/search, update status → customer email sent
+- Admin can view/filter/search orders, update status → customer email sent on shipping/delivered
 - Admin can download Excel + view logos from order detail
-- Admin can upload CSV → map columns → preview grouped products with inline edit
-- Admin can upload images per ColorSet in preview before confirming
-- Confirm import → products visible in `/admin/products` and storefront
-- Admin can edit product details post-import via `/admin/products/[id]/edit`
+- Admin can upload CSV → map columns → preview + confirm import
+- Admin can edit product (info, images, ColorSet, stock) via `/admin/products/[id]/edit` **FULL SCOPE**
+- Images upload free-form with sortOrder (not 4 angles)
+- Stock display visible in product list + edit page
 - Non-admin users cannot access `/admin`
-- **Stock display visible** in product list and product edit page
 
 ## Risk
 | Risk | Level | Mitigation |
 |------|-------|------------|
-| Supplier CSV format varies each time | Medium | Column mapping UI handles this — user re-maps each import |
-| Product name inconsistency in CSV causes wrong grouping | Low | Show grouped preview clearly; user can spot and edit |
-| Cloudinary upload failure mid-confirm | Low | Wrap in try/catch; report failed images, allow retry |
-| Large CSV (>500 rows) → slow preview render | Unlikely | PapaParse streaming + virtual scroll if needed |
-| Scope creep on product edit page | Medium | Keep edit minimal: fields + images only, no variant management |
+| Supplier CSV format varies | Medium | Column mapping UI, re-map each import |
+| Product name inconsistency | Low | Show grouped preview clearly |
+| Cloudinary upload failure | Low | Try/catch, report failed, allow retry |
+| Large CSV performance | Unlikely | PapaParse + virtual scroll if needed |
+| Stock variant UI complexity | Medium | Table/form per ColorSet+size, keep simple |
 
 ## Security
-- All `/admin/*` routes protected by Better Auth session + admin role middleware (Phase 2)
-- File upload validation: CSV only for import, image MIME check before Cloudinary upload
-- API routes validate admin session server-side (not just client route guard)
+- All `/admin/*` routes protected by Better Auth + admin role middleware
+- File upload validation: CSV only, image MIME check before Cloudinary
+- API routes validate admin session server-side

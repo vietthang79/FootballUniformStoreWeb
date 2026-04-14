@@ -3,7 +3,7 @@ title: "Custom Mockup Platform - Football Uniform"
 description: "Website custom mockup đồng phục bóng đá - khách tự thêm mockup vào vị trí tùy chọn trên ảnh sản phẩm thật"
 status: pending
 priority: P1
-effort: ~6w
+effort: ~7w
 issue: ~
 branch: main
 tags: [frontend, backend, database, feature, ecommerce]
@@ -14,6 +14,62 @@ created: 2026-04-12
 
 ## Tech Stack
 Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook Form | **shadcn/ui** | Cloudinary | Resend | ExcelJS | COD (MVP) | Vercel + Railway
+
+## Monorepo Structure (pnpm Workspaces)
+
+```bash
+FootballUniformStoreWeb/
+# Workspace Configuration
+```
+package.json          # Workspace root with scripts: dev, build, scraper
+pnpm-workspace.yaml   # packages: ['apps/*', 'packages/*']
+
+# Applications
+```bash
+apps/web/             # Next.js 15 Full-stack App (@football-store/web)
+  src/
+    app/              # App Router (API routes + pages)
+    components/       # React components
+    lib/              # Database, auth, cloudinary configs
+    types/            # Import from @football-store/shared-types
+  package.json        # Dependencies: Next.js, Prisma, Better Auth, etc.
+  prisma/
+    schema.prisma     # Complete database schema
+    seed.ts          # Dev/test data
+
+# Shared Packages
+```
+packages/
+  shared-types/       # TypeScript interfaces (@football-store/shared-types)
+    src/
+      index.ts       # Export: ProductCategory, CsvRow, ScrapedProduct, etc.
+    package.json     # Dependencies: TypeScript, Zod
+    
+  scraper/           # Playwright CLI tool (@football-store/scraper)
+    src/
+      scraper.ts     # Main scraping logic
+      sites/         # Site-specific scrapers
+    package.json     # Dependencies: Playwright, @football-store/shared-types
+    tsconfig.json    # Node.js target
+```
+
+## Workspace Scripts:
+```json
+{
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter shared-types build && pnpm --filter web build",
+    "scraper": "pnpm --filter scraper dev",
+    "db:push": "pnpm --filter web db:push",
+    "db:seed": "pnpm --filter web db:seed"
+  }
+}
+```
+
+## Package Dependencies:
+- `@football-store/web` depends on `@football-store/shared-types: workspace:*`
+- `@football-store/scraper` depends on `@football-store/shared-types: workspace:*`
+- Build order: shared-types first, then web/scraper in parallel
 
 ## Confirmed Decisions (Validation Session 1 — 2026-04-12)
 - **UI**: shadcn/ui + Tailwind CSS
@@ -33,23 +89,26 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 |---|-------|--------|--------|------|
 | 1 | Project Setup + DB Schema | pending | 3d | [phase-01](./phase-01-project-setup.md) |
 | 2 | Auth — Login / Register / Forgot Password | pending | 2d | [phase-02](./phase-02-auth.md) |
-| 3 | Product Catalog + Normal E-Commerce | pending | 5d | [phase-03](./phase-03-product-catalog.md) |
+| 3 | Homepage (Marketing Landing Page) | pending | 2d | [phase-03](./phase-03-homepage.md) |
 | 4 | Custom Mockup Builder UI + Logic | pending | 5d | [phase-04](./phase-04-custom-builder.md) |
 | 5 | Admin Preview Component | pending | 1d | [phase-05](./phase-05-mockup-preview.md) |
 | 6 | Order Processing + Email + Excel | pending | 4d | [phase-06](./phase-06-order-processing.md) |
 | 7 | Payment Integration (COD only) | pending | 1d | [phase-07](./phase-07-payment.md) |
 | 8 | Admin + Order Management + Product Import | pending | 5d | [phase-08](./phase-08-admin.md) |
 | 9 | Polish, SEO, Deploy | pending | 3d | [phase-09](./phase-09-polish-deploy.md) |
+| 10 | Product Catalog + Normal E-Commerce | pending | 5d | [phase-10](./phase-10-product-catalog.md) |
+| 11 | Data Scraper Tool (Dev Seed) | pending | 4d | [phase-11](./phase-11-data-scraper.md) |
 
 ## Dependencies
 - Phase 2 depends on Phase 1
-- Phase 3 depends on Phase 2 (auth required for checkout)
-- Phase 4 depends on Phase 3 (product data)
-- Phase 5 depends on Phase 4 (builder state)
-- Phase 6 depends on Phase 4+5 (custom order data)
-- Phase 7 depends on Phase 6 (order flow)
-- Phase 8 depends on Phase 6+7
-- Phase 9 depends on all
+- Phase 3 depends on Phase 1+2 (DB for featured products, auth for nav user state)
+- Phase 4 depends on Phase 2 (auth required for checkout)
+- Phase 5 depends on Phase 4 (product data)
+- Phase 6 depends on Phase 5 (builder state)
+- Phase 7 depends on Phase 5+6 (custom order data)
+- Phase 8 depends on Phase 7 (order flow)
+- Phase 9 depends on Phase 7+8
+- Phase 10 depends on all
 
 ## Key Architecture Decisions
 1. **Cart = Zustand + localStorage** — no server-side cart, sync to DB only at checkout
@@ -187,6 +246,37 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 - phase-04: xóa [Sửa] + edit flow; teamName fallback = product.name
 - phase-06: trim admin UI files/steps (→ Phase 8); thêm retry logic cho order-number.ts; teamName fallback trong email templates
 - phase-08: clarify không duplicate API routes từ Phase 6; thêm analytics vào dashboard
+
+---
+
+### Session 8 — 2026-04-14
+**Trigger:** Gap analysis brainstorm — rà soát toàn bộ plan trước khi implement
+**Questions asked:** 15
+
+#### Confirmed Decisions
+1. **[DB Schema]** Player model: 1 field `size` duy nhất (required), xóa `shortsSize` — áo + quần cùng size
+2. **[Email]** Email scope final: Shop nhận (new order + cancel); Khách KHÔNG nhận khi đặt; Khách CÓ nhận khi status → "Đang giao"/"Đã giao"
+3. **[DB Schema]** ProductImage: xóa `angle` enum, thay bằng `sortOrder: Int` — ảnh tự do, không hard-code 4 góc
+4. **[DB Schema]** ProductVariant: đổi FK từ `productId` → `colorSetId` — stock per màu riêng lẻ (override Session 6)
+5. **[Architecture]** printConfigJson: `angles.{front/back/sleeve/shorts}` → `overlays: OverlayElement[][]` (indexed by image slot)
+6. **[UX]** ColorSet switch: giữ overlay positions, đổi ảnh nền; tab thừa bị ẩn (không xóa data)
+7. **[UX]** Gallery dual-mode: thumbnail grid (normal view) + tabs (builder view), cùng 1 trang `/products/[slug]`
+8. **[UX]** Order confirmation page: mã đơn + tổng tiền + player size summary (M×2, L×4...) — không có mockup canvas
+9. **[DB Schema]** User model thêm: `shippingName`, `shippingPhone`, `shippingAddress` (nullable) — auto-fill checkout
+10. **[UX]** Logo quality: badge "⚠ Chất lượng thấp" + note tự động, không block upload
+11. **[UX]** Search + Filter: AND logic — search within category (`?q=...&category=...`)
+12. **[Feature]** Status email to customer: gửi email khi admin chuyển → "Đang giao" và "Đã giao"
+13. **[Scope]** Product edit page: FULL scope — info + ảnh (reorder/add/delete) + ColorSet + stock per variant
+14. **[Scope]** Orphaned logos Cloudinary: chấp nhận bỏ qua cho MVP
+15. **[Priority]** Phase 11 Scraper: nâng lên P1 (cần trước launch); CSV format cập nhật (1 row = ColorSet × size)
+
+#### Phase Impact
+- phase-01: schema changes (ProductVariant FK, angle→sortOrder, User shipping fields, Player 1 size)
+- phase-03/10: order confirmation UX, auto-fill shipping, search+filter AND
+- phase-04: overlays[][] structure, gallery dual-mode, ColorSet switch UX, logo quality badge
+- phase-06: email scope final (no customer email on order, yes on status)
+- phase-08: product edit FULL, status PATCH triggers customer email, import update for ColorSet-based variants
+- phase-11: P1 priority, CSV format update
 
 ---
 
