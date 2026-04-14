@@ -725,26 +725,33 @@
                     <div class="mermaid">
 graph TD
     A[Trang Chủ] --> B[Xem Danh Sách Sản Phẩm]
-    B --> C{Đã Đăng Nhập?}
-    C -->|Chưa| D[Đăng Ký / Đăng Nhập]
-    C -->|Rồi| E[Xem Chi Tiết Sản Phẩm]
-    D --> E
-    E --> F[Chọn Màu Sắc]
-    F --> G[Chọn Size]
-    G --> H{Có Hàng?}
-    H -->|Có| I[Thêm Vào Giỏ Hàng]
-    H -->|Hết| J[Chọn Size Khác]
-    J --> G
-    I --> K[Xem Giỏ Hàng]
-    K --> L{Tiếp Tục Mua?}
-    L -->|Có| B
-    L -->|Không| M[Thanh Toán]
-    M --> N[Nhập Thông Tin Giao Hàng]
-    N --> O[Xác Nhận Đơn Hàng COD]
-    O --> P[Nhận Email Xác Nhận]
-    P --> Q[Chờ Xử Lý Đơn Hàng]
-    Q --> R[Đang Giao Hàng]
-    R --> S[Nhận Hàng & Thanh Toán]
+    B --> C[Lọc / Tìm Kiếm]
+    C --> D[Xem Chi Tiết Sản Phẩm]
+    D --> E[Chọn Màu Sắc]
+    E --> F[Chọn Size]
+    F --> G{Có Hàng?}
+    G -->|Có| H{Thêm Vào Giỏ?}
+    G -->|Hết| I[Chọn Size Khác]
+    I --> F
+    H -->|Có| J{Đã Đăng Nhập?}
+    H -->|Không| D
+    J -->|Chưa| K[Đăng Ký / Đăng Nhập]
+    J -->|Rồi| L[Thêm Vào Giỏ Hàng]
+    K --> L
+    L --> M[Xem Giỏ Hàng]
+    M --> N{Tiếp Tục Mua?}
+    N -->|Có| B
+    N -->|Không| O[Thanh Toán]
+    O --> P{Đã Lưu Thông Tin?}
+    P -->|Có| Q[Xem Thông Tin Đã Lưu]
+    P -->|Không| R[Nhập Thông Tin Giao Hàng]
+    Q --> R
+    R --> S[Xác Nhận Đơn Hàng COD]
+    S --> T[Thông Báo Đặt Hàng Thành Công]
+    T --> U[Admin Nhận Email Đơn Mới]
+    U --> V[Chờ Xử Lý Đơn Hàng]
+    V --> W[Đang Giao Hàng]
+    W --> X[Nhận Hàng & Thanh Toán]
                     </div>
                 </div>
 
@@ -752,32 +759,32 @@ graph TD
                     <div class="flow-step">
                         <span class="step-number">1</span>
                         <h4>Xem Sản Phẩm</h4>
-                        <p>Khách truy cập trang chủ, xem danh sách sản phẩm, lọc theo danh mục (áo, quần, giày, phụ kiện), xem giá và hình ảnh.</p>
+                        <p>Khách truy cập trang chủ, xem danh sách sản phẩm, lọc theo danh mục (áo, quần, giày, phụ kiện), tìm kiếm theo tên. Không cần đăng nhập.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">2</span>
-                        <h4>Đăng Nhập / Đăng Ký</h4>
-                        <p>Yêu cầu đăng nhập trước khi đặt hàng. Nếu chưa có tài khoản, đăng ký bằng email và mật khẩu. Xác nhận đăng nhập thành công.</p>
+                        <h4>Xem Chi Tiết Sản Phẩm</h4>
+                        <p>Click vào sản phẩm để xem chi tiết. Chọn màu sắc từ bộ màu có sẵn. Chọn size (S, M, L, XL, 2XL). Kiểm tra số lượng hàng tồn. Không cần đăng nhập.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">3</span>
-                        <h4>Chọn Sản Phẩm</h4>
-                        <p>Click vào sản phẩm để xem chi tiết. Chọn màu sắc từ bộ màu có sẵn. Chọn size (S, M, L, XL, 2XL). Kiểm tra số lượng hàng tồn.</p>
+                        <h4>Thêm Vào Giỏ Hàng</h4>
+                        <p>Nhấn nút "Thêm vào giỏ hàng". Nếu chưa đăng nhập, hệ thống yêu cầu đăng nhập/đăng ký. Sau khi đăng nhập, sản phẩm được lưu vào giỏ hàng.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">4</span>
-                        <h4>Thêm Vào Giỏ</h4>
-                        <p>Nhấn nút "Thêm vào giỏ hàng". Sản phẩm được lưu vào giỏ hàng (trong trình duyệt). Có thể tiếp tục mua thêm sản phẩm khác.</p>
+                        <h4>Xem Giỏ Hàng</h4>
+                        <p>Xem danh sách sản phẩm đã chọn, thay đổi số lượng, xóa sản phẩm. Có thể tiếp tục mua thêm sản phẩm khác.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">5</span>
                         <h4>Thanh Toán</h4>
-                        <p>Chuyển đến trang thanh toán. Nhập tên, số điện thoại, địa chỉ giao hàng. Chọn phương thức COD. Xác nhận thông tin.</p>
+                        <p>Chuyển đến trang thanh toán. Nếu đã mua trước, hệ thống hiển thị thông tin giao hàng đã lưu. Nếu chưa, nhập tên, SĐT, địa chỉ. Thông tin được lưu cho các đơn sau.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">6</span>
                         <h4>Xác Nhận Đơn Hàng</h4>
-                        <p>Hệ thống tạo mã đơn hàng (ORD-YYYYMMDD-XXX). Gửi email xác nhận cho khách. Đơn hàng được gửi đến shop để xử lý.</p>
+                        <p>Hệ thống tạo mã đơn hàng (ORD-YYYYMMDD-XXX). Hiển thị thông báo đặt hàng thành công. Admin nhận email thông báo đơn hàng mới.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">7</span>
@@ -796,42 +803,46 @@ graph TD
                     
                     <div class="feature-detail-card">
                         <h4>🔐 Đăng Nhập & Đăng Ký</h4>
-                        <p>Hệ thống yêu cầu khách hàng đăng nhập trước khi đặt hàng để quản lý đơn hàng và lịch sử mua sắm.</p>
+                        <p>Chỉ yêu cầu đăng nhập khi khách hàng thêm sản phẩm vào giỏ hàng. Có thể xem và tìm kiếm sản phẩm mà không cần đăng nhập.</p>
                         <ul>
                             <li>Đăng ký: Nhập email, mật khẩu, tên hiển thị</li>
                             <li>Đăng nhập: Email + mật khẩu</li>
                             <li>Quên mật khẩu: Nhập email → nhận link reset</li>
                             <li>Phiên đăng nhập được lưu an toàn</li>
+                            <li>Không bắt buộc khi chỉ xem sản phẩm</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>📋 Danh Sách Sản Phẩm</h4>
-                        <p>Trang hiển thị tất cả sản phẩm có sẵn với hình ảnh, giá, tên sản phẩm.</p>
+                        <p>Trang hiển thị tất cả sản phẩm có sẵn với hình ảnh, giá, tên sản phẩm. Không cần đăng nhập để xem.</p>
                         <ul>
                             <li>Lọc theo danh mục: áo, quần, giày, phụ kiện</li>
                             <li>Tìm kiếm theo tên sản phẩm</li>
                             <li>Sắp xếp theo giá, mới nhất</li>
                             <li>Hiển thị số lượng tồn kho</li>
+                            <li>Truy cập tự do không cần đăng nhập</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>🎯 Chi Tiết Sản Phẩm</h4>
-                        <p>Trang chi tiết hiển thị đầy đủ thông tin sản phẩm để khách hàng ra quyết định.</p>
+                        <p>Trang chi tiết hiển thị đầy đủ thông tin sản phẩm để khách hàng ra quyết định. Không cần đăng nhập để xem.</p>
                         <ul>
                             <li>Hình ảnh sản phẩm từ nhiều góc độ</li>
                             <li>Chọn màu sắc (nếu có nhiều màu)</li>
                             <li>Chọn size với hiển thị số lượng tồn</li>
                             <li>Thông tin mô tả sản phẩm chi tiết</li>
                             <li>Giá bán rõ ràng</li>
+                            <li>Truy cập tự do không cần đăng nhập</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>🛒 Giỏ Hàng</h4>
-                        <p>Lưu trữ tạm thời sản phẩm khách hàng chọn trước khi thanh toán.</p>
+                        <p>Thêm sản phẩm vào giỏ hàng yêu cầu đăng nhập. Lưu trữ tạm thời sản phẩm khách hàng chọn trước khi thanh toán.</p>
                         <ul>
+                            <li>Yêu cầu đăng nhập khi thêm vào giỏ</li>
                             <li>Hiển thị danh sách sản phẩm đã chọn</li>
                             <li>Thay đổi số lượng từng sản phẩm</li>
                             <li>Xóa sản phẩm khỏi giỏ</li>
@@ -842,25 +853,27 @@ graph TD
 
                     <div class="feature-detail-card">
                         <h4>💳 Thanh Toán COD</h4>
-                        <p>Phương thức thanh toán khi nhận hàng, đơn giản và an toàn cho khách hàng.</p>
+                        <p>Phương thức thanh toán khi nhận hàng, đơn giản và an toàn cho khách hàng. Thông tin giao hàng được lưu cho các đơn sau.</p>
                         <ul>
-                            <li>Nhập thông tin giao hàng: tên, SĐT, địa chỉ</li>
+                            <li>Nếu đã mua trước: hiển thị thông tin đã lưu</li>
+                            <li>Nếu chưa mua: nhập tên, SĐT, địa chỉ</li>
                             <li>Ghi chú cho đơn hàng (tùy chọn)</li>
                             <li>Xác nhận thông tin trước khi đặt</li>
                             <li>Không cần thanh toán online</li>
                             <li>Thanh toán tiền mặt khi nhận hàng</li>
+                            <li>Thông tin tự động lưu cho đơn hàng sau</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
-                        <h4>📧 Email Xác Nhận</h4>
-                        <p>Hệ thống tự động gửi email xác nhận sau khi đặt hàng thành công.</p>
+                        <h4>📧 Thông Báo Đặt Hàng</h4>
+                        <p>Hệ thống thông báo đặt hàng thành công ngay trên màn hình. Chỉ admin nhận email khi có đơn hàng mới.</p>
                         <ul>
+                            <li>Hiển thị thông báo thành công trên màn hình</li>
                             <li>Mã đơn hàng: ORD-YYYYMMDD-XXX</li>
-                            <li>Chi tiết sản phẩm đã đặt</li>
-                            <li>Thông tin giao hàng</li>
-                            <li>Tổng số tiền cần thanh toán</li>
-                            <li>Link theo dõi đơn hàng</li>
+                            <li>Admin nhận email thông báo đơn hàng mới</li>
+                            <li>Email admin chứa chi tiết đơn hàng</li>
+                            <li>Không gửi email xác nhận cho khách hàng</li>
                         </ul>
                     </div>
 
@@ -908,40 +921,43 @@ graph TD
                     <h3 style="text-align:center; margin-bottom:20px; font-weight:700;">Sơ Đồ Quy Trình Đặt Đồng Phục Đội</h3>
                     <div class="mermaid">
 graph TD
-    A[Trang Chủ] --> B[Xem Sản Phẩm Có Tùy Chỉnh]
-    B --> C{Đã Đăng Nhập?}
-    C -->|Chưa| D[Đăng Ký / Đăng Nhập]
-    C -->|Rồi| E[Chọn Sản Phẩm Đội Bóng]
-    D --> E
-    E --> F[Chọn Bộ Màu Sắc]
-    F --> G[Upload Logo Đội]
-    G --> H[Thêm Tên Đội]
-    H --> I[Thiết Kế Mockup]
-    I --> J{Thiết Kế Xong?}
-    J -->|Chưa| I
-    J -->|Rồi| K[Nhập Danh Sách Cầu Thủ]
-    K --> L[Paste Từ Excel / Nhập Thủ Công]
-    L --> M[Xác Nhận Size & Số Áo]
-    M --> N[Tính Phí In Ấn]
-    N --> O{Thêm N Bộ Để Giảm Phí?}
-    O -->|Có| K
-    O -->|Không| P[Thêm Vào Giỏ Hàng]
-    P --> Q[Xem Giỏ Hàng Đội]
-    Q --> R[Thanh Toán COD]
-    R --> S[Nhập Thông Tin Giao Hàng]
-    S --> T[Xác Nhận Đơn Hàng]
-    T --> U[Nhận Email + Excel + Link Logo]
-    U --> V[Chờ Xử Lý & In Ấn]
-    V --> W[Đang Giao Hàng]
-    W --> X[Nhận Hàng & Thanh Toán]
-                    </div>
+    A[Trang Chủ] --> B[Xem Danh Sách Sản Phẩm]
+    B --> C[Lọc / Tìm Kiếm]
+    C --> D[Xem Chi Tiết Sản Phẩm]
+    D --> E{Sản Phẩm Có Tag Custom?}
+    E -->|Có| F[Chọn Bộ Màu Sắc]
+    E -->|Không| G[Mua Thường Không Custom]
+    F --> H{Thêm Vào Giỏ?}
+    H -->|Không| D
+    H -->|Có| I{Đã Đăng Nhập?}
+    I -->|Chưa| J[Đăng Ký / Đăng Nhập]
+    I -->|Rồi| K[Upload Logo Đội Tùy Chọn]
+    J --> K
+    K --> L[Thiết Kế Mockup Tùy Chọn]
+    L --> M{Thêm Danh Sách Cầu Thủ?}
+    M -->|Có| N[Paste Excel / Nhập Thủ Công]
+    M -->|Không| O[Không Nhập Cầu Thủ]
+    N --> P[Tính Phí In Ấn]
+    O --> P
+    P --> Q[Thêm Vào Giỏ Hàng]
+    Q --> R[Xem Giỏ Hàng Đội]
+    R --> S{Tiếp Tục Mua?}
+    S -->|Có| B
+    S -->|Không| T[Thanh Toán COD]
+    T --> U[Nhập Thông Tin Giao Hàng]
+    U --> V[Xác Nhận Đơn Hàng]
+    V --> W[Thông Báo Đặt Hàng Thành Công]
+    W --> X[Admin Nhận Email + Excel + Logo]
+    X --> Y[Chờ Xử Lý & In Ấn]
+    Y --> Z[Đang Giao Hàng]
+    Z --> AA[Nhận Hàng & Thanh Toán]
                 </div>
 
                 <div class="flow-steps">
                     <div class="flow-step">
                         <span class="step-number">1</span>
-                        <h4>Chọn Sản Phẩm Đội</h4>
-                        <p>Tìm sản phẩm có nhãn "Đồng phục tùy chỉnh". Chọn mẫu áo/đồng phục phù hợp với đội. Chỉ hiển thị trên máy tính (desktop).</p>
+                        <h4>Xem Sản Phẩm</h4>
+                        <p>Tìm và chọn sản phẩm từ danh sách. Nếu sản phẩm có tag "Custom", sẽ hiển thị công cụ thiết kế mockup. Nếu không, mua như sản phẩm thường.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">2</span>
@@ -950,18 +966,18 @@ graph TD
                     </div>
                     <div class="flow-step">
                         <span class="step-number">3</span>
-                        <h4>Upload Logo</h4>
-                        <p>Upload file logo đội (PNG, JPG, SVG, tối đa 5MB). Hệ thống kiểm tra chất lượng. Nếu logo mờ, hiển thị cảnh báo nhưng vẫn cho phép upload.</p>
+                        <h4>Upload Logo (Tùy Chọn)</h4>
+                        <p>Upload file logo đội (PNG, JPG, SVG, tối đa 5MB). Hệ thống kiểm tra chất lượng. Có thể chọn không upload nếu không cần thiết kế.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">4</span>
-                        <h4>Thiết Kế Mockup</h4>
-                        <p>Kéo thả logo vào vị trí mong muốn trên áo (mặt trước, mặt sau, tay áo, quần). Có thể thêm nhiều logo (logo đội, nhà tài trợ, cờ...). Xoay, thay đổi kích thước logo.</p>
+                        <h4>Thiết Kế Mockup (Tùy Chọn)</h4>
+                        <p>Kéo thả logo vào vị trí mong muốn trên áo (mặt trước, mặt sau, tay áo, quần). Có thể thêm nhiều logo. Xoay, thay đổi kích thước. Có thể bỏ qua nếu không cần thiết kế.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">5</span>
-                        <h4>Nhập Danh Sách Cầu Thủ</h4>
-                        <p>Nhập thủ công từng cầu thủ hoặc paste từ Excel. Các cột: Tên, Số áo, Size áo (bắt buộc), Size quần. Hệ thống tự động nhận diện cột Excel.</p>
+                        <h4>Nhập Danh Sách Cầu Thủ (Tùy Chọn)</h4>
+                        <p>Nhập thủ công từng cầu thủ hoặc paste từ Excel. Không bắt buộc trường nào. Các cột: Tên, Số áo, Size áo, Size quần. Tất cả đều tùy chọn.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">6</span>
@@ -971,12 +987,12 @@ graph TD
                     <div class="flow-step">
                         <span class="step-number">7</span>
                         <h4>Thêm Vào Giỏ</h4>
-                        <p>Thêm thiết kế đồng phục vào giỏ hàng dưới dạng "gói đội". Có thể thêm nhiều gói đội khác nhau vào cùng một đơn hàng.</p>
+                        <p>Thêm thiết kế đồng phục vào giỏ hàng. Có thể thêm nhiều gói đội khác nhau vào cùng một đơn hàng.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">8</span>
                         <h4>Thanh Toán & Giao Hàng</h4>
-                        <p>Quy trình thanh toán giống mua thường. Nhận email kèm file Excel danh sách cầu thủ và link download logo. Shop in ấn theo thiết kế.</p>
+                        <p>Quy trình thanh toán giống mua thường. Admin nhận email kèm file Excel danh sách cầu thủ (nếu có) và link download logo (nếu có).</p>
                     </div>
                 </div>
 
@@ -985,39 +1001,45 @@ graph TD
                     
                     <div class="feature-detail-card">
                         <h4>🎨 Công Cụ Thiết Kế Mockup</h4>
-                        <p>Cho phép khách hàng tự thiết kế đồng phục trực tuyến trên ảnh sản phẩm thật.</p>
+                        <p>Cho phép khách hàng tự thiết kế đồng phục trực tuyến trên ảnh sản phẩm thật. Chỉ hiển thị khi sản phẩm có tag "Custom".</p>
                         <ul>
+                            <li>Chỉ hiển thị nếu sản phẩm có tag "Custom"</li>
                             <li>Giao diện kéo-thả logo vào vị trí tùy ý</li>
                             <li>4 góc nhìn: mặt trước, mặt sau, tay áo, quần</li>
                             <li>Hỗ trợ nhiều logo trên cùng một sản phẩm</li>
                             <li>Xoay, thay đổi kích thước logo</li>
                             <li>Lưu vị trí logo theo % (responsive)</li>
                             <li>Chỉ hoạt động trên máy tính (desktop)</li>
+                            <li>Có thể bỏ qua nếu không cần thiết kế</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>📤 Upload Logo</h4>
-                        <p>Hệ thống cho phép upload logo đội với nhiều định dạng và kiểm tra chất lượng.</p>
+                        <p>Hệ thống cho phép upload logo đội với nhiều định dạng và kiểm tra chất lượng. Hoàn toàn tùy chọn.</p>
                         <ul>
+                            <li>Upload logo là tùy chọn</li>
                             <li>Định dạng: PNG, JPG, SVG (tối đa 5MB)</li>
                             <li>SVG được kiểm tra bảo mật trước khi lưu</li>
                             <li>Kiểm tra kích thước logo (&lt;300px = cảnh báo)</li>
                             <li>Hiển thị danh sách logo đã upload</li>
                             <li>Có thể xóa logo đã upload</li>
                             <li>Logo lưu trên đám mây an toàn</li>
+                            <li>Có thể tiếp tục mà không upload logo</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>📋 Danh Sách Cầu Thủ</h4>
-                        <p>Quản lý danh sách cầu thủ với thông tin chi tiết cho in ấn.</p>
+                        <p>Quản lý danh sách cầu thủ với thông tin chi tiết cho in ấn. Tất cả trường đều tùy chọn.</p>
                         <ul>
                             <li>Nhập thủ công từng dòng: Tên, Số áo, Size áo, Size quần</li>
                             <li>Paste từ Excel/Google Sheets (tự động nhận diện cột)</li>
-                            <li>Size áo bắt buộc, tên và số áo tùy chọn</li>
+                            <li>Không bắt buộc trường nào</li>
+                            <li>Tất cả trường đều tùy chọn</li>
                             <li>Tên/Số trống = áo trơn không in</li>
                             <li>Hiển thị số lượng cầu thủ theo thời gian thực</li>
+                            <li>Có thể tiếp tục mà không nhập danh sách</li>
                         </ul>
                     </div>
 
@@ -1036,13 +1058,14 @@ graph TD
 
                     <div class="feature-detail-card">
                         <h4>📧 Email Kèm File</h4>
-                        <p>Shop nhận email đầy đủ thông tin để in ấn và sản xuất.</p>
+                        <p>Admin nhận email đầy đủ thông tin để in ấn và sản xuất. Khách chỉ nhận thông báo thành công trên màn hình.</p>
                         <ul>
                             <li>Thông tin đơn hàng và khách hàng</li>
-                            <li>File Excel 2 sheet: thông tin đơn + danh sách cầu thủ</li>
-                            <li>Link download tất cả logo đã upload</li>
-                            <li>Link xem mockup thiết kế</li>
-                            <li>Gửi email cho shop và khách hàng</li>
+                            <li>File Excel 2 sheet: thông tin đơn + danh sách cầu thủ (nếu có)</li>
+                            <li>Link download tất cả logo đã upload (nếu có)</li>
+                            <li>Link xem mockup thiết kế (nếu có)</li>
+                            <li>Chỉ admin nhận email</li>
+                            <li>Khách nhận thông báo thành công trên màn hình</li>
                         </ul>
                     </div>
 
@@ -1085,9 +1108,9 @@ graph TD
     C -->|Chỉnh Sửa SP| F[Danh Sách Sản Phẩm]
     C -->|Báo Cáo| G[Xem Thống Kê]
 
-    D --> H[Lọc / Tìm Kiếm Đơn]
+    D --> H[Lọc Tìm Kiếm Đơn]
     H --> I[Xem Chi Tiết Đơn]
-    I --> J[Xem Mockup + Danh Sách Cầu Thủ]
+    I --> J[Xem Mockup Danh Sách]
     I --> K[Download Excel]
     I --> L[Download Logo]
     J --> M[Cập Nhật Trạng Thái]
@@ -1096,18 +1119,19 @@ graph TD
 
     E --> O[Map Cột CSV]
     O --> P[Xem Preview Nhóm]
-    P --> Q[Upload Ảnh Mỗi Bộ Màu]
-    Q --> R[Xác Nhận Import]
-    R --> S[Sản Phẩm Đã Thêm]
+    P --> Q[Chỉnh Sửa Tên Giá Inline]
+    Q --> R[Upload Ảnh Màu Tự Do]
+    R --> S[Xác Nhận Import]
+    S --> T[Sản Phẩm Đã Thêm]
 
-    F --> T[Chọn Sản Phẩm]
-    T --> U[Chỉnh Sửa Thông Tin]
-    U --> V[Thêm / Xóa Bộ Màu]
-    V --> W[Upload Ảnh 4 Góc]
-    W --> X[Lưu Thay Đổi]
+    F --> U[Chọn Sản Phẩm]
+    U --> V[Chỉnh Sửa Thông Tin]
+    V --> W[Thêm Xóa Bộ Màu]
+    W --> X[Upload Ảnh Tự Do]
+    X --> Y[Lưu Thay Đổi]
 
-    G --> Y[Xem Doanh Thu Theo Ngày]
-    G --> Z[Xem Top 5 Sản Phẩm Bán Chạy]
+    G --> Z[Xem Doanh Thu]
+    G --> AA[Xem Top Sản Phẩm]
                     </div>
                 </div>
 
@@ -1140,7 +1164,7 @@ graph TD
                     <div class="flow-step">
                         <span class="step-number">6</span>
                         <h4>Import Sản Phẩm</h4>
-                        <p>Upload file CSV từ nhà cung cấp. Map cột CSV sang trường database. Preview nhóm sản phẩm. Upload ảnh thủ công cho mỗi bộ màu (4 góc). Xác nhận import.</p>
+                        <p>Upload file CSV từ nhà cung cấp. Map cột CSV sang trường database. Preview nhóm sản phẩm. Chỉnh sửa tên, giá, mô tả ngay trong giao diện import. Upload ảnh không giới hạn số lượng cho mỗi bộ màu. Xác nhận import.</p>
                     </div>
                     <div class="flow-step">
                         <span class="step-number">7</span>
@@ -1208,24 +1232,25 @@ graph TD
 
                     <div class="feature-detail-card">
                         <h4>📤 Import Sản Phẩm Từ CSV</h4>
-                        <p>Nhập sản phẩm hàng loạt từ file CSV của nhà cung cấp.</p>
+                        <p>Nhập sản phẩm hàng loạt từ file CSV của nhà cung cấp. Có thể chỉnh sửa ngay trong giao diện import.</p>
                         <ul>
                             <li>Upload file CSV (định dạng chuẩn)</li>
                             <li>Map cột CSV sang trường database (auto-suggest)</li>
                             <li>Preview nhóm sản phẩm theo tên</li>
+                            <li>Chỉnh sửa tên, giá, mô tả ngay trong giao diện import trước khi xác nhận</li>
                             <li>Toggle "Cho phép tùy chỉnh mockup" cho mỗi nhóm</li>
-                            <li>Upload ảnh thủ công: 4 góc (trước, sau, tay, quần) cho mỗi bộ màu</li>
+                            <li>Upload ảnh không giới hạn số lượng cho mỗi bộ màu</li>
                             <li>Xác nhận import → tạo sản phẩm, bộ màu, ảnh, size</li>
                         </ul>
                     </div>
 
                     <div class="feature-detail-card">
                         <h4>🛠️ Chỉnh Sửa Sản Phẩm</h4>
-                        <p>Chỉnh sửa chi tiết sản phẩm sau khi đã import.</p>
+                        <p>Chỉnh sửa chi tiết sản phẩm sau khi đã import hoặc nếu thấy sai sau import.</p>
                         <ul>
                             <li>Chỉnh sửa: tên, mô tả, giá, danh mục</li>
                             <li>Quản lý bộ màu: thêm, xóa, chỉnh sửa</li>
-                            <li>Upload/đổi ảnh cho mỗi bộ màu (4 góc)</li>
+                            <li>Upload/đổi ảnh cho mỗi bộ màu (không giới hạn số lượng)</li>
                             <li>Chỉnh sửa số lượng tồn kho theo size</li>
                             <li>Bật/tắt tính năng tùy chỉnh mockup</li>
                             <li>Ẩn/hiện sản phẩm khỏi storefront</li>
