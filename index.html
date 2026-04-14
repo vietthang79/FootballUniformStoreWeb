@@ -2,1515 +2,1673 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nền Tảng Bán Đồ Bóng Đá Chuyên Nghiệp - Football Uniform Store</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StarSport — Nền Tảng Đặt Đồng Phục Bóng Đá Trực Tuyến</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontSize: '18px',
+                fontFamily: 'Montserrat, sans-serif',
+                primaryColor: '#FDD017',
+                primaryTextColor: '#0F172A',
+                primaryBorderColor: '#FDD017',
+                lineColor: '#64748B',
+                secondaryColor: '#00AEEF',
+                tertiaryColor: '#E31E26',
+                background: '#FFFFFF',
+                mainBkg: '#FFFFFF',
+                nodeBorder: '#E2E8F0',
+                clusterBkg: '#F8FAFC',
+                clusterBorder: '#E2E8F0',
+                titleColor: '#0F172A',
+                edgeLabelBackground: '#FFFFFF',
+                actorBkg: '#FFFFFF',
+                actorBorder: '#E2E8F0',
+                actorTextColor: '#0F172A',
+                actorLineColor: '#64748B',
+                signalColor: '#0F172A',
+                signalTextColor: '#0F172A',
+                labelBoxBkgColor: '#FFFFFF',
+                labelBoxBorderColor: '#E2E8F0',
+                labelTextColor: '#0F172A',
+                loopTextColor: '#0F172A',
+                noteBorderColor: '#E2E8F0',
+                noteBkgColor: '#F8FAFC',
+                noteTextColor: '#0F172A',
+                activationBorderColor: '#64748B',
+                activationBkgColor: '#F8FAFC',
+                sequenceNumberColor: '#0F172A'
+            },
+            flowchart: {
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 60
+            }
+        });
+    </script>
     <style>
-        * {
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         :root {
-            --primary: #FDD017;
-            --secondary: #E31E26;
-            --accent-blue: #00AEEF;
-            --accent-gray: #A7A9AC;
-            --dark: #1a1a1a;
-            --light: #ffffff;
-            --gray-100: #f5f5f5;
-            --gray-200: #e5e5e5;
-            --gray-600: #4a4a4a;
-            --gray-800: #2d2d2d;
+            --yellow: #FDD017;
+            --red: #E31E26;
+            --blue: #00AEEF;
+            --gray: #A7A9AC;
+            --dark: #0F172A;
+            --surface: #F8FAFC;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --text-muted: #64748B;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
+            background: var(--surface);
             color: var(--dark);
-            background: var(--light);
+            line-height: 1.65;
+            font-size: 16px;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .nav-logo-badge {
+            background: var(--yellow);
+            color: var(--dark);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: var(--surface);
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* ── SECTION WRAPPER ── */
+        .section {
+            padding: 5rem 1.5rem;
+        }
+
+        .section--dark {
+            background: var(--dark);
+            color: var(--white);
+        }
+
+        .section--yellow {
+            background: var(--yellow);
+            color: var(--dark);
+        }
+
+        .section--red {
+            background: var(--red);
+            color: var(--white);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
-        /* Header */
-        header {
-            background: var(--dark);
-            color: var(--light);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* ── TYPOGRAPHY ── */
+        .eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            opacity: 0.7;
         }
 
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.15;
         }
 
-        .logo {
-            font-size: 24px;
+        h2 {
+            font-size: clamp(1.5rem, 3.5vw, 2.4rem);
             font-weight: 800;
-            color: var(--primary);
-        }
-
-        .logo span {
-            color: var(--light);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--gray-800) 100%);
-            color: var(--light);
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
             line-height: 1.2;
         }
 
-        .hero h1 span {
-            color: var(--primary);
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: var(--gray-200);
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: var(--primary);
-            color: var(--dark);
-            padding: 15px 40px;
-            font-size: 18px;
+        h3 {
+            font-size: 1.15rem;
             font-weight: 700;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-            cursor: pointer;
         }
 
-        .cta-button:hover {
-            background: var(--secondary);
-            color: var(--light);
-            transform: translateY(-2px);
+        p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.75;
         }
 
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-            background: var(--gray-100);
+        .section--dark p,
+        .section--red p {
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--dark);
+        .section--yellow p {
+            color: rgba(0, 0, 0, 0.65);
         }
 
-        .section-subtitle {
-            text-align: center;
-            font-size: 18px;
-            color: var(--gray-600);
-            max-width: 700px;
-            margin: 0 auto 60px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--light);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .feature-card p {
-            color: var(--gray-600);
-            font-size: 16px;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 80px 0;
-            background: var(--light);
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
-        }
-
-        .step {
-            text-align: center;
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--secondary);
-            color: var(--light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0 auto 20px;
-        }
-
-        .step h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .step p {
-            color: var(--gray-600);
-            font-size: 15px;
-        }
-
-        /* Benefits */
-        .benefits {
-            padding: 80px 0;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, #0088cc 100%);
-            color: var(--light);
-        }
-
-        .benefits .section-title,
-        .benefits .section-subtitle {
-            color: var(--light);
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .benefit-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .benefit-item h4 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .benefit-item p {
-            font-size: 15px;
-            opacity: 0.9;
-        }
-
-        /* Target Customers */
-        .customers {
-            padding: 80px 0;
-            background: var(--gray-100);
-        }
-
-        .customer-types {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .customer-card {
-            background: var(--light);
-            padding: 35px;
-            border-radius: 12px;
-            border-left: 5px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        }
-
-        .customer-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .customer-card ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .customer-card li {
-            padding: 8px 0;
-            color: var(--gray-600);
-            font-size: 15px;
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #1E293B 60%, #0F172A 100%);
+            color: var(--white);
+            padding: 7rem 1.5rem 6rem;
             position: relative;
-            padding-left: 25px;
+            overflow: hidden;
         }
 
-        .customer-card li:before {
-            content: "✓";
+        .hero::before {
+            content: '';
             position: absolute;
-            left: 0;
-            color: var(--primary);
+            top: -80px;
+            right: -80px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(253, 208, 23, 0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -60px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 174, 239, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(253, 208, 23, 0.15);
+            border: 1px solid rgba(253, 208, 23, 0.4);
+            color: var(--yellow);
+            font-size: 0.78rem;
             font-weight: 700;
+            padding: 5px 16px;
+            border-radius: 999px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
         }
 
-        /* CTA Section */
-        .cta-section {
-            padding: 80px 0;
-            background: var(--dark);
-            color: var(--light);
-            text-align: center;
+        .hero h1 {
+            margin-bottom: 1.25rem;
         }
 
-        .cta-section h2 {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 20px;
+        .hero h1 span {
+            color: var(--yellow);
         }
 
-        .cta-section p {
-            font-size: 18px;
-            color: var(--gray-200);
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+        .hero-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 620px;
+            margin-bottom: 2.5rem;
         }
 
-        .cta-section .cta-button {
-            background: var(--primary);
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--yellow);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-weight: 500;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--yellow);
             color: var(--dark);
         }
 
-        /* Footer */
-        footer {
-            background: var(--gray-800);
-            color: var(--light);
-            padding: 40px 0;
-            text-align: center;
+        .btn-primary:hover {
+            background: #e8bc00;
+            transform: translateY(-1px);
         }
 
-        footer p {
-            color: var(--gray-200);
-            font-size: 14px;
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .section-title {
-                font-size: 28px;
-            }
-
-            nav {
-                display: none;
-            }
-
-            .features-grid,
-            .steps,
-            .benefits-grid,
-            .customer-types {
-                grid-template-columns: 1fr;
-            }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        /* User Flows Section */
-        .user-flows {
-            padding: 80px 0;
-            background: var(--light);
-        }
-
-        .role-tabs {
+        .btn-group {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .role-tab {
-            padding: 12px 30px;
-            background: var(--gray-200);
-            border: none;
-            border-radius: 30px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .role-tab.active {
-            background: var(--primary);
-            color: var(--dark);
-        }
-
-        .role-tab:hover {
-            background: var(--secondary);
-            color: var(--light);
-        }
-
-        .role-content {
-            display: none;
-        }
-
-        .role-content.active {
-            display: block;
-        }
-
-        .role-description {
-            background: var(--gray-100);
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-        }
-
-        .role-description h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .role-description p {
-            color: var(--gray-600);
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        .role-description ul {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 20px;
-        }
-
-        .role-description li {
-            padding: 10px 0;
-            color: var(--gray-600);
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .role-description li:before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .flow-diagram {
-            background: var(--gray-100);
-            padding: 40px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            overflow-x: auto;
-        }
-
-        .flow-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .flow-step {
-            background: var(--light);
-            padding: 30px;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-blue);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .flow-step h4 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--dark);
-        }
-
-        .flow-step p {
-            color: var(--gray-600);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .flow-step .step-number {
-            display: inline-block;
-            background: var(--accent-blue);
-            color: var(--light);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+        /* ── SECTION HEADER ── */
+        .section-header {
             text-align: center;
-            line-height: 30px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 3.5rem;
         }
 
-        .feature-details {
-            margin-top: 60px;
+        .section-header h2 {
+            margin-bottom: 1rem;
         }
 
-        .feature-detail-card {
-            background: var(--light);
-            padding: 35px;
+        .section-header p {
+            max-width: 560px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+        }
+
+        /* ── FEATURE CARDS ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
             border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
         }
 
-        .feature-detail-card h4 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark);
+        .feature-icon svg {
+            width: 26px;
+            height: 26px;
         }
 
-        .feature-detail-card p {
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 15px;
+        .icon-yellow {
+            background: rgba(253, 208, 23, 0.15);
+            color: #8B6F00;
         }
 
-        .feature-detail-card ul {
-            list-style: none;
-            padding-left: 0;
+        .icon-red {
+            background: rgba(227, 30, 38, 0.1);
+            color: var(--red);
         }
 
-        .feature-detail-card li {
-            padding: 8px 0;
-            color: var(--gray-600);
-            font-size: 14px;
+        .icon-blue {
+            background: rgba(0, 174, 239, 0.12);
+            color: #0077AA;
+        }
+
+        .icon-green {
+            background: rgba(34, 197, 94, 0.12);
+            color: #15803D;
+        }
+
+        .icon-purple {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7C3AED;
+        }
+
+        .icon-orange {
+            background: rgba(249, 115, 22, 0.12);
+            color: #C2410C;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.92rem;
+        }
+
+        /* ── ROLE CARDS ── */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .role-card {
+            border-radius: 20px;
+            padding: 2.25rem;
+            border: 1px solid var(--border);
+            background: var(--white);
             position: relative;
-            padding-left: 25px;
+            overflow: hidden;
         }
 
-        .feature-detail-card li:before {
-            content: "•";
+        .role-card::before {
+            content: '';
             position: absolute;
+            top: 0;
             left: 0;
-            color: var(--primary);
+            right: 0;
+            height: 4px;
+        }
+
+        .role-card.customer::before {
+            background: linear-gradient(90deg, var(--yellow), #F59E0B);
+        }
+
+        .role-card.admin::before {
+            background: linear-gradient(90deg, var(--red), #DC2626);
+        }
+
+        .role-badge {
+            display: inline-block;
+            font-size: 0.72rem;
             font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-customer {
+            background: rgba(253, 208, 23, 0.2);
+            color: #7A6000;
+        }
+
+        .badge-admin {
+            background: rgba(227, 30, 38, 0.1);
+            color: var(--red);
+        }
+
+        .role-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card p {
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .action-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .action-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+
+        .customer .action-list li::before {
+            background: var(--yellow);
+        }
+
+        .admin .action-list li::before {
+            background: var(--red);
+        }
+
+        /* ── FLOW DIAGRAM ── */
+        .flow-container {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            min-height: 400px;
+        }
+
+        .flow-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flow-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
         }
 
         .mermaid {
             display: flex;
             justify-content: center;
+            min-height: 300px;
+        }
+
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ── PRICING / FEE TABLE ── */
+        .fee-table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: var(--dark);
+            color: var(--white);
+        }
+
+        thead th {
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            background: var(--white);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        tbody td {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .highlight-cell {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        .green-cell {
+            color: #15803D;
+            font-weight: 700;
+        }
+
+        /* ── ORDER STATUS TRACK ── */
+        .status-track {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .status-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            width: 80px;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .status-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .status-desc {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .s-pending {
+            background: rgba(253, 208, 23, 0.2);
+        }
+
+        .s-process {
+            background: rgba(0, 174, 239, 0.15);
+        }
+
+        .s-ship {
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .s-done {
+            background: rgba(34, 197, 94, 0.15);
+        }
+
+        .status-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .arrow-right {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            border: 4px solid transparent;
+            border-left: 6px solid var(--border);
+        }
+
+        /* ── BENEFITS GRID ── */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 1.75rem;
+        }
+
+        .benefit-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: var(--yellow);
+        }
+
+        .benefit-item p {
+            font-size: 0.88rem;
+        }
+
+        /* ── PHASE TIMELINE ── */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 32px 1fr;
+            gap: 0 1.25rem;
+            padding-bottom: 1.5rem;
+            align-items: start;
+        }
+
+        .timeline-date {
+            text-align: right;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-top: 3px;
+        }
+
+        .timeline-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--yellow);
+            border: 2px solid var(--white);
+            box-shadow: 0 0 0 3px rgba(253, 208, 23, 0.25);
+            flex-shrink: 0;
+        }
+
+        .timeline-connector {
+            width: 2px;
+            background: var(--border);
+            flex: 1;
+            min-height: 32px;
+        }
+
+        .timeline-item:last-child .timeline-connector {
+            display: none;
+        }
+
+        .timeline-content {
+            padding-top: 0;
+        }
+
+        .timeline-content h3 {
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .timeline-content p {
+            font-size: 0.85rem;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 8px;
+            border-radius: 999px;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .pb-1 {
+            background: rgba(0, 174, 239, 0.12);
+            color: #0077AA;
+        }
+
+        .pb-2 {
+            background: rgba(253, 208, 23, 0.2);
+            color: #7A6000;
+        }
+
+        .pb-3 {
+            background: rgba(34, 197, 94, 0.12);
+            color: #15803D;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--dark);
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        footer strong {
+            color: var(--yellow);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+            margin: 1rem auto 0;
+        }
+
+        .divider-yellow {
+            background: var(--yellow);
+        }
+
+        .divider-red {
+            background: var(--red);
+        }
+
+        .divider-white {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .divider-left {
+            margin-left: 0;
+        }
+
+        /* ── CALLOUT BOX ── */
+        .callout {
+            border-radius: 14px;
+            padding: 1.5rem 1.75rem;
+            border-left: 4px solid;
+            margin-top: 1.5rem;
+        }
+
+        .callout-yellow {
+            background: rgba(253, 208, 23, 0.1);
+            border-color: var(--yellow);
+        }
+
+        .callout h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .callout p {
+            font-size: 0.88rem;
+        }
+
+        /* ── TAG ROW ── */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: rgba(0, 0, 0, 0.06);
+            color: var(--dark);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        .section--dark .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="logo">Football<span>Uniform</span></div>
-            <nav>
-                <ul>
-                    <li><a href="#features">Tính Năng</a></li>
-                    <li><a href="#how-it-works">Cách Hoạt Động</a></li>
-                    <li><a href="#user-flows">Luồng Người Dùng</a></li>
-                    <li><a href="#benefits">Lợi Ích</a></li>
-                    <li><a href="#customers">Khách Hàng</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- ══════════════ NAV ══════════════ -->
+    <nav>
+        <a href="#" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="13" fill="#FDD017" />
+                <path d="M14 4C8.477 4 4 8.477 4 14s4.477 10 10 10 10-4.477 10-10S19.523 4 14 4z" fill="#0F172A"
+                    opacity=".05" />
+                <path d="M9 11l5-3 5 3v6l-5 3-5-3v-6z" fill="#0F172A" stroke="#0F172A" stroke-width="1"
+                    stroke-linejoin="round" />
+            </svg>
+            StarSport
+            <span class="nav-logo-badge">PROPOSAL</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#overview">Tổng quan</a></li>
+            <li><a href="#features">Tính năng</a></li>
+            <li><a href="#roles">Người dùng</a></li>
+            <li><a href="#flows">Quy trình</a></li>
+            <li><a href="#pricing">Phí in ấn</a></li>
+            <li><a href="#timeline">Lộ trình</a></li>
+        </ul>
+    </nav>
+
+    <!-- ══════════════ HERO ══════════════ -->
+    <section class="hero" id="top">
         <div class="container">
-            <h1>Nền Tảng Bán Đồ Bóng Đá<br><span>Chuyên Nghiệp & Đa Dạng</span></h1>
-            <p>Giải pháp toàn diện cho đội bóng, câu lạc bộ và người yêu thích thể thao. Tự thiết kế đồng phục theo ý
-                muốn, quản lý đơn hàng dễ dàng, giao hàng toàn quốc.</p>
-            <a href="#contact" class="cta-button">Liên Hệ Ngay</a>
+            <div class="hero-tag">Đề xuất dự án &middot; 2026</div>
+            <h1>
+                Nền tảng đặt hàng &amp; thiết kế<br />
+                <span>đồng phục bóng đá trực tuyến</span>
+            </h1>
+            <p class="hero-desc">
+                Cho phép khách hàng tự thiết kế mockup đồng phục ngay trên ảnh sản phẩm thật,
+                đặt hàng cho cả đội, nhập danh sách cầu thủ — tất cả trong một quy trình đơn giản,
+                không cần gặp trực tiếp.
+            </p>
+            <div class="btn-group">
+                <a href="#features" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                    Xem tính năng
+                </a>
+                <a href="#flows" class="btn btn-outline">Xem quy trình sử dụng</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num">2</span>
+                    <span class="stat-label">Nhóm người dùng</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">4</span>
+                    <span class="stat-label">Góc nhìn thiết kế</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">COD</span>
+                    <span class="stat-label">Thanh toán nhận hàng</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">Trực tuyến &amp; tự động</span>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
+    <!-- ══════════════ OVERVIEW ══════════════ -->
+    <section class="section" id="overview">
         <div class="container">
-            <h2 class="section-title">Tính Năng Nổi Bật</h2>
-            <p class="section-subtitle">Trải nghiệm mua sắm và thiết kế đồng phục bóng đá chuyên nghiệp, tiện lợi và an
-                toàn</p>
+            <div class="section-header">
+                <p class="eyebrow">Tổng quan dự án</p>
+                <h2>StarSport là gì?</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>
+                    StarSport là một website thương mại điện tử chuyên về đồng phục bóng đá,
+                    cho phép khách hàng không chỉ mua sản phẩm có sẵn mà còn tự thiết kế mẫu đồng phục
+                    theo ý muốn của đội — tất cả ngay trên trình duyệt, không cần phần mềm chuyên dụng.
+                </p>
+            </div>
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Tự Thiết Kế Mockup</h3>
-                    <p>Khách hàng tự do thêm logo, tên đội, số áo vào vị trí tùy ý trên ảnh sản phẩm thật. Xem trước kết
-                        quả thời gian thực trước khi đặt hàng.</p>
+                    <div class="feature-icon icon-yellow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <path d="M9 9h6M9 12h6M9 15h4" />
+                        </svg>
+                    </div>
+                    <h3>Mua sản phẩm thông thường</h3>
+                    <p>Duyệt catalogue đầy đủ: giày, áo, quần, phụ kiện. Chọn màu sắc, kích cỡ và đặt hàng nhanh chóng.
+                    </p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">📦</div>
-                    <h3>Sản Phẩm Đa Dạng</h3>
-                    <p>Áo đấu, quần short, bộ đồng phục hoàn chỉnh, giày đá bóng và phụ kiện thể thao. Nhiều mẫu mã, màu
-                        sắc và size cho mọi lứa tuổi.</p>
+                    <div class="feature-icon icon-blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg>
+                    </div>
+                    <h3>Thiết kế đồng phục tùy chỉnh</h3>
+                    <p>Tự kéo thả logo vào vị trí mong muốn trên ảnh sản phẩm thật — 4 góc nhìn: mặt trước, mặt sau, tay
+                        áo, quần.</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>Đặt Hàng Theo Đội</h3>
-                    <p>Hỗ trợ đặt hàng theo đội với danh sách cầu thủ chi tiết. Tự động tính phí in ấn, xuất file Excel
-                        quản lý đơn hàng.</p>
+                    <div class="feature-icon icon-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                            <path d="M16 3.13a4 4 0 010 7.75" />
+                        </svg>
+                    </div>
+                    <h3>Đặt hàng cho cả đội</h3>
+                    <p>Nhập danh sách cầu thủ (tên, số áo, kích cỡ) bằng cách dán trực tiếp từ Excel. Đặt nhiều đội
+                        trong một lần thanh toán.</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">🚚</div>
-                    <h3>Giao Hàng Toàn Quốc</h3>
-                    <p>Mạng lưới giao hàng rộng khắp, đảm bảo hàng đến tay khách hàng nhanh chóng và an toàn. Thanh toán
-                        khi nhận hàng.</p>
+                    <div class="feature-icon icon-red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 17H7A5 5 0 017 7h2" />
+                            <path d="M15 7h2a5 5 0 010 10h-2" />
+                            <line x1="8" y1="12" x2="16" y2="12" />
+                        </svg>
+                    </div>
+                    <h3>Theo dõi đơn hàng</h3>
+                    <p>Khách hàng tự theo dõi trạng thái đơn hàng theo thời gian thực. Hủy đơn khi chưa xử lý — không
+                        cần liên hệ shop.</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3>Giá Cả Hợp Lý</h3>
-                    <p>Chính sách giá cạnh tranh, ưu đãi cho đơn hàng số lượng lớn. Phí in ấn giảm dần theo số lượng bộ
-                        đặt.</p>
+                    <div class="feature-icon icon-purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <path d="M8 21h8M12 17v4" />
+                        </svg>
+                    </div>
+                    <h3>Quản lý đơn hàng tập trung</h3>
+                    <p>Bộ phận quản lý xem toàn bộ đơn hàng, cập nhật trạng thái, xem chi tiết thiết kế và danh sách cầu
+                        thủ từ một màn hình.</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>An Toàn & Tin Cậy</h3>
-                    <p>Hệ thống bảo mật thông tin khách hàng. Quy trình đặt hàng minh bạch, hỗ trợ khách hàng 24/7.</p>
+                    <div class="feature-icon icon-orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                    <h3>Nhập hàng từ danh sách Excel</h3>
+                    <p>Quản trị viên tải lên file Excel của nhà cung cấp để cập nhật sản phẩm hàng loạt, không cần nhập
+                        tay từng sản phẩm.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
+    <!-- ══════════════ ROLES ══════════════ -->
+    <section class="section" style="background:#F1F5F9" id="roles">
         <div class="container">
-            <h2 class="section-title">Quy Trình Đặt Hàng</h2>
-            <p class="section-subtitle">Đơn giản, nhanh chóng, chỉ với vài bước cơ bản</p>
+            <div class="section-header">
+                <p class="eyebrow">Đối tượng sử dụng</p>
+                <h2>Ai sẽ dùng hệ thống này?</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>Hệ thống phục vụ hai nhóm người dùng chính với quyền hạn và thao tác riêng biệt.</p>
+            </div>
 
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Chọn Sản Phẩm</h3>
-                    <p>Tìm và chọn mẫu đồng phục ưng ý từ danh sách sản phẩm đa dạng</p>
+            <div class="roles-grid">
+                <!-- CUSTOMER -->
+                <div class="role-card customer">
+                    <span class="role-badge badge-customer">Khách hàng / Đội bóng</span>
+                    <h3>Người mua hàng</h3>
+                    <p>Cá nhân hoặc đại diện đội bóng muốn mua sản phẩm hoặc đặt đồng phục tùy chỉnh cho cả đội.</p>
+                    <ul class="action-list">
+                        <li>Đăng ký tài khoản và đăng nhập</li>
+                        <li>Duyệt sản phẩm, tìm kiếm theo tên</li>
+                        <li>Chọn màu sắc, kích cỡ — xem tồn kho từng size</li>
+                        <li>Tự thiết kế: kéo thả logo lên ảnh đồng phục (4 góc nhìn)</li>
+                        <li>Upload nhiều logo: logo CLB, nhà tài trợ, huy hiệu giải đấu</li>
+                        <li>Nhập danh sách cầu thủ (dán từ Excel, nhập tay)</li>
+                        <li>Thêm vào giỏ hàng — thanh toán một lần cho nhiều đội</li>
+                        <li>Theo dõi trạng thái đơn hàng</li>
+                        <li>Hủy đơn khi chưa được xử lý</li>
+                    </ul>
                 </div>
 
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Tùy Chỉnh Thiết Kế</h3>
-                    <p>Thêm logo, tên đội, số áo vào vị trí mong muốn trên sản phẩm</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Nhập Thông Tin</h3>
-                    <p>Điền danh sách cầu thủ, size, số áo cho từng thành viên</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Xác Nhận & Giao Hàng</h3>
-                    <p>Kiểm tra lại thông tin, xác nhận đơn hàng và chờ giao hàng</p>
+                <!-- ADMIN -->
+                <div class="role-card admin">
+                    <span class="role-badge badge-admin">Quản trị viên / Nhân viên shop</span>
+                    <h3>Người quản lý</h3>
+                    <p>Nhân viên nội bộ chịu trách nhiệm quản lý đơn hàng, sản phẩm và vận hành website.</p>
+                    <ul class="action-list">
+                        <li>Xem toàn bộ đơn hàng với bộ lọc trạng thái</li>
+                        <li>Cập nhật trạng thái đơn: đang xử lý → đang giao → đã giao</li>
+                        <li>Xem chi tiết thiết kế mockup và danh sách cầu thủ</li>
+                        <li>Tải xuống file Excel danh sách cầu thủ để giao in</li>
+                        <li>Nhận email thông báo tự động khi có đơn mới hoặc đơn bị hủy</li>
+                        <li>Nhập hàng loạt sản phẩm từ file Excel nhà cung cấp</li>
+                        <li>Chỉnh sửa thông tin sản phẩm sau khi import</li>
+                        <li>Upload ảnh sản phẩm theo từng màu sắc (4 góc chụp)</li>
+                        <li>Xem báo cáo doanh thu và sản phẩm bán chạy</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- User Flows Section -->
-    <section class="user-flows" id="user-flows">
+    <!-- ══════════════ FLOWS ══════════════ -->
+    <section class="section" id="flows">
         <div class="container">
-            <h2 class="section-title">Luồng Hoạt Động Chi Tiết</h2>
-            <p class="section-subtitle">Mô tả chi tiết quy trình hoạt động cho từng loại người dùng</p>
-
-            <div class="role-tabs">
-                <button class="role-tab active" onclick="showRole('customer-regular')">Khách Hàng Thường</button>
-                <button class="role-tab" onclick="showRole('customer-team')">Khách Hàng Đội Bóng</button>
-                <button class="role-tab" onclick="showRole('admin')">Quản Trị Viên</button>
+            <div class="section-header">
+                <p class="eyebrow">Quy trình sử dụng</p>
+                <h2>Khách hàng thao tác như thế nào?</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>Có hai luồng mua hàng: mua sản phẩm thông thường và đặt đồng phục tùy chỉnh theo đội.</p>
             </div>
 
-            <!-- Customer Regular Flow -->
-            <div id="customer-regular" class="role-content active">
-                <div class="role-description">
-                    <h3>🛒 Khách Hàng Thường (Mua Sản Phẩm Cơ Bản)</h3>
-                    <p>Khách hàng cá nhân mua sản phẩm đồng phục bóng đá, giày, phụ kiện không cần thiết kế riêng. Quy
-                        trình tập trung vào việc xem sản phẩm, chọn size/màu, thanh toán và nhận hàng.</p>
-                    <ul>
-                        <li><strong>Mục đích:</strong> Mua sắm sản phẩm có sẵn cho cá nhân hoặc nhóm nhỏ</li>
-                        <li><strong>Sản phẩm:</strong> Áo, quần, giày, phụ kiện không cần thiết kế</li>
-                        <li><strong>Thanh toán:</strong> COD (thanh toán khi nhận hàng)</li>
-                        <li><strong>Giao hàng:</strong> Toàn quốc qua đơn vị vận chuyển</li>
-                    </ul>
+            <!-- Flow 1 -->
+            <div class="flow-container" style="margin-bottom: 2rem;">
+                <div class="flow-title">
+                    <span class="flow-dot" style="background: var(--blue);"></span>
+                    Luồng 1 — Mua sản phẩm thông thường (giày, phụ kiện,...)
                 </div>
+                <div class="mermaid">
+                    flowchart TD
+                    A([🌐 Vào trang web]) --> B[🔍 Duyệt sản phẩm]
+                    B --> C{❓ Chưa đăng nhập?}
+                    C -- Có --> D[🔐 Đăng nhập / Đăng ký]
+                    D --> E
+                    C -- Không --> E[🎨 Chọn màu & kích cỡ]
+                    E --> F[🛒 Thêm vào giỏ hàng]
+                    F --> G[👁️ Xem giỏ hàng]
+                    G --> H[📍 Điền địa chỉ giao hàng]
+                    H --> I[✅ Xác nhận đặt hàng<br />💵 Thanh toán khi nhận hàng]
+                    I --> J([📋 Nhận mã đơn hàng<br />🔔 Theo dõi trạng thái])
 
-                <div class="flow-diagram">
-                    <h3 style="text-align:center; margin-bottom:20px; font-weight:700;">Sơ Đồ Quy Trình Mua Hàng Thường
-                    </h3>
-                    <div class="mermaid">
-                        graph TD
-                        A[Trang Chủ] --> B[Xem Danh Sách Sản Phẩm]
-                        B --> C[Lọc / Tìm Kiếm]
-                        C --> D[Xem Chi Tiết Sản Phẩm]
-                        D --> E[Chọn Màu Sắc]
-                        E --> F[Chọn Size]
-                        F --> G{Có Hàng?}
-                        G -->|Có| H{Thêm Vào Giỏ?}
-                        G -->|Hết| I[Chọn Size Khác]
-                        I --> F
-                        H -->|Có| J{Đã Đăng Nhập?}
-                        H -->|Không| D
-                        J -->|Chưa| K[Đăng Ký / Đăng Nhập]
-                        J -->|Rồi| L[Thêm Vào Giỏ Hàng]
-                        K --> L
-                        L --> M[Xem Giỏ Hàng]
-                        M --> N{Tiếp Tục Mua?}
-                        N -->|Có| B
-                        N -->|Không| O[Thanh Toán]
-                        O --> P{Đã Lưu Thông Tin?}
-                        P -->|Có| Q[Xem Thông Tin Đã Lưu]
-                        P -->|Không| R[Nhập Thông Tin Giao Hàng]
-                        Q --> R
-                        R --> S[Xác Nhận Đơn Hàng COD]
-                        S --> T[Thông Báo Đặt Hàng Thành Công]
-                        T --> U[Admin Nhận Email Đơn Mới]
-                        U --> V[Chờ Xử Lý Đơn Hàng]
-                        V --> W[Đang Giao Hàng]
-                        W --> X[Nhận Hàng & Thanh Toán]
-                    </div>
-                </div>
-
-                <div class="flow-steps">
-                    <div class="flow-step">
-                        <span class="step-number">1</span>
-                        <h4>Xem Sản Phẩm</h4>
-                        <p>Khách truy cập trang chủ, xem danh sách sản phẩm, lọc theo danh mục (áo, quần, giày, phụ
-                            kiện), tìm kiếm theo tên. Không cần đăng nhập.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">2</span>
-                        <h4>Xem Chi Tiết Sản Phẩm</h4>
-                        <p>Click vào sản phẩm để xem chi tiết. Chọn màu sắc từ bộ màu có sẵn. Chọn size (S, M, L, XL,
-                            2XL). Kiểm tra số lượng hàng tồn. Không cần đăng nhập.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">3</span>
-                        <h4>Thêm Vào Giỏ Hàng</h4>
-                        <p>Nhấn nút "Thêm vào giỏ hàng". Nếu chưa đăng nhập, hệ thống yêu cầu đăng nhập/đăng ký. Sau khi
-                            đăng nhập, sản phẩm được lưu vào giỏ hàng.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">4</span>
-                        <h4>Xem Giỏ Hàng</h4>
-                        <p>Xem danh sách sản phẩm đã chọn, thay đổi số lượng, xóa sản phẩm. Có thể tiếp tục mua thêm sản
-                            phẩm khác.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">5</span>
-                        <h4>Thanh Toán</h4>
-                        <p>Chuyển đến trang thanh toán. Nếu đã mua trước, hệ thống hiển thị thông tin giao hàng đã lưu.
-                            Nếu chưa, nhập tên, SĐT, địa chỉ. Thông tin được lưu cho các đơn sau.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">6</span>
-                        <h4>Xác Nhận Đơn Hàng</h4>
-                        <p>Hệ thống tạo mã đơn hàng (ORD-YYYYMMDD-XXX). Hiển thị thông báo đặt hàng thành công. Admin
-                            nhận email thông báo đơn hàng mới.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">7</span>
-                        <h4>Theo Dõi Đơn Hàng</h4>
-                        <p>Khách có thể xem trạng thái đơn hàng trong tài khoản: Đang chờ → Đang xử lý → Đang giao → Đã
-                            giao. Có thể hủy nếu đang chờ.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">8</span>
-                        <h4>Nhận Hàng</h4>
-                        <p>Nhận viên giao hàng giao đến địa chỉ. Khách kiểm tra hàng và thanh toán tiền mặt. Hoàn tất
-                            quy trình mua sắm.</p>
-                    </div>
-                </div>
-
-                <div class="feature-details">
-                    <h3 style="text-align:center; font-size:28px; font-weight:700; margin-bottom:40px;">Chi Tiết Tính
-                        Năng</h3>
-
-                    <div class="feature-detail-card">
-                        <h4>🔐 Đăng Nhập & Đăng Ký</h4>
-                        <p>Chỉ yêu cầu đăng nhập khi khách hàng thêm sản phẩm vào giỏ hàng. Có thể xem và tìm kiếm sản
-                            phẩm mà không cần đăng nhập.</p>
-                        <ul>
-                            <li>Đăng ký: Nhập email, mật khẩu, tên hiển thị</li>
-                            <li>Đăng nhập: Email + mật khẩu</li>
-                            <li>Quên mật khẩu: Nhập email → nhận link reset</li>
-                            <li>Phiên đăng nhập được lưu an toàn</li>
-                            <li>Không bắt buộc khi chỉ xem sản phẩm</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📋 Danh Sách Sản Phẩm</h4>
-                        <p>Trang hiển thị tất cả sản phẩm có sẵn với hình ảnh, giá, tên sản phẩm. Không cần đăng nhập để
-                            xem.</p>
-                        <ul>
-                            <li>Lọc theo danh mục: áo, quần, giày, phụ kiện</li>
-                            <li>Tìm kiếm theo tên sản phẩm</li>
-                            <li>Sắp xếp theo giá, mới nhất</li>
-                            <li>Hiển thị số lượng tồn kho</li>
-                            <li>Truy cập tự do không cần đăng nhập</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🎯 Chi Tiết Sản Phẩm</h4>
-                        <p>Trang chi tiết hiển thị đầy đủ thông tin sản phẩm để khách hàng ra quyết định. Không cần đăng
-                            nhập để xem.</p>
-                        <ul>
-                            <li>Hình ảnh sản phẩm từ nhiều góc độ</li>
-                            <li>Chọn màu sắc (nếu có nhiều màu)</li>
-                            <li>Chọn size với hiển thị số lượng tồn</li>
-                            <li>Thông tin mô tả sản phẩm chi tiết</li>
-                            <li>Giá bán rõ ràng</li>
-                            <li>Truy cập tự do không cần đăng nhập</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🛒 Giỏ Hàng</h4>
-                        <p>Thêm sản phẩm vào giỏ hàng yêu cầu đăng nhập. Lưu trữ tạm thời sản phẩm khách hàng chọn trước
-                            khi thanh toán.</p>
-                        <ul>
-                            <li>Yêu cầu đăng nhập khi thêm vào giỏ</li>
-                            <li>Hiển thị danh sách sản phẩm đã chọn</li>
-                            <li>Thay đổi số lượng từng sản phẩm</li>
-                            <li>Xóa sản phẩm khỏi giỏ</li>
-                            <li>Tính tổng tiền tự động</li>
-                            <li>Dữ liệu lưu trong trình duyệt (không mất khi đóng tab)</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>💳 Thanh Toán COD</h4>
-                        <p>Phương thức thanh toán khi nhận hàng, đơn giản và an toàn cho khách hàng. Thông tin giao hàng
-                            được lưu cho các đơn sau.</p>
-                        <ul>
-                            <li>Nếu đã mua trước: hiển thị thông tin đã lưu</li>
-                            <li>Nếu chưa mua: nhập tên, SĐT, địa chỉ</li>
-                            <li>Ghi chú cho đơn hàng (tùy chọn)</li>
-                            <li>Xác nhận thông tin trước khi đặt</li>
-                            <li>Không cần thanh toán online</li>
-                            <li>Thanh toán tiền mặt khi nhận hàng</li>
-                            <li>Thông tin tự động lưu cho đơn hàng sau</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📧 Thông Báo Đặt Hàng</h4>
-                        <p>Hệ thống thông báo đặt hàng thành công ngay trên màn hình. Chỉ admin nhận email khi có đơn
-                            hàng mới.</p>
-                        <ul>
-                            <li>Hiển thị thông báo thành công trên màn hình</li>
-                            <li>Mã đơn hàng: ORD-YYYYMMDD-XXX</li>
-                            <li>Admin nhận email thông báo đơn hàng mới</li>
-                            <li>Email admin chứa chi tiết đơn hàng</li>
-                            <li>Không gửi email xác nhận cho khách hàng</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📦 Theo Dõi Đơn Hàng</h4>
-                        <p>Khách hàng có thể xem trạng thái đơn hàng trong tài khoản của mình.</p>
-                        <ul>
-                            <li>Đang chờ: Đơn hàng mới tạo</li>
-                            <li>Đang xử lý: Shop đang chuẩn bị hàng</li>
-                            <li>Đang giao: Đang vận chuyển</li>
-                            <li>Đã giao: Đã nhận hàng thành công</li>
-                            <li>Đã hủy: Khách hoặc shop hủy đơn</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>❌ Hủy Đơn Hàng</h4>
-                        <p>Khách hàng có thể hủy đơn hàng nếu trạng thái là "Đang chờ".</p>
-                        <ul>
-                            <li>Chỉ hủy được khi đơn đang chờ xử lý</li>
-                            <li>Nút hủy hiển thị trong trang chi tiết đơn</li>
-                            <li>Xác nhận trước khi hủy</li>
-                            <li>Shop nhận email thông báo hủy</li>
-                            <li>Không thể hủy sau khi đã xử lý</li>
-                        </ul>
-                    </div>
+                    style A fill:#FDD017,color:#0F172A,stroke:#0F172A,stroke-width:2px
+                    style B fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style C fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style D fill:#00AEEF,color:#FFFFFF,stroke:#00AEEF,stroke-width:2px
+                    style E fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style F fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style G fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style H fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style I fill:#E31E26,color:#FFFFFF,stroke:#E31E26,stroke-width:2px
+                    style J fill:#22c55e,color:#FFFFFF,stroke:#22c55e,stroke-width:2px
                 </div>
             </div>
 
-            <!-- Customer Team Flow -->
-            <div id="customer-team" class="role-content">
-                <div class="role-description">
-                    <h3>🎨 Khách Hàng Đội Bóng (Thiết Kế Đồng Phục Tùy Chỉnh)</h3>
-                    <p>Đội bóng, câu lạc bộ cần thiết kế đồng phục riêng với logo, tên đội, số áo cho từng cầu thủ. Quy
-                        trình bao gồm thiết kế mockup trực tuyến, quản lý danh sách cầu thủ, tính phí in ấn tự động.</p>
-                    <ul>
-                        <li><strong>Mục đích:</strong> Đặt đồng phục đội bóng với thiết kế riêng</li>
-                        <li><strong>Sản phẩm:</strong> Áo, quần, bộ đồng phục có thể tùy chỉnh</li>
-                        <li><strong>Thiết kế:</strong> Tự thêm logo, tên đội, số áo theo ý muốn</li>
-                        <li><strong>Quản lý:</strong> Danh sách cầu thủ với size và số áo</li>
-                        <li><strong>Phí in:</strong> Tự động tính theo số lượng (giảm dần)</li>
-                    </ul>
+            <!-- Flow 2 -->
+            <div class="flow-container" style="margin-bottom: 2rem;">
+                <div class="flow-title">
+                    <span class="flow-dot" style="background: var(--yellow);"></span>
+                    Luồng 2 — Đặt đồng phục tùy chỉnh cho đội bóng
                 </div>
+                <div class="mermaid">
+                    flowchart TD
+                    A([🎯 Chọn sản phẩm đồng phục]) --> B[📷 Xem ảnh sản phẩm thật<br />4 góc: Trước / Sau / Tay áo /
+                    Quần]
+                    B --> C[🎨 Chọn màu sắc bộ đồng phục]
+                    C --> D[📤 Upload logo đội<br />CLB · Nhà tài trợ · Huy hiệu giải]
+                    D --> E[🖱️ Kéo thả logo vào vị trí<br />mong muốn trên ảnh]
+                    E --> F[⚙️ Điều chỉnh kích cỡ và vị trí<br />Trực tiếp trên ảnh sản phẩm thật]
+                    F --> G[👥 Nhập danh sách cầu thủ<br />Dán từ Excel hoặc nhập tay]
+                    G --> H[📋 Xem tóm tắt và giá<br />bao gồm phí in nếu dưới 10 bộ]
+                    H --> I[🛒 Thêm vào giỏ hàng]
+                    I --> J{❓ Đặt thêm đội khác?}
+                    J -- Có --> A
+                    J -- Không --> K[💵 Thanh toán một lần<br />Tất cả đội trong giỏ hàng]
+                    K --> L([✅ Đơn hàng được xác nhận<br />📧 Shop nhận email thông báo])
 
-                <div class="flow-diagram">
-                    <h3 style="text-align:center; margin-bottom:20px; font-weight:700;">Sơ Đồ Quy Trình Đặt Đồng Phục
-                        Đội</h3>
-                    <div class="mermaid">
-                        graph TD
-                        A[Trang Chủ] --> B[Xem Danh Sách Sản Phẩm]
-                        B --> C[Lọc / Tìm Kiếm]
-                        C --> D[Xem Chi Tiết Sản Phẩm]
-                        D --> E{Sản Phẩm Có Tag Custom?}
-                        E -->|Có| F[Chọn Bộ Màu Sắc]
-                        E -->|Không| G[Mua Thường Không Custom]
-                        F --> H{Thêm Vào Giỏ?}
-                        H -->|Không| D
-                        H -->|Có| I{Đã Đăng Nhập?}
-                        I -->|Chưa| J[Đăng Ký / Đăng Nhập]
-                        I -->|Rồi| K[Upload Logo Đội Tùy Chọn]
-                        J --> K
-                        K --> L[Thiết Kế Mockup Tùy Chọn]
-                        L --> M{Thêm Danh Sách Cầu Thủ?}
-                        M -->|Có| N[Paste Excel / Nhập Thủ Công]
-                        M -->|Không| O[Không Nhập Cầu Thủ]
-                        N --> P[Tính Phí In Ấn]
-                        O --> P
-                        P --> Q[Thêm Vào Giỏ Hàng]
-                        Q --> R[Xem Giỏ Hàng Đội]
-                        R --> S{Tiếp Tục Mua?}
-                        S -->|Có| B
-                        S -->|Không| T[Thanh Toán COD]
-                        T --> U[Nhập Thông Tin Giao Hàng]
-                        U --> V[Xác Nhận Đơn Hàng]
-                        V --> W[Thông Báo Đặt Hàng Thành Công]
-                        W --> X[Admin Nhận Email + Excel + Logo]
-                        X --> Y[Chờ Xử Lý & In Ấn]
-                        Y --> Z[Đang Giao Hàng]
-                        Z --> AA[Nhận Hàng & Thanh Toán]
-                    </div>
-                </div>
-
-                <div class="flow-steps">
-                    <div class="flow-step">
-                        <span class="step-number">1</span>
-                        <h4>Xem Sản Phẩm</h4>
-                        <p>Tìm và chọn sản phẩm từ danh sách. Nếu sản phẩm có tag "Custom", sẽ hiển thị công cụ
-                            thiết kế mockup. Nếu không, mua như sản phẩm thường.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">2</span>
-                        <h4>Chọn Bộ Màu</h4>
-                        <p>Xem các bộ màu có sẵn (ví dụ: Xanh Navy + Trắng). Click để chọn. Hình ảnh sản phẩm thay
-                            đổi theo màu đã chọn.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">3</span>
-                        <h4>Upload Logo (Tùy Chọn)</h4>
-                        <p>Upload file logo đội (PNG, JPG, SVG, tối đa 5MB). Hệ thống kiểm tra chất lượng. Có thể
-                            chọn không upload nếu không cần thiết kế.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">4</span>
-                        <h4>Thiết Kế Mockup (Tùy Chọn)</h4>
-                        <p>Kéo thả logo vào vị trí mong muốn trên áo (mặt trước, mặt sau, tay áo, quần). Có thể thêm
-                            nhiều logo. Xoay, thay đổi kích thước. Có thể bỏ qua nếu không cần thiết kế.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">5</span>
-                        <h4>Nhập Danh Sách Cầu Thủ (Tùy Chọn)</h4>
-                        <p>Nhập thủ công từng cầu thủ hoặc paste từ Excel. Không bắt buộc trường nào. Các cột: Tên,
-                            Số áo, Size áo, Size quần. Tất cả đều tùy chọn.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">6</span>
-                        <h4>Tính Phí In</h4>
-                        <p>Hệ thống tự động tính phí in dựa trên số lượng bộ: &lt;6 bộ +20%, 6-9 bộ +10%, 10+ bộ
-                            miễn phí in. Hiển thị gợi ý thêm bộ để giảm phí.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">7</span>
-                        <h4>Thêm Vào Giỏ</h4>
-                        <p>Thêm thiết kế đồng phục vào giỏ hàng. Có thể thêm nhiều gói đội khác nhau vào cùng một
-                            đơn hàng.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">8</span>
-                        <h4>Thanh Toán & Giao Hàng</h4>
-                        <p>Quy trình thanh toán giống mua thường. Admin nhận email kèm file Excel danh sách cầu thủ
-                            (nếu có) và link download logo (nếu có).</p>
-                    </div>
-                </div>
-
-                <div class="feature-details">
-                    <h3 style="text-align:center; font-size:28px; font-weight:700; margin-bottom:40px;">Chi Tiết
-                        Tính Năng</h3>
-
-                    <div class="feature-detail-card">
-                        <h4>🎨 Công Cụ Thiết Kế Mockup</h4>
-                        <p>Cho phép khách hàng tự thiết kế đồng phục trực tuyến trên ảnh sản phẩm thật. Chỉ hiển thị
-                            khi sản phẩm có tag "Custom".</p>
-                        <ul>
-                            <li>Chỉ hiển thị nếu sản phẩm có tag "Custom"</li>
-                            <li>Giao diện kéo-thả logo vào vị trí tùy ý</li>
-                            <li>4 góc nhìn: mặt trước, mặt sau, tay áo, quần</li>
-                            <li>Hỗ trợ nhiều logo trên cùng một sản phẩm</li>
-                            <li>Xoay, thay đổi kích thước logo</li>
-                            <li>Lưu vị trí logo theo % (responsive)</li>
-                            <li>Chỉ hoạt động trên máy tính (desktop)</li>
-                            <li>Có thể bỏ qua nếu không cần thiết kế</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📤 Upload Logo</h4>
-                        <p>Hệ thống cho phép upload logo đội với nhiều định dạng và kiểm tra chất lượng. Hoàn toàn
-                            tùy chọn.</p>
-                        <ul>
-                            <li>Upload logo là tùy chọn</li>
-                            <li>Định dạng: PNG, JPG, SVG (tối đa 5MB)</li>
-                            <li>SVG được kiểm tra bảo mật trước khi lưu</li>
-                            <li>Kiểm tra kích thước logo (&lt;300px = cảnh báo)</li>
-                            <li>Hiển thị danh sách logo đã upload</li>
-                            <li>Có thể xóa logo đã upload</li>
-                            <li>Logo lưu trên đám mây an toàn</li>
-                            <li>Có thể tiếp tục mà không upload logo</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📋 Danh Sách Cầu Thủ</h4>
-                        <p>Quản lý danh sách cầu thủ với thông tin chi tiết cho in ấn. Tất cả trường đều tùy chọn.
-                        </p>
-                        <ul>
-                            <li>Nhập thủ công từng dòng: Tên, Số áo, Size áo, Size quần</li>
-                            <li>Paste từ Excel/Google Sheets (tự động nhận diện cột)</li>
-                            <li>Không bắt buộc trường nào</li>
-                            <li>Tất cả trường đều tùy chọn</li>
-                            <li>Tên/Số trống = áo trơn không in</li>
-                            <li>Hiển thị số lượng cầu thủ theo thời gian thực</li>
-                            <li>Có thể tiếp tục mà không nhập danh sách</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>💰 Tính Phí In Ấn Tự Động</h4>
-                        <p>Hệ thống tính phí in dựa trên số lượng bộ với chính sách giảm dần.</p>
-                        <ul>
-                            <li>&lt;6 bộ: Phí in +20% tổng giá</li>
-                            <li>6-9 bộ: Phí in +10% tổng giá</li>
-                            <li>10+ bộ: Miễn phí in ấn</li>
-                            <li>Hiển thị gợi ý: "Thêm N bộ để giảm phí"</li>
-                            <li>Tính riêng cho từng gói đội</li>
-                            <li>Server-side validation khi đặt hàng</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📧 Email Kèm File</h4>
-                        <p>Admin nhận email đầy đủ thông tin để in ấn và sản xuất. Khách chỉ nhận thông báo thành
-                            công trên màn hình.</p>
-                        <ul>
-                            <li>Thông tin đơn hàng và khách hàng</li>
-                            <li>File Excel 2 sheet: thông tin đơn + danh sách cầu thủ (nếu có)</li>
-                            <li>Link download tất cả logo đã upload (nếu có)</li>
-                            <li>Link xem mockup thiết kế (nếu có)</li>
-                            <li>Chỉ admin nhận email</li>
-                            <li>Khách nhận thông báo thành công trên màn hình</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🔄 Hủy Đơn Đội</h4>
-                        <p>Khách có thể hủy đơn đội nếu trạng thái là "Đang chờ".</p>
-                        <ul>
-                            <li>Chỉ hủy được khi đơn đang chờ xử lý</li>
-                            <li>Shop nhận email cảnh báo hủy đơn</li>
-                            <li>Email tiêu đề: "[Đơn huỷ] ORD-XXX - Tên khách"</li>
-                            <li>Không thể hủy sau khi đã bắt đầu in ấn</li>
-                            <li>Khách có thể đặt lại nếu cần</li>
-                        </ul>
-                    </div>
+                    style A fill:#FDD017,color:#0F172A,stroke:#0F172A,stroke-width:2px
+                    style B fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style C fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style D fill:#00AEEF,color:#FFFFFF,stroke:#00AEEF,stroke-width:2px
+                    style E fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style F fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style G fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style H fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style I fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style J fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style K fill:#E31E26,color:#FFFFFF,stroke:#E31E26,stroke-width:2px
+                    style L fill:#22c55e,color:#FFFFFF,stroke:#22c55e,stroke-width:2px
                 </div>
             </div>
 
-            <!-- Admin Flow -->
-            <div id="admin" class="role-content">
-                <div class="role-description">
-                    <h3>⚙️ Quản Trị Viên (Quản Lý Hệ Thống)</h3>
-                    <p>Nhân viên quản lý shop chịu trách nhiệm quản lý đơn hàng, nhập sản phẩm từ CSV, theo dõi
-                        doanh thu, cập nhật trạng thái giao hàng. Có quyền truy cập toàn bộ dữ liệu hệ thống.</p>
-                    <ul>
-                        <li><strong>Mục đích:</strong> Quản lý vận hành cửa hàng</li>
-                        <li><strong>Quyền hạn:</strong> Truy cập toàn bộ dữ liệu, cập nhật trạng thái</li>
-                        <li><strong>Quản lý đơn:</strong> Xem, xử lý, cập nhật trạng thái đơn hàng</li>
-                        <li><strong>Quản lý sản phẩm:</strong> Import từ CSV, chỉnh sửa sản phẩm</li>
-                        <li><strong>Báo cáo:</strong> Doanh thu, sản phẩm bán chạy</li>
-                    </ul>
+            <!-- Flow 3: Admin -->
+            <div class="flow-container">
+                <div class="flow-title">
+                    <span class="flow-dot" style="background: var(--red);"></span>
+                    Luồng 3 — Quản trị viên xử lý đơn hàng
                 </div>
+                <div class="mermaid">
+                    flowchart TD
+                    A([📧 Nhận email<br />đơn hàng mới]) --> B[🔐 Đăng nhập<br />trang quản trị]
+                    B --> C[👁️ Xem chi tiết đơn hàng]
+                    C --> D[🎨 Xem thiết kế mockup<br />👥 Danh sách cầu thủ từng đội]
+                    D --> E[📥 Tải file Excel<br />Danh sách in ấn]
+                    E --> F[⚙️ Chuyển trạng thái<br />→ Đang xử lý]
+                    F --> G[🚚 Giao hàng xong<br />→ Đã giao]
+                    G --> H([✅ Đơn hoàn tất])
 
-                <div class="flow-diagram">
-                    <h3 style="text-align:center; margin-bottom:20px; font-weight:700;">Sơ Đồ Quy Trình Quản Trị
-                    </h3>
-                    <div class="mermaid">
-                        graph TD
-                        A["Đăng Nhập Admin"] --> B["Dashboard Tổng Quan"]
-                        B --> C{"Chọn Chức Năng"}
-                        C -->|"Quản Lý Đơn"| D["Xem Danh Sách Đơn Hàng"]
-                        C -->|"Import Sản Phẩm"| E["Upload CSV"]
-                        C -->|"Chỉnh Sửa SP"| F["Danh Sách Sản Phẩm"]
-                        C -->|"Báo Cáo"| G["Xem Thống Kê"]
-
-                        D --> H["Lọc Tìm Kiếm Đơn"]
-                        H --> I["Xem Chi Tiết Đơn"]
-                        I --> J["Xem Mockup Danh Sách"]
-                        I --> K["Download Excel"]
-                        I --> L["Download Logo"]
-                        J --> M["Cập Nhật Trạng Thái"]
-                        M --> N["Gửi Email Khách Hàng"]
-                        N --> D
-
-                        E --> O["Map Cột CSV"]
-                        O --> P["Xem Preview Nhóm"]
-                        P --> Q["Chỉnh Sửa Tên Giá Inline"]
-                        Q --> R["Upload Ảnh Màu Tự Do"]
-                        R --> S["Xác Nhận Import"]
-                        S --> T["Sản Phẩm Đã Thêm"]
-
-                        F --> U["Chọn Sản Phẩm"]
-                        U --> V["Chỉnh Sửa Thông Tin"]
-                        V --> W["Thêm Xóa Bộ Màu"]
-                        W --> X["Upload Ảnh Tự Do"]
-                        X --> Y["Lưu Thay Đổi"]
-
-                        G --> Z["Xem Doanh Thu"]
-                        G --> a2["Xem Top Sản Phẩm"]
-                    </div>
-                </div>
-
-                <div class="flow-steps">
-                    <div class="flow-step">
-                        <span class="step-number">1</span>
-                        <h4>Đăng Nhập Admin</h4>
-                        <p>Đăng nhập với tài khoản có quyền admin. Chỉ tài khoản admin mới có thể truy cập trang
-                            quản trị.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">2</span>
-                        <h4>Dashboard Tổng Quan</h4>
-                        <p>Xem thống kê nhanh: tổng đơn hàng, doanh thu, đơn đang chờ, đơn đang giao. Báo cáo doanh
-                            thu theo ngày/tuần.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">3</span>
-                        <h4>Quản Lý Đơn Hàng</h4>
-                        <p>Xem danh sách tất cả đơn hàng với bộ lọc theo trạng thái. Tìm kiếm theo mã đơn hoặc tên
-                            khách. Xem chi tiết từng đơn.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">4</span>
-                        <h4>Xem Chi Tiết Đơn</h4>
-                        <p>Đối với đơn đội: xem mockup thiết kế (read-only), danh sách cầu thủ, link download logo,
-                            file Excel. Đối với đơn thường: xem sản phẩm và số lượng.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">5</span>
-                        <h4>Cập Nhật Trạng Thái</h4>
-                        <p>Thay đổi trạng thái đơn: Đang chờ → Đang xử lý → Đang giao → Đã giao. Có thể thêm ghi chú
-                            admin cho đơn hàng.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">6</span>
-                        <h4>Import Sản Phẩm</h4>
-                        <p>Upload file CSV từ nhà cung cấp. Map cột CSV sang trường database. Preview nhóm sản phẩm.
-                            Chỉnh sửa tên, giá, mô tả ngay trong giao diện import. Upload ảnh không giới hạn số
-                            lượng cho mỗi bộ màu. Xác nhận import.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">7</span>
-                        <h4>Chỉnh Sửa Sản Phẩm</h4>
-                        <p>Sau khi import, có thể chỉnh sửa chi tiết sản phẩm: tên, giá, mô tả. Thêm/xóa bộ màu.
-                            Upload ảnh mới.</p>
-                    </div>
-                    <div class="flow-step">
-                        <span class="step-number">8</span>
-                        <h4>Báo Cáo</h4>
-                        <p>Xem thống kê doanh thu, top sản phẩm bán chạy, xu hướng mua sắm. Xuất báo cáo nếu cần.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="feature-details">
-                    <h3 style="text-align:center; font-size:28px; font-weight:700; margin-bottom:40px;">Chi Tiết
-                        Tính Năng</h3>
-
-                    <div class="feature-detail-card">
-                        <h4>📊 Dashboard Admin</h4>
-                        <p>Màn hình tổng quan hiển thị các chỉ số quan trọng của cửa hàng.</p>
-                        <ul>
-                            <li>Tổng số đơn hàng theo trạng thái</li>
-                            <li>Doanh thu tổng và theo ngày/tuần</li>
-                            <li>Top 5 sản phẩm bán chạy nhất</li>
-                            <li>Đơn hàng mới nhất</li>
-                            <li>Biểu đồ xu hướng doanh thu</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📋 Quản Lý Đơn Hàng</h4>
-                        <p>Danh sách tất cả đơn hàng với công cụ lọc và tìm kiếm.</p>
-                        <ul>
-                            <li>Lọc theo trạng thái: chờ, xử lý, giao, đã giao, hủy</li>
-                            <li>Tìm kiếm theo mã đơn hoặc tên khách</li>
-                            <li>Phân trang cho danh sách lớn</li>
-                            <li>Sắp xếp theo ngày đặt</li>
-                            <li>Hiển thị tóm tắt thông tin</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🔍 Chi Tiết Đơn Hàng</h4>
-                        <p>Xem đầy đủ thông tin từng đơn hàng để xử lý.</p>
-                        <ul>
-                            <li>Thông tin khách hàng: tên, SĐT, địa chỉ</li>
-                            <li>Danh sách sản phẩm thường</li>
-                            <li>Đối với đơn đội: mockup preview, danh sách cầu thủ, link logo</li>
-                            <li>Download file Excel danh sách cầu thủ</li>
-                            <li>Download tất cả logo</li>
-                            <li>Lịch sử thay đổi trạng thái</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>✏️ Cập Nhật Trạng Thái</h4>
-                        <p>Thay đổi trạng thái đơn hàng và thông báo khách hàng.</p>
-                        <ul>
-                            <li>Dropdown chọn trạng thái mới</li>
-                            <li>Thêm ghi chú admin (tùy chọn)</li>
-                            <li>Tự động gửi email thông báo khách hàng khi giao/đã giao</li>
-                            <li>Lưu lịch sử thay đổi</li>
-                            <li>Không thể thay đổi đơn đã hủy</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📤 Import Sản Phẩm Từ CSV</h4>
-                        <p>Nhập sản phẩm hàng loạt từ file CSV của nhà cung cấp. Có thể chỉnh sửa ngay trong giao
-                            diện import.</p>
-                        <ul>
-                            <li>Upload file CSV (định dạng chuẩn)</li>
-                            <li>Map cột CSV sang trường database (auto-suggest)</li>
-                            <li>Preview nhóm sản phẩm theo tên</li>
-                            <li>Chỉnh sửa tên, giá, mô tả ngay trong giao diện import trước khi xác nhận</li>
-                            <li>Toggle "Cho phép tùy chỉnh mockup" cho mỗi nhóm</li>
-                            <li>Upload ảnh không giới hạn số lượng cho mỗi bộ màu</li>
-                            <li>Xác nhận import → tạo sản phẩm, bộ màu, ảnh, size</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🛠️ Chỉnh Sửa Sản Phẩm</h4>
-                        <p>Chỉnh sửa chi tiết sản phẩm sau khi đã import hoặc nếu thấy sai sau import.</p>
-                        <ul>
-                            <li>Chỉnh sửa: tên, mô tả, giá, danh mục</li>
-                            <li>Quản lý bộ màu: thêm, xóa, chỉnh sửa</li>
-                            <li>Upload/đổi ảnh cho mỗi bộ màu (không giới hạn số lượng)</li>
-                            <li>Chỉnh sửa số lượng tồn kho theo size</li>
-                            <li>Bật/tắt tính năng tùy chỉnh mockup</li>
-                            <li>Ẩn/hiện sản phẩm khỏi storefront</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>📈 Báo Cáo & Thống Kê</h4>
-                        <p>Xem các báo cáo hoạt động của cửa hàng.</p>
-                        <ul>
-                            <li>Doanh thu theo ngày/tuần/tháng</li>
-                            <li>Top sản phẩm bán chạy</li>
-                            <li>Số lượng đơn hàng theo trạng thái</li>
-                            <li>Khách hàng mua nhiều nhất</li>
-                            <li>Xu hướng mua sắm theo thời gian</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-detail-card">
-                        <h4>🔐 Bảo Mật Admin</h4>
-                        <p>Đảm bảo chỉ admin mới có thể truy cập trang quản trị.</p>
-                        <ul>
-                            <li>Yêu cầu đăng nhập với quyền admin</li>
-                            <li>Kiểm tra quyền ở mỗi trang admin</li>
-                            <li>Không cho phép truy cập trực tiếp URL</li>
-                            <li>Logout tự động sau thời gian không hoạt động</li>
-                            <li>Ghi log hành động admin</li>
-                        </ul>
-                    </div>
+                    style A fill:#00AEEF,color:#FFFFFF,stroke:#00AEEF,stroke-width:2px
+                    style B fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style C fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style D fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style E fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style F fill:#FDD017,color:#0F172A,stroke:#FDD017,stroke-width:2px
+                    style G fill:#FFFFFF,color:#0F172A,stroke:#E2E8F0,stroke-width:2px
+                    style H fill:#22c55e,color:#FFFFFF,stroke:#22c55e,stroke-width:2px
                 </div>
             </div>
+        </div>
     </section>
 
-    <!-- Benefits -->
-    <section class="benefits" id="benefits">
+    <!-- ══════════════ ORDER STATUS ══════════════ -->
+    <section class="section" style="background:#F1F5F9" id="order-status">
         <div class="container">
-            <h2 class="section-title">Lợi Ích Cho Khách Hàng</h2>
-            <p class="section-subtitle">Tại sao chọn nền tảng của chúng tôi?</p>
+            <div class="section-header">
+                <p class="eyebrow">Theo dõi đơn hàng</p>
+                <h2>Trạng thái đơn hàng</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>Mỗi đơn hàng đi qua 4 bước. Khách hàng có thể tự hủy khi đơn còn ở bước "Chờ xử lý".</p>
+            </div>
+
+            <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:1rem; margin-top:2rem;">
+                <div
+                    style="text-align:center; padding: 1.5rem 2rem; background:var(--white); border-radius:16px; border:1px solid var(--border); min-width:180px;">
+                    <div
+                        style="width:56px;height:56px;border-radius:50%;background:rgba(253,208,23,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A6000" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <div style="font-weight:800;color:var(--dark);margin-bottom:4px;">Chờ xử lý</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Vừa đặt hàng<br />Có thể hủy lúc này</div>
+                </div>
+                <div style="display:flex;align-items:center;color:var(--border);font-size:1.5rem;">→</div>
+                <div
+                    style="text-align:center; padding: 1.5rem 2rem; background:var(--white); border-radius:16px; border:1px solid var(--border); min-width:180px;">
+                    <div
+                        style="width:56px;height:56px;border-radius:50%;background:rgba(0,174,239,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0077AA" stroke-width="2">
+                            <path
+                                d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z" />
+                            <path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                            <path
+                                d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z" />
+                            <path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z" />
+                            <path
+                                d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z" />
+                            <path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z" />
+                            <path
+                                d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z" />
+                            <path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z" />
+                        </svg>
+                    </div>
+                    <div style="font-weight:800;color:var(--dark);margin-bottom:4px;">Đang xử lý</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Shop đang in ấn<br />chuẩn bị hàng</div>
+                </div>
+                <div style="display:flex;align-items:center;color:var(--border);font-size:1.5rem;">→</div>
+                <div
+                    style="text-align:center; padding: 1.5rem 2rem; background:var(--white); border-radius:16px; border:1px solid var(--border); min-width:180px;">
+                    <div
+                        style="width:56px;height:56px;border-radius:50%;background:rgba(139,92,246,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13" />
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                            <circle cx="5.5" cy="18.5" r="2.5" />
+                            <circle cx="18.5" cy="18.5" r="2.5" />
+                        </svg>
+                    </div>
+                    <div style="font-weight:800;color:var(--dark);margin-bottom:4px;">Đang giao hàng</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Đơn đang trên đường<br />đến tay khách</div>
+                </div>
+                <div style="display:flex;align-items:center;color:var(--border);font-size:1.5rem;">→</div>
+                <div
+                    style="text-align:center; padding: 1.5rem 2rem; background:var(--white); border-radius:16px; border:1px solid var(--border); min-width:180px;">
+                    <div
+                        style="width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <div style="font-weight:800;color:var(--dark);margin-bottom:4px;">Đã giao hàng</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Khách nhận được hàng<br />Hoàn tất đơn hàng
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ PRINT FEE ══════════════ -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <p class="eyebrow">Chính sách in ấn</p>
+                <h2>Phí in ấn theo số lượng</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>Phí in ấn áp dụng riêng cho từng đội đặt đồng phục tùy chỉnh, tính theo tổng số bộ của đội đó.</p>
+            </div>
+
+            <div class="fee-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Số bộ đặt (mỗi đội)</th>
+                            <th>Phí in ấn thêm</th>
+                            <th>Ví dụ: giá bộ 300.000đ</th>
+                            <th>Tổng thanh toán</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dưới 6 bộ</td>
+                            <td class="highlight-cell">+20% / bộ</td>
+                            <td>300.000 + 60.000 = 360.000đ / bộ</td>
+                            <td>5 bộ × 360.000 = <strong>1.800.000đ</strong></td>
+                        </tr>
+                        <tr>
+                            <td>6 – 9 bộ</td>
+                            <td style="color:#F59E0B; font-weight:700;">+10% / bộ</td>
+                            <td>300.000 + 30.000 = 330.000đ / bộ</td>
+                            <td>8 bộ × 330.000 = <strong>2.640.000đ</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Từ 10 bộ trở lên</td>
+                            <td class="green-cell">Miễn phí in</td>
+                            <td>300.000đ / bộ (giá gốc)</td>
+                            <td>10 bộ × 300.000 = <strong>3.000.000đ</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout callout-yellow">
+                <h4>Lưu ý quan trọng</h4>
+                <p>Website sẽ hiển thị thông báo nhắc nhở khi số bộ đặt chưa đủ ngưỡng miễn phí,
+                    giúp khách hàng cân nhắc thêm để được lợi hơn. Phí in chỉ áp dụng cho đồng phục tùy chỉnh, không
+                    tính cho sản phẩm thông thường.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ MOCKUP BUILDER DETAIL ══════════════ -->
+    <section class="section section--dark" id="builder">
+        <div class="container">
+            <div class="section-header">
+                <p class="eyebrow" style="opacity:.6">Tính năng nổi bật</p>
+                <h2 style="color:var(--yellow)">Bộ công cụ thiết kế mockup</h2>
+                <div class="divider divider-white" style="margin: 1rem auto;"></div>
+                <p>Khách hàng thiết kế trực tiếp trên ảnh sản phẩm thật — không cần phần mềm, không cần gặp trực tiếp
+                    shop.</p>
+            </div>
 
             <div class="benefits-grid">
                 <div class="benefit-item">
-                    <div class="benefit-icon">⏱️</div>
-                    <div>
-                        <h4>Tiết Kiệm Thời Gian</h4>
-                        <p>Quy trình đặt hàng tự động hóa, không cần liên hệ qua điện thoại hay email nhiều lần</p>
-                    </div>
+                    <h3>4 góc nhìn</h3>
+                    <p>Mặt trước, mặt sau, tay áo, quần — mỗi góc có thiết kế riêng biệt, logo giữ nguyên vị trí khi
+                        chuyển màu.</p>
                 </div>
-
                 <div class="benefit-item">
-                    <div class="benefit-icon">🎯</div>
-                    <div>
-                        <h4>Chính Xác & Minh Bạch</h4>
-                        <p>Xem trước thiết kế trước khi in, tránh sai sót. Mọi thông tin đơn hàng được lưu trữ rõ ràng
-                        </p>
-                    </div>
+                    <h3>Nhiều logo cùng lúc</h3>
+                    <p>Upload và đặt đồng thời: logo CLB, nhà tài trợ, huy hiệu giải đấu, cờ quốc gia — không giới hạn
+                        số lượng logo.</p>
                 </div>
-
                 <div class="benefit-item">
-                    <div class="benefit-icon">📈</div>
-                    <div>
-                        <h4>Quản Lý Dễ Dàng</h4>
-                        <p>Theo dõi trạng thái đơn hàng, lịch sử mua sắm, xuất báo cáo Excel cho đội bóng</p>
-                    </div>
+                    <h3>Kéo thả tự do</h3>
+                    <p>Kéo logo vào bất kỳ vị trí nào trên ảnh, thay đổi kích cỡ theo ý muốn. Không bị giới hạn vị trí
+                        cố định.</p>
                 </div>
-
                 <div class="benefit-item">
-                    <div class="benefit-icon">🎁</div>
-                    <div>
-                        <h4>Ưu Đãi Số Lượng</h4>
-                        <p>Giảm phí in ấn cho đơn hàng từ 6 bộ trở lên. Miễn phí in cho đơn hàng 10 bộ+</p>
-                    </div>
+                    <h3>Nhập từ Excel</h3>
+                    <p>Dán danh sách cầu thủ trực tiếp từ Excel vào website. Hệ thống tự nhận diện cột số áo, tên, kích
+                        cỡ.</p>
                 </div>
-
                 <div class="benefit-item">
-                    <div class="benefit-icon">🛡️</div>
-                    <div>
-                        <h4>Bảo Hành Chất Lượng</h4>
-                        <p>Cam kết chất lượng in ấn, hỗ trợ đổi trả nếu có lỗi từ nhà sản xuất</p>
-                    </div>
+                    <h3>Không cần cài đặt</h3>
+                    <p>Hoạt động hoàn toàn trên trình duyệt web máy tính. Không cần tải ứng dụng hay phần mềm thêm.</p>
                 </div>
-
                 <div class="benefit-item">
-                    <div class="benefit-icon">🤝</div>
-                    <div>
-                        <h4>Hỗ Trợ Chuyên Nghiệp</h4>
-                        <p>Đội ngũ tư vấn nhiệt tình, giải đáp thắc mắc và hỗ trợ thiết kế nếu cần</p>
-                    </div>
+                    <h3>Lưu thiết kế tự động</h3>
+                    <p>Thiết kế được lưu trong giỏ hàng. Đặt nhiều đội khác nhau rồi thanh toán gộp một lần.</p>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 3rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem;">
+                <div class="flow-title" style="color: rgba(255,255,255,0.5);">
+                    <span class="flow-dot" style="background: var(--yellow);"></span>
+                    Quy trình thiết kế — từ góc nhìn khách hàng
+                </div>
+                <div class="mermaid">
+                    flowchart LR
+                    A[Chọn màu sắc\nbộ đồng phục] --> B[Upload logo\nPNG / JPG / SVG]
+                    B --> C[Kéo logo vào\nvị trí trên áo]
+                    C --> D[Chuyển tab\nxem 4 góc nhìn]
+                    D --> E[Nhập tên + số áo\ncầu thủ]
+                    E --> F[Chọn kích cỡ\ntừng người]
+                    F --> G([Thêm vào giỏ\nĐặt hàng])
+
+                    style A fill:#334155,color:#fff,stroke:#475569
+                    style B fill:#334155,color:#fff,stroke:#475569
+                    style C fill:#334155,color:#fff,stroke:#475569
+                    style D fill:#334155,color:#fff,stroke:#475569
+                    style E fill:#334155,color:#fff,stroke:#475569
+                    style F fill:#334155,color:#fff,stroke:#475569
+                    style G fill:#FDD017,color:#0F172A,stroke:none
+                </div>
+            </div>
+
+            <div class="tags" style="margin-top: 2rem;">
+                <span class="tag">Không cần cài ứng dụng</span>
+                <span class="tag">Trình duyệt máy tính</span>
+                <span class="tag">Lưu tự động</span>
+                <span class="tag">Nhiều đội / 1 đơn hàng</span>
+                <span class="tag">Xem trực tiếp trên ảnh thật</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════ ADMIN FLOW ══════════════ -->
+    <section class="section" id="admin">
+        <div class="container">
+            <div class="section-header">
+                <p class="eyebrow">Góc nhìn quản trị</p>
+                <h2>Quản lý vận hành shop</h2>
+                <div class="divider divider-red" style="margin: 1rem auto;"></div>
+                <p>Toàn bộ quy trình vận hành được tập trung trên một màn hình quản trị, dễ thao tác ngay cả với người
+                    không rành công nghệ.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div class="feature-card" style="border-top: 3px solid var(--red);">
+                    <h3 style="margin-bottom: 0.75rem;">Quản lý đơn hàng</h3>
+                    <ul class="action-list" style="margin-top: 0;">
+                        <li>Xem danh sách đơn theo trạng thái</li>
+                        <li>Lọc nhanh: hôm nay, tuần này, chờ xử lý</li>
+                        <li>Xem thiết kế mockup của khách</li>
+                        <li>Tải Excel danh sách cầu thủ để giao in</li>
+                        <li>Cập nhật trạng thái đơn hàng</li>
+                        <li>Xem lý do hủy đơn nếu khách hủy</li>
+                    </ul>
+                </div>
+                <div class="feature-card" style="border-top: 3px solid var(--blue);">
+                    <h3 style="margin-bottom: 0.75rem;">Quản lý sản phẩm</h3>
+                    <ul class="action-list" style="margin-top: 0;">
+                        <li>Tải lên file Excel nhà cung cấp</li>
+                        <li>Xem trước sản phẩm trước khi lưu</li>
+                        <li>Upload ảnh theo từng màu sắc (4 góc)</li>
+                        <li>Bật / tắt tính năng thiết kế tùy chỉnh per sản phẩm</li>
+                        <li>Chỉnh sửa giá, mô tả, kích cỡ</li>
+                        <li>Quản lý tồn kho</li>
+                    </ul>
+                </div>
+                <div class="feature-card" style="border-top: 3px solid var(--yellow);">
+                    <h3 style="margin-bottom: 0.75rem;">Báo cáo & Thông báo</h3>
+                    <ul class="action-list" style="margin-top: 0;">
+                        <li>Nhận email tự động khi có đơn mới</li>
+                        <li>Nhận cảnh báo khi khách hủy đơn</li>
+                        <li>Xem doanh thu theo ngày / tháng</li>
+                        <li>Xem sản phẩm bán chạy nhất</li>
+                        <li>Tổng quan số đơn theo từng trạng thái</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flow-container" style="margin-top: 2rem;">
+                <div class="flow-title">
+                    <span class="flow-dot" style="background: var(--red);"></span>
+                    Quy trình nhập sản phẩm hàng loạt từ Excel
+                </div>
+                <div class="mermaid">
+                    flowchart LR
+                    A([Tải lên file\nExcel nhà cung cấp]) --> B[Hệ thống tự\nphân tích các cột]
+                    B --> C[Xem trước danh sách\nsản phẩm được nhóm]
+                    C --> D[Upload ảnh từng màu\n4 góc chụp / màu]
+                    D --> E[Bật/tắt tùy chỉnh\ncho từng sản phẩm]
+                    E --> F[Xác nhận lưu\nvào hệ thống]
+                    F --> G([Sản phẩm xuất hiện\ntrên website ngay])
+
+                    style A fill:#FDD017,color:#0F172A,stroke:none
+                    style G fill:#22c55e,color:#fff,stroke:none
+                    style F fill:#E31E26,color:#fff,stroke:none
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Target Customers -->
-    <section class="customers" id="customers">
+    <!-- ══════════════ TIMELINE ══════════════ -->
+    <section class="section" style="background:#F1F5F9" id="timeline">
         <div class="container">
-            <h2 class="section-title">Đối Tác Khách Hàng</h2>
-            <p class="section-subtitle">Phù hợp với nhiều nhóm khách hàng khác nhau</p>
+            <div class="section-header">
+                <p class="eyebrow">Lộ trình triển khai</p>
+                <h2>Kế hoạch xây dựng</h2>
+                <div class="divider divider-yellow" style="margin: 1rem auto;"></div>
+                <p>Dự án được chia thành các giai đoạn rõ ràng, ưu tiên tính năng cốt lõi trước để có thể ra mắt sớm.
+                </p>
+            </div>
 
-            <div class="customer-types">
-                <div class="customer-card">
-                    <h3>🏆 Đội Bóng Chuyên Nghiệp</h3>
-                    <ul>
-                        <li>Đặt hàng số lượng lớn</li>
-                        <li>Tùy chỉnh thiết kế chuyên sâu</li>
-                        <li>Quản lý danh sách cầu thủ</li>
-                        <li>Xuất báo cáo Excel quản lý</li>
-                    </ul>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; max-width: 900px; margin: 0 auto;">
+
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:var(--dark);">
+                            1</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Nền tảng & Cơ sở dữ liệu</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~3 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Khởi tạo website, thiết lập cơ sở dữ liệu, cấu hình màu thương hiệu,
+                        font chữ.</p>
                 </div>
 
-                <div class="customer-card">
-                    <h3>👨‍👩‍👧‍👦 Đội Bóng Phong Trào</h3>
-                    <ul>
-                        <li>Giá cả hợp lý</li>
-                        <li>Quy trình đặt hàng đơn giản</li>
-                        <li>Hỗ trợ thiết kế cơ bản</li>
-                        <li>Giao hàng nhanh chóng</li>
-                    </ul>
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:var(--dark);">
+                            2</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Đăng nhập & Tài khoản</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~2 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Đăng ký, đăng nhập bằng email/mật khẩu. Quên mật khẩu gửi link qua
+                        email.</p>
                 </div>
 
-                <div class="customer-card">
-                    <h3>🏫 Câu Lạc Bộ Trường Học</h3>
-                    <ul>
-                        <li>Gói ưu đãi cho giáo dục</li>
-                        <li>Đa dạng size cho học sinh</li>
-                        <li>Thiết kế logo trường</li>
-                        <li>Hóa đơn VAT đầy đủ</li>
-                    </ul>
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:var(--dark);">
+                            3</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Trang chủ & Mua thường</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~7 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Trang chủ, danh sách sản phẩm, trang chi tiết, giỏ hàng, đặt hàng,
+                        lịch sử đơn.</p>
                 </div>
 
-                <div class="customer-card">
-                    <h3>👤 Cá Nhân Yêu Thể Thao</h3>
-                    <ul>
-                        <li>Mua lẻ sản phẩm</li>
-                        <li>Đa dạng mẫu mã</li>
-                        <li>Thanh toán COD tiện lợi</li>
-                        <li>Giao hàng toàn quốc</li>
-                    </ul>
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:#00AEEF;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:white;">
+                            4</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Bộ công cụ thiết kế</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~5 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Toàn bộ giao diện thiết kế mockup: upload logo, kéo thả, 4 góc nhìn,
+                        danh sách cầu thủ.</p>
+                </div>
+
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:#00AEEF;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:white;">
+                            6</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Xử lý đơn & Email</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~4 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Đặt đơn đồng phục tùy chỉnh, gửi email thông báo, xuất file Excel danh
+                        sách cầu thủ.</p>
+                </div>
+
+                <div
+                    style="background:var(--white); border-radius:16px; padding:1.75rem; border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                        <div
+                            style="width:32px;height:32px;border-radius:50%;background:#E31E26;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:white;">
+                            8</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.92rem;">Trang quản trị</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);">~5 ngày làm việc</div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.86rem;">Dashboard, quản lý đơn hàng, nhập sản phẩm từ Excel, xem báo cáo doanh
+                        thu.</p>
+                </div>
+
+            </div>
+
+            <div
+                style="text-align:center; margin-top:2.5rem; padding:1.5rem 2rem; background:var(--white); border-radius:14px; border:1px solid var(--border); display:inline-block; width:100%;">
+                <div
+                    style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+                    Tổng thời gian ước tính</div>
+                <div style="font-size:2rem; font-weight:900; color:var(--dark);">7 tuần <span
+                        style="font-size:1rem; color:var(--text-muted); font-weight:500;">làm việc (~35 ngày)</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section" id="contact">
-        <div class="container">
-            <h2>Sẵn Sàng Bắt Đầu?</h2>
-            <p>Liên hệ ngay để nhận tư vấn miễn phí và báo giá chi tiết cho đội bóng của bạn</p>
-            <a href="mailto:contact@footballuniform.vn" class="cta-button">Liên Hệ Ngay</a>
+    <!-- ══════════════ CTA ══════════════ -->
+    <section class="section section--red">
+        <div class="container" style="text-align:center;">
+            <p class="eyebrow" style="color:rgba(255,255,255,0.7);">Sẵn sàng triển khai</p>
+            <h2>Bắt đầu số hóa quy trình đặt hàng đồng phục</h2>
+            <div class="divider divider-white" style="margin: 1rem auto;"></div>
+            <p style="max-width:540px; margin: 0 auto 2rem; font-size:1rem;">
+                Thay thế quy trình nhắn tin — gặp trực tiếp — thiết kế thủ công bằng một nền tảng trực tuyến
+                chuyên nghiệp, hoạt động 24/7, không cần nhân viên hỗ trợ mỗi đơn hàng.
+            </p>
+            <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+                <a href="#features" class="btn" style="background:var(--white); color:var(--red);">Xem lại tính năng</a>
+                <a href="#flows" class="btn"
+                    style="background:rgba(255,255,255,0.15); color:var(--white); border:1.5px solid rgba(255,255,255,0.3);">Xem
+                    quy trình chi tiết</a>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ══════════════ FOOTER ══════════════ -->
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Football Uniform Store. Tất cả quyền được bảo lưu.</p>
-        </div>
+        <strong>StarSport</strong> — Nền tảng đặt đồng phục bóng đá trực tuyến &middot; Tài liệu đề xuất nội bộ &middot;
+        2026
     </footer>
 
     <script>
-        // Initialize Mermaid
         mermaid.initialize({
-            startOnLoad: false,
-            theme: 'default',
-            securityLevel: 'loose'
-        });
-
-        // Function to render Mermaid diagrams in a specific container
-        function renderMermaidInContainer(container) {
-            const mermaidDivs = container.querySelectorAll('.mermaid');
-            mermaidDivs.forEach(div => {
-                mermaid.run({
-                    nodes: [div]
-                }).catch(err => console.error('Mermaid render error:', err));
-            });
-        }
-
-        // Tab switching function
-        function showRole(roleId) {
-            // Hide all role contents
-            document.querySelectorAll('.role-content').forEach(content => {
-                content.classList.remove('active');
-            });
-
-            // Remove active class from all tabs
-            document.querySelectorAll('.role-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Show selected role content
-            const selectedContent = document.getElementById(roleId);
-            selectedContent.classList.add('active');
-
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-
-            // Render Mermaid diagrams in the newly visible tab
-            renderMermaidInContainer(selectedContent);
-        }
-
-        // Initial render for the first tab (which is visible by default)
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstTab = document.querySelector('.role-content.active');
-            if (firstTab) {
-                renderMermaidInContainer(firstTab);
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#FDD017',
+                primaryTextColor: '#0F172A',
+                primaryBorderColor: '#E8BC00',
+                lineColor: '#94A3B8',
+                secondaryColor: '#F1F5F9',
+                tertiaryColor: '#E2E8F0',
+                background: '#FFFFFF',
+                mainBkg: '#FFFFFF',
+                nodeBorder: '#CBD5E1',
+                clusterBkg: '#F8FAFC',
+                titleColor: '#0F172A',
+                edgeLabelBackground: '#F8FAFC',
+                fontFamily: 'Montserrat, sans-serif',
+                fontSize: '14px'
+            },
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 15
             }
         });
     </script>
