@@ -17,8 +17,8 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 
 ## Confirmed Decisions (Validation Session 1 — 2026-04-12)
 - **UI**: shadcn/ui + Tailwind CSS
-- **Brand colors**: Đỏ #FDD017(primary), Vàng #E31E26 (secondary), Xanh dương #00AEEF (accent), Xám #A7A9AC (accent)
-- **Builder UX**: Step wizard (progress bar + Back/Next)
+- **Brand colors**: Vàng #FDD017 (primary), Đỏ #E31E26 (secondary), Xanh dương #00AEEF (accent), Xám #A7A9AC (accent)
+- **Builder UX**: ~~Step wizard~~ → Sections trên trang product detail (any-order, no wizard)
 - **Tồn kho**: Không tracking MVP — lưu cột stock nhưng không tự động trừ
 - **Admin scope**: Quản lý đơn hàng + **CSV product import**. Không CRUD thủ công — import sản phẩm từ file CSV supplier xuất. Product Edit page riêng cho sửa chi tiết sau import.
 - **Tay áo logo**: Khách chọn tay trái / phải / cả hai
@@ -104,6 +104,90 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 - phase-02-auth.md: new file created
 - Total effort: +2d (7w → 7w+2d)
 
+### Session 5 — 2026-04-14
+**Trigger:** Deep review brainstorm — project understanding validation
+**Questions asked:** 12
+
+#### Confirmed Decisions
+1. **[Brand]** Colors labels were swapped → Vàng #FDD017 (primary), Đỏ #E31E26 (secondary)
+2. **[UX]** Builder UX overrides Session 1 — NOT a step wizard → **sections on product detail page** `/products/[slug]`. User can interact with any section in any order.
+3. **[UX]** Mockup preview = **Tab switcher 4 góc** (Mặt trước / Mặt sau / Tay áo / Quần), mỗi tab có CSS overlay drag-drop riêng, lưu vị trí per-angle.
+4. **[Architecture]** Builder tech = **CSS overlay** (confirmed, no Fabric.js)
+5. **[UX]** Mobile: **Desktop-only** for builder (show notice < 768px); catalog + checkout vẫn responsive
+6. **[Architecture]** Product types: `isCustomizable` flag trên Product model (true = hiện builder sections)
+7. **[UX]** Player list luôn hiện (default 1 dòng); **Size bắt buộc**, Tên + Số áo tùy chọn
+8. **[Scope]** Print fee **vào MVP** (Phase 3 nudge + Phase 6 server-side validation)
+9. **[UX]** Admin order preview: CSS overlay mockup (read-only) + bảng cầu thủ + logo link
+10. **[Shipping]** Khách nhập địa chỉ đầy đủ; StarSport tự giao hoặc qua VC (không tích hợp API)
+11. **[Order]** 4 trạng thái: `pending → processing → shipping → delivered` (+ `cancelled`)
+12. **[Order]** Khách tự hủy được khi status = `pending`; sau đó chỉ qua shop
+
+#### Phase Impact
+- plan.md: fix brand colors; override Session 1 wizard decision
+- phase-01: fix color labels; update Player model (name/number optional); printConfigJson per-angle structure; order status "pending" default
+- phase-03: builder is embedded in `/products/[slug]`; add print fee nudge in cart; add cancel order (pending only)
+- phase-04: **COMPLETE REWRITE** — remove wizard, implement product-detail sections + 4-angle tab CSS overlay
+- phase-05: `<MockupPreview />` built in Phase 4 (interactive); Phase 5 integrates read-only into admin
+- phase-06: add cancel order endpoint; confirm 2-sheet Excel; print fee server-side validation
+- phase-08: add cancel order admin display
+
+---
+
+### Session 6 — 2026-04-14
+**Trigger:** Deep project validation brainstorm — verify understanding + phát hiện gaps
+**Questions asked:** 14
+
+#### Confirmed Decisions
+1. **[UX/Admin]** `isCustomizable` flag → **toggle checkbox trong wizard preview step** (per product group header). Không cần cột trong CSV supplier.
+2. **[CSV Import]** Image mapping → **upload thủ công per ColorSet** trong wizard preview step. Session 4 "4 cột ảnh" bị override — ảnh do shop tự chụp/upload, không từ CSV.
+3. **[Architecture]** Mixed cart → **1 Order** chứa cả OrderItems (thường) + CustomOrders (đội). Checkout 1 lần, 1 mã đơn.
+4. **[Architecture]** ProductVariant scope → **per Product** (chung mọi ColorSet). Sizes áp dụng cho tất cả màu.
+5. **[Phase split]** Phase 3 = cart + checkout + POST /api/orders (normal items only); Phase 6 = extend API thêm CustomOrder handling.
+6. **[Builder — MAJOR]** Multi-logo support: logo panel bên trái canvas, drag logos vào canvas per angle. `CustomConfig.logos[]` thay `logoUrl`. `OverlayElement` reference `logoId`. Logo formats: PNG/JPG/SVG max 5MB (SVG phải sanitize XSS).
+7. **[Builder]** Excel paste → **flexible auto-detect** cột (pattern matching). Confidence thấp → hiện quick mapping dialog.
+8. **[Order]** Cancel đơn → **gửi email cảnh báo shop** (subject: "[Đơn huỷ] ORD-xxx — Tên khách").
+9. **[Order]** Order number reset **theo ngày** (NNN reset về 001 mỗi ngày mới).
+10. **[Order]** Print fee tính **riêng từng CustomOrder** (không pool tổng số bộ).
+11. **[UX]** Overlay position **giữ nguyên** khi khách đổi ColorSet.
+12. **[UX]** Builder size dropdown: show đủ sizes từ ProductVariant, **disable nếu stock=0**.
+13. **[UX]** Out of stock normal products: "Hết hàng" + disable button per-size.
+14. **[Admin]** Admin tài khoản đầu tiên: **seed script** khi deploy.
+
+#### Phase Impact
+- plan.md: fix Session 4 CSV image decision; thêm multi-logo decision
+- phase-01: update printConfigJson comment → multi-logo structure (`logos[]` + `logoId` in OverlayElement)
+- phase-03: Phase 3 checkout scope clarified (normal only); size OOS UX (disable + "Hết hàng"); stock UX
+- phase-04: **MAJOR** — multi-logo panel sidebar; updated data types (LogoItem, OverlayElement.logoId); flexible Excel detect + mapping dialog; SVG sanitize security
+- phase-06: mixed order handling (normal + custom same Order); cancel email to shop; multi-logo email attachments; order number daily reset note; print fee per CustomOrder
+- phase-08: `isCustomizable` toggle trong wizard preview; CSV images = manual upload (no CSV URL columns)
+
+### Session 7 — 2026-04-14
+**Trigger:** Deep validation + gap analysis — rà soát toàn bộ plan trước khi implement
+**Questions asked:** 14
+
+#### Confirmed Decisions
+1. **[DB Schema]** Xóa redundant columns khỏi CustomOrder (`clubLogoUrl`, `sponsorLogoUrl`, `leagueLogoUrl`, `flagPatchUrl`, tất cả boolean print config) — chỉ dùng `printConfigJson` làm single source of truth
+2. **[Phase split]** Phase 6 = API only (orders, email, Excel); Admin UI (order list, order detail, status update) → Phase 8
+3. **[UX]** Bỏ nút [Sửa] trong cart khỏi MVP — chỉ [Xóa]. Khách custom lại từ /products/[slug]
+4. **[Architecture]** Order number race condition → fix bằng unique constraint + retry (max 3 lần)
+5. **[DB Schema]** ProductImage giữ cả 2 FK (productId + colorSetId) — giữ nguyên
+6. **[Project state]** Next.js chưa khởi tạo — Phase 1 bắt đầu từ đầu; index.html không dùng làm reference
+7. **[Auth]** Better Auth schema dùng `npx @better-auth/cli generate` → Prisma adapter
+8. **[Brand colors]** Fix bug phase-01 step 6: Vàng #FDD017 (primary), Đỏ #E31E26 (secondary)
+9. **[UX]** Print fee nudge per-CustomOrder riêng lẻ (không pool)
+10. **[Services]** Giữ Railway + Cloudinary + Resend (không thay đổi)
+11. **[Admin]** Tạo admin user thủ công: register bình thường → update role='admin' trong DB lần đầu
+12. **[UX]** teamName fallback = product.name (trong email subject, Excel, admin preview)
+13. **[Homepage]** Làm mới hoàn toàn, không dùng index.html làm reference
+14. **[Phase 9]** Scope: SEO/OG per product + Core Web Vitals + admin analytics (doanh thu, top products). Không PWA.
+
+#### Phase Impact
+- phase-01: fix brand color labels; thêm `npx @better-auth/cli generate`; xóa redundant CustomOrder columns khỏi schema
+- phase-03: print fee nudge per-CustomOrder; cart custom item chỉ có [Xóa]
+- phase-04: xóa [Sửa] + edit flow; teamName fallback = product.name
+- phase-06: trim admin UI files/steps (→ Phase 8); thêm retry logic cho order-number.ts; teamName fallback trong email templates
+- phase-08: clarify không duplicate API routes từ Phase 6; thêm analytics vào dashboard
+
 ---
 
 ### Session 2 — 2026-04-13
@@ -138,7 +222,7 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 7. **[UI]** Font default → **Montserrat** (brand font, not shadcn default Inter)
 8. **[UI]** Brand colors theme → **Create src/lib/theme.ts** with custom colors; update tailwind.config.ts
 9. **[Phase 5]** Admin Preview → **Full UI implementation** (not just reusable component, integrate with Phase 8 admin order detail)
-10. **[CSV Import]** Image mapping → 4 columns: hinh_anh_front, hinh_anh_back, hinh_anh_sleeve, hinh_anh_shorts
+10. **[CSV Import]** Image mapping → **manual upload per ColorSet** trong wizard preview step (không cần cột ảnh trong CSV supplier — ảnh do shop tự upload)
 
 #### Phase Impact
 - phase-07: rewritten as COD only, effort 3d → 1d
@@ -146,5 +230,5 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 - phase-03: add stock display on product detail page
 - phase-04: update image angles to 4 (front/back/sleeve/shorts)
 - phase-05: update to full UI implementation (not just component)
-- phase-08: add stock display in product list/edit, 4 image angles per ColorSet in CSV import
+- phase-08: add stock display in product list/edit, manual image upload (4 angles) per ColorSet trong wizard preview step
 - Total effort: -2d (7w+2d → 7w) due to COD only simplification

@@ -111,7 +111,7 @@ model Order {
 
   paymentMethod   String  // "cod" (MVP - VNPay/MoMo deferred to Phase 2)
   paymentStatus   String  @default("pending") // "pending", "paid", "failed", "refunded"
-  orderStatus     String  @default("new") // "new", "confirmed", "processing", "shipped", "delivered", "cancelled"
+  orderStatus     String  @default("pending") // "pending", "processing", "shipping", "delivered", "cancelled"
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -144,38 +144,16 @@ model CustomOrder {
   productId       Int
   product         Product  @relation(fields: [productId], references: [id])
   colorSetName    String
+  // teamName optional — fallback to product.name in email/Excel if empty
   teamName        String?
-
-  // Logo URLs (Cloudinary)
-  clubLogoUrl     String?
-  sponsorLogoUrl  String?
-  leagueLogoUrl   String?
-  flagPatchUrl    String?
-
-  // Logo quality notes
   logoQualityNote String? // Auto-generated note for low quality logos
 
-  // Print config — front
-  printClubLogo       Boolean @default(false) // ngực trái
-  printSponsorLogo    Boolean @default(false) // giữa ngực
-  printSmallNumber    Boolean @default(false) // ngực phải
-
-  // Print config — sleeve
-  printLeagueLogo     Boolean @default(false)
-  printSleeveeSponsor Boolean @default(false)
-  printFlagPatch      Boolean @default(false)
-
-  // Print config — back
-  printTeamName       Boolean @default(false)
-  printBackNumber     Boolean @default(false)
-  printPlayerName     Boolean @default(false)
-
-  // Print config — shorts
-  printShortsNumber   Boolean @default(false)
-  shortsNumberSide    String? // "left", "right"
-
-  // Full print config with transform data (for admin preview)
-  printConfigJson     Json?   // Stores position/scale/rotation for all elements
+  // Full print config — single source of truth for builder state + admin preview
+  // Structure: { teamName, logos: [{ id, url, filename, qualityNote? }], angles: { front: OverlayElement[], back: [], sleeve: [], shorts: [] }, players: [...] }
+  // OverlayElement: { id, type: "logo"|"text", logoId?: string, text?: string, x: %, y: %, width: %, height: %, rotation: number, zIndex: number }
+  // Positions stored as % for responsiveness. logos[] supports multi-logo (club, sponsor, flag patch, etc.)
+  // Session 7: removed redundant logoUrl columns + boolean print config columns — printConfigJson is the only source
+  printConfigJson     Json?
 
   // Generated files
   excelFileUrl        String?
@@ -192,10 +170,10 @@ model Player {
   customOrderId Int
   customOrder   CustomOrder @relation(fields: [customOrderId], references: [id], onDelete: Cascade)
   sortOrder     Int
-  playerName    String
-  playerNumber  Int
-  jerseySize    String      // "S", "M", "L", "XL"
-  shortsSize    String      // "S", "M", "L", "XL"
+  playerName    String?     // optional — nếu trống thì áo trơn không in tên
+  playerNumber  Int?        // optional — nếu trống thì áo trơn không in số
+  jerseySize    String      // required — để sản xuất (XS/S/M/L/XL/XXL)
+  shortsSize    String?     // optional
 
   @@index([customOrderId])
 }
@@ -208,9 +186,9 @@ model Player {
 3. `npx prisma init` — configure schema above
 4. Setup `.env.example` with all required vars
 5. Configure **Montserrat font**: add to `tailwind.config.ts` and `src/app/layout.tsx`
-6. Create **brand colors theme**: `src/lib/theme.ts` with brand colors (Đỏ #FDD017, Vàng #E31E26, Xanh dương #00AEEF, Xám #A7A9AC); update `tailwind.config.ts`
+6. Create **brand colors theme**: `src/lib/theme.ts` with brand colors (Vàng #FDD017 primary, Đỏ #E31E26 secondary, Xanh dương #00AEEF accent, Xám #A7A9AC accent); update `tailwind.config.ts`
 7. Create base layout: `src/app/layout.tsx` with header (logo, nav, cart icon) + footer (mobile responsive)
-8. Configure Better Auth base — `src/lib/auth.ts` (plugins configured in Phase 2)
+8. Run `npx @better-auth/cli generate` → adds User/Session/Account/Verification tables to schema.prisma. Then configure Better Auth base — `src/lib/auth.ts` (plugins configured in Phase 2)
 9. Configure Prisma client — `src/lib/db.ts`
 10. Configure Cloudinary — `src/lib/cloudinary.ts`
 11. Create `src/lib/constants.ts` — sizes, categories, printing fee tiers
@@ -256,3 +234,7 @@ model Player {
 ## Risk
 - Better Auth version — pin version; full plugin setup in Phase 2
 - Railway PostgreSQL connection string format — test early
+
+## Security Notes
+- Upload API (Phase 4): validate MIME type + max 5MB; **SVG files must be sanitized** (strip `<script>`, event handlers, `href` with `javascript:`) before uploading to Cloudinary to prevent XSS
+- ProductVariant is scoped per **Product** (shared across all ColorSets) — do not add ColorSet FK to ProductVariant

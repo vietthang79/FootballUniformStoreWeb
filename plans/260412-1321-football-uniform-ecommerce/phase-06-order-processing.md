@@ -16,27 +16,39 @@ effort: 4d
 Server-side order creation, Excel player list generation, email to shop with all order details + attachments, and admin dashboard for order management.
 
 ## Requirements
-- POST `/api/orders` — create order from cart data (user must be authenticated — Phase 2)
-- Generate unique order number (ORD-YYYYMMDD-NNN)
-- For custom orders: generate Excel file with player list
-- Email to shop: order info + Excel + logo files + print config (admin views mockup preview via Phase 5 CSS overlay component)
+- POST `/api/orders` — **extends Phase 3 route** to handle both normal OrderItems + CustomOrders in 1 transaction. Cart can mix both types; result = 1 Order.
+- Generate unique order number: `ORD-YYYYMMDD-NNN` — **NNN resets to 001 daily** (COUNT orders today + 1)
+- For custom orders: generate **2-sheet Excel** (Sheet 1: order info; Sheet 2: player list)
+- Server-side **print fee validation** — recalculate per CustomOrder from `players.length`, don't trust client. Each CustomOrder calculated independently.
+- Email to shop: order info + Excel attachment + **all logo files** (from `logos[]` array in printConfigJson)
 - Email to customer: order confirmation with summary
-- Order status tracking (basic: new → confirmed → processing → shipped → delivered)
+- Order status: `pending → processing → shipping → delivered` (+ `cancelled`)
+- Customer cancel: PATCH `/api/orders/[id]/cancel` — only when `status = pending`, verify ownership; **send cancel email to shop**
 
 ## Architecture
 
 ```
-Checkout Submit → POST /api/orders
+Checkout Submit → POST /api/orders  (Phase 3 route extended)
   ├── Validate cart data + session (userId from auth)
-  ├── Create Order + OrderItems in DB
+  ├── Create Order in DB
+  ├── For each NormalCartItem:
+  │   └── Create OrderItem in DB
   ├── For each CustomCartItem:
   │   ├── Create CustomOrder + Players in DB
-  │   ├── Generate Excel (ExcelJS) → upload to Cloudinary
-  │   └── Save printConfigJson from builder state
-  ├── Calculate printing surcharge
-  ├── Send email to shop (Resend) with attachments
+  │   ├── Server-side recalculate print fee (per CustomOrder independently)
+  │   ├── Save printConfigJson (incl. logos[]) into CustomOrder
+  │   └── Generate 2-sheet Excel → upload to Cloudinary → save URL
+  ├── Send email to shop (Resend):
+  │   └── Attachments: Excel file + all logo files from logos[].url
   ├── Send email to customer (Resend)
   └── Return order confirmation
+
+Customer Cancel → PATCH /api/orders/[id]/cancel
+  ├── Verify userId + status=pending
+  ├── Set status = 'cancelled'
+  ├── Send cancel email to shop: "[Đơn huỷ] ORD-xxx — Tên khách"
+  └── Return updated order
+```
 
 Admin Dashboard:
   ├── GET /admin/orders - List all orders with status
@@ -45,89 +57,99 @@ Admin Dashboard:
   └── POST /admin/orders/[id]/notes - Add admin notes
 ```
 
-## Excel Template Design
+## Excel Template Design (2 sheets)
 
-| STT | Tên cầu thủ | Số áo | Size áo | Size quần |
-|-----|-------------|-------|---------|-----------|
-| 1   | Nguyễn Văn A | 10   | L       | M         |
+**Sheet 1 — Thông tin đơn hàng:**
+| Mã đơn | Ngày đặt | Khách hàng | SĐT | Địa chỉ | Tổng tiền | Trạng thái |
 
-Headers styled: bold white text, blue background. Auto-width columns.
+**Sheet 2 — Chi tiết cầu thủ:**
+| Mã đơn | Sản phẩm | Màu | Tên cầu thủ | Số áo | Size áo | Size quần |
+
+Headers styled: bold white text, blue background (#00AEEF). Auto-width columns.
 
 ## Email to Shop Content
-- Subject: `[Đơn mới] ORD-20260412-001 — Đội ABC FC — 12 bộ`
-- Body: customer info, product name, color set, print config summary, total + surcharge
-- Attachments: Excel file, logo files (from Cloudinary URLs)
+- Subject: `[Đơn mới] ORD-20260412-001 — Đội ABC FC — 12 bộ` (teamName fallback = product.name nếu khách không nhập)
+- Body: customer info, sản phẩm thường (nếu có), custom orders (tên đội, số bộ, surcharge), total
+- Attachments: Excel file + **tất cả logo files** (`logos[].url` từ printConfigJson per CustomOrder)
 - Note: Admin xem mockup preview trong dashboard (Phase 5 component)
+
+## Cancel Email to Shop Content
+- Subject: `[Đơn huỷ] ORD-20260412-001 — Nguyễn Văn A`
+- Body: thông tin khách (tên, SĐT), tóm tắt đơn (sản phẩm, số bộ nếu custom), thời gian huỷ
+- Trigger: customer gọi PATCH /api/orders/[id]/cancel (status pending → cancelled)
 
 ## Related Code Files
 
+<!-- Session 7: Phase 6 = API + email + Excel only. Admin UI (order list, order detail, status UI) moved to Phase 8 -->
+
 ### Create
-- `src/app/api/orders/route.ts` - POST handler
-- `src/app/admin/orders/page.tsx` - admin order list
-- `src/app/admin/orders/[id]/page.tsx` - admin order details
-- `src/app/api/admin/orders/[id]/status/route.ts` - update order status
-- `src/app/api/admin/orders/[id]/notes/route.ts` - add admin notes
-- `src/components/admin/order-list-table.tsx` - order list with status badges
-- `src/components/admin/order-detail-view.tsx` - detailed order view
-- `src/components/admin/status-update-form.tsx` - status update form
-- `src/lib/order-number.ts` - generate sequential order number
-- `src/lib/excel-generator.ts` - ExcelJS player list generator
-- `src/lib/email/send-shop-notification.ts` - shop email with Resend
-- `src/lib/email/send-customer-confirmation.ts` - customer email
-- `src/lib/email/templates/shop-order-email.tsx` - React Email template (shop)
-- `src/lib/email/templates/customer-order-email.tsx` - React Email template (customer)
-- `src/app/order-confirmation/[orderId]/page.tsx` - confirmation page
+- `src/app/api/orders/route.ts` — POST: handle normal items + custom orders in 1 transaction
+- `src/app/api/orders/[id]/cancel/route.ts` — PATCH cancel (pending only, verify ownership, send cancel email to shop)
+- `src/app/api/admin/orders/[id]/status/route.ts` — PATCH order status (admin only)
+- `src/app/api/admin/orders/[id]/notes/route.ts` — POST admin notes
+- `src/lib/order-number.ts` — generate sequential order number (unique constraint + retry on conflict)
+- `src/lib/excel-generator.ts` — ExcelJS 2-sheet workbook generator
+- `src/lib/email/send-shop-notification.ts` — shop email with Resend (+ all logo URLs as attachments)
+- `src/lib/email/send-shop-cancel-notification.ts` — shop cancel alert email
+- `src/lib/email/send-customer-confirmation.ts` — customer email
+- `src/lib/email/templates/shop-order-email.tsx` — React Email template (shop, mixed order)
+- `src/lib/email/templates/shop-cancel-email.tsx` — React Email template (cancel alert)
+- `src/lib/email/templates/customer-order-email.tsx` — React Email template (customer)
+- `src/app/order-confirmation/[orderId]/page.tsx` — confirmation page
 
 ## Implementation Steps
 
-1. Create `order-number.ts` — query DB for today's max order number, increment
-2. Create `excel-generator.ts` — ExcelJS workbook with styled player list, returns Buffer
-3. Create `POST /api/orders`:
-   - Validate request body (zod schema)
-   - Get userId from session (required — Phase 2 ensures auth)
-   - Transaction: create Order → OrderItems → CustomOrder → Players
-   - Save printConfigJson from builder state into CustomOrder
-   - Calculate printing surcharge per custom order
-   - Generate Excel per custom order → upload to Cloudinary → store URL
+1. Create `order-number.ts` — COUNT today's orders in DB, return `ORD-YYYYMMDD-{NNN padded to 3 digits}` (resets daily). Wrap order creation in try/catch: on unique constraint violation for orderNumber → retry up to 3 times with incremented count.
+2. Create `excel-generator.ts` — ExcelJS 2-sheet workbook (Sheet 1: order info, Sheet 2: players) with styled headers, returns Buffer
+3. Extend `POST /api/orders` (Phase 3 route):
+   - Validate request body (zod schema — both normal items + custom items)
+   - Get userId from session
+   - Transaction: create Order → OrderItems (normal) → CustomOrder + Players (custom)
+   - For each CustomOrder: **server-side recalculate print fee independently** from `players.length` using `printing-fee.ts`
+   - Save `printConfigJson` (incl. `logos[]`) from builder state into CustomOrder
+   - Generate 2-sheet Excel per custom order → upload Cloudinary → store URL
    - Return orderId
-4. Create shop email template — React Email, includes all order info
-5. Create customer email template — simpler confirmation
-6. Create `send-shop-notification.ts` — Resend API call with Excel + logo attachments
-7. Create `send-customer-confirmation.ts` — Resend API call
-8. Trigger emails after order creation (in API route, non-blocking)
-9. Create order confirmation page — shows order number, summary, "email đã được gửi"
-10. Update checkout page to call `/api/orders` and redirect to confirmation
-11. **Admin Dashboard**: Create order list page with filtering and status badges
-12. **Admin Dashboard**: Create order detail page showing same content as email
-13. **Admin Dashboard**: Create API routes for status updates and notes
-14. **Admin Dashboard**: Add authentication middleware for admin routes
+4. Create `PATCH /api/orders/[id]/cancel`:
+   - Verify `userId` from session matches `order.userId`
+   - Verify `order.status === 'pending'`
+   - Set `status = 'cancelled'`
+   - **Trigger `send-shop-cancel-notification.ts`** (non-blocking)
+   - Return updated order
+5. Create shop order email template — React Email, mixed order (normal items + custom orders), logo attachments from `logos[].url`
+6. Create shop cancel email template — React Email, order summary + customer contact
+7. Create customer confirmation email template — simpler summary
+8. Create `send-shop-notification.ts` — Resend API call with Excel + all logo URLs as attachments
+9. Create `send-shop-cancel-notification.ts` — Resend API call for cancel alert
+10. Create `send-customer-confirmation.ts` — Resend API call
+11. Trigger emails after order creation/cancel (non-blocking, log errors but don't block)
+12. Create order confirmation page — shows order number, summary, "email xác nhận đã được gửi"
+13. Update checkout page to call `/api/orders` → redirect to confirmation
+14. Create admin API routes: PATCH status + POST notes (auth guard — admin only). Send customer email on shipping/delivered.
+<!-- Admin UI (order list page, order detail page) → Phase 8 -->
 
 ## Todo
-- [ ] Order number generator
-- [ ] ExcelJS player list generator
-- [ ] POST /api/orders endpoint with validation
-- [ ] Order creation in DB (transaction) with userId from session
-- [ ] Save printConfigJson from builder state into CustomOrder
-- [ ] Printing surcharge calculation in order
-- [ ] Excel upload to Cloudinary
-- [ ] Shop notification email (Resend + React Email)
+- [ ] Order number generator (daily reset, ORD-YYYYMMDD-NNN)
+- [ ] ExcelJS 2-sheet generator (Sheet 1: order info, Sheet 2: players)
+- [ ] Extend POST /api/orders — mixed normal + custom items, per-CustomOrder print fee recalculation
+- [ ] Save printConfigJson (incl. logos[]) from builder state into CustomOrder
+- [ ] Excel upload to Cloudinary per CustomOrder
+- [ ] PATCH /api/orders/[id]/cancel — ownership check + pending status + cancel email to shop
+- [ ] Shop order email (Resend + React Email, all logo attachments from logos[])
+- [ ] Shop cancel alert email
 - [ ] Customer confirmation email
 - [ ] Order confirmation page
 - [ ] Wire checkout form → API → confirmation redirect
-- [ ] Error handling (payment failed, email failed)
-- [ ] **Admin Dashboard**: Order list page with status filtering
-- [ ] **Admin Dashboard**: Order detail page with full information
-- [ ] **Admin Dashboard**: API routes for status/notes updates
-- [ ] **Admin Dashboard**: Authentication middleware for admin access
+- [ ] Error handling (email failed → log, don't block order)
+- [ ] Admin API routes for status/notes updates (auth guard — Phase 8 UI will consume these)
 
 ## Success Criteria
-- Checkout → order created in DB with correct totals + userId
-- Excel file generated with all players, proper formatting
-- Shop receives email with Excel + logo attachments within 30s
+- Checkout → order created in DB with correct totals (server-side print fee) + userId
+- 2-sheet Excel file generated: Sheet 1 order info, Sheet 2 players, proper formatting
+- Shop receives email with Excel attachment within 30s
 - Customer receives confirmation email
 - Order confirmation page shows order number
-- **Admin Dashboard**: Shop can view all orders and update status
-- **Admin Dashboard**: Order details show same content as email attachments
+- Customer can cancel pending order from `/orders/[id]`; cannot cancel after processing
+- Admin API endpoints functional (status update, notes) — UI in Phase 8
 
 ## Risk
 - Resend rate limits (free: 100 emails/day) → sufficient for MVP
