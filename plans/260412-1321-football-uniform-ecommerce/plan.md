@@ -279,6 +279,27 @@ packages/
 - phase-11: P1 priority, CSV format update
 
 ---
+### Session 9 — 2026-04-14
+**Trigger:** Pre-implementation gap analysis — review toàn bộ plan + resolve conflicts
+**Questions asked:** 9
+
+#### Confirmed Decisions
+1. **[DB Schema]** ProductVariant FK → `colorSetId` (Session 8 wins over Session 6) — stock riêng từng màu
+2. **[DB Schema]** ProductImage thêm `label: String?` — admin đặt tên tab trong builder
+3. **[UX]** Overlay indexed by slot index, tab thừa ẩn khi ColorSet switch (data preserved)
+4. **[Phase split]** Phase 3 vs 10: giữ nguyên cả 2, khi implement check cái nào đã làm thì skip
+5. **[UX]** Normal product detail: cùng `/products/[slug]`, if/else layout dựa vào `isCustomizable`
+6. **[Phase 11]** Upgrade P2 → P1, start song song với Phase 1-2 (cần data trước launch)
+7. **[Email]** Admin cancel KHÔNG gửi email cho khách — shop tự liên hệ qua Zalo/điện thoại
+8. **[Builder]** Drag-drop library: `react-draggable` (không dùng react-moveable)
+9. **[Cart]** Zustand store: 2 arrays riêng biệt (`items[]` + `customOrders[]`)
+
+#### Phase Impact
+- phase-01: thêm `ProductImage.label: String?`
+- phase-04: đổi library sang `react-draggable`; tabs labeled by `ProductImage.label`; xóa `shortsSize` khỏi Player type
+- phase-06: admin cancel không gửi email cho khách (no change needed — đã đúng)
+- phase-11: priority P2 → P1
+---
 
 ### Session 2 — 2026-04-13
 **Trigger:** Product management flow clarification

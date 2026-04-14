@@ -4,16 +4,16 @@
 
 ## Overview
 
-- **Priority:** P2 (dev/demo data)
+- **Priority:** P1 (Session 9: upgraded — cần data thật trước launch; start song song với Phase 1)
 - **Status:** pending
 - **Effort:** ~4d
-- **Goal:** Scrape product data from 4 Vietnamese football sites → CSV → import via admin wizard
+- **Goal:** Scrape product data from 4 Vietnamese football sites → CSV → dùng để seed dev/test data (độc lập với admin CSV import wizard)
 
 ## Requirements
 
 - Scrape: name, description, price, category, colors, sizes, front image
 - Download images + upload to Cloudinary, save URL in CSV
-- CSV format matches phase-08 import wizard (English column names)
+- CSV dùng để seed dev data — **không liên quan** đến Phase 8 admin CSV import wizard (2 luồng độc lập)
 - Rate limiting + stealth to avoid blocks
 - CLI flags: `--site`, `--limit`, `--skip-images`, `--category`
 
@@ -212,14 +212,14 @@ When scraping product:
 - [ ] Implement sites/decathlon-vn.ts
 - [ ] Implement run.ts CLI
 - [ ] Test: `pnpm scraper --site=soccerstore --limit=5`
-- [ ] Verify CSV in Excel + admin import wizard
+- [ ] Verify CSV readable in Excel, seed data vào DB dev qua seed script
 
 ## Success Criteria
 
 - `pnpm scraper --site=soccerstore --limit=20` runs without errors
 - CSV is UTF-8, price is integer VND
 - Front image displays from Cloudinary URL
-- CSV imports successfully via /admin/products/import wizard
+- CSV readable in Excel + data seeds successfully vào DB dev
 - ≥50 products from ≥2 sites
 
 ## Risk Assessment
@@ -239,6 +239,7 @@ When scraping product:
 
 ## Dependencies
 
-- Phase 08 CSV import wizard must be implemented before Step 5 validation
+- Phase 01 phải xong trước (monorepo setup + shared-types + Cloudinary config)
 - `.env` needs: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 - `packages/shared-types` must be built before scraper package
+- **Không phụ thuộc Phase 8** — scraper là dev tool độc lập

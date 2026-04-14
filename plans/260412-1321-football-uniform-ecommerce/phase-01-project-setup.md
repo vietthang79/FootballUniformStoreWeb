@@ -79,6 +79,7 @@ model ProductImage {
   url       String  // Cloudinary URL
   colorSetId Int?
   colorSet  ColorSet? @relation(fields: [colorSetId], references: [id])
+  label     String?  // Session 9: tab label shown in builder (e.g., "Mặt trước", "Tay áo")
   sortOrder Int     @default(0)  // Session 8: free-form images, not hard-coded angles
 }
 

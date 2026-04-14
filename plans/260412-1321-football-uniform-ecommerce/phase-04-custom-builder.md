@@ -20,7 +20,7 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
 
 **Desktop-only**: Trên mobile < 768px, thay toàn bộ builder bằng thông báo "Vui lòng dùng máy tính để thiết kế đồng phục". Catalog, cart, checkout vẫn responsive bình thường.
 
-**Builder tech**: `react-moveable` library — logo/text là `absolute` div đè lên ảnh sản phẩm thật. Drag/resize/rotate handled by `<Moveable />` component (replaces raw mouse events).
+**Builder tech**: `react-draggable` library — logo/text là `absolute` div đè lên ảnh sản phẩm thật. Drag handled by `<Draggable />` component. (Session 9: confirmed react-draggable, not react-moveable)
 
 ## Page Layout (scroll-through sections)
 
@@ -46,7 +46,7 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
 ├── [Section 4] Thiết kế mockup (CORE)
 │               Layout: [Logo Panel bên trái | Canvas + Tabs]
 │               Logo Panel: danh sách logos từ library — drag logo vào canvas
-│               Tab switcher: tabs for each image slot (0, 1, 2...)
+│               Tab switcher: tabs for each image slot, labeled by ProductImage.label (Session 9)
 │               Mỗi tab:
 │                 - Ảnh sản phẩm thật làm nền
 │                 - Drag logo từ panel thả vào canvas → xuất hiện element
@@ -126,7 +126,7 @@ interface CustomConfig {
     playerName?: string
     playerNumber?: string
     size: string          // required — from ProductVariant sizes (disabled if stock=0)
-    shortsSize?: string
+    // Session 8: shortsSize removed — 1 field `size` for both jersey + shorts
   }[]
 }
 
