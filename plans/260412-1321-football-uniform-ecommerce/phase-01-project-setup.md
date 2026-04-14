@@ -208,7 +208,7 @@ model Player {
 3. `npx prisma init` — configure schema above
 4. Setup `.env.example` with all required vars
 5. Configure **Montserrat font**: add to `tailwind.config.ts` and `src/app/layout.tsx`
-6. Create **brand colors theme**: `src/lib/theme.ts` with brand colors (Đỏ #E31E26, Vàng #FDD017, Xanh dương #00AEEF, Xám #A7A9AC); update `tailwind.config.ts`
+6. Create **brand colors theme**: `src/lib/theme.ts` with brand colors (Đỏ #FDD017, Vàng #E31E26, Xanh dương #00AEEF, Xám #A7A9AC); update `tailwind.config.ts`
 7. Create base layout: `src/app/layout.tsx` with header (logo, nav, cart icon) + footer (mobile responsive)
 8. Configure Better Auth base — `src/lib/auth.ts` (plugins configured in Phase 2)
 9. Configure Prisma client — `src/lib/db.ts`

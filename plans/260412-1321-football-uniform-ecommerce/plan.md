@@ -17,7 +17,7 @@ Next.js 15 App Router | PostgreSQL + Prisma | Better Auth | Zustand | React Hook
 
 ## Confirmed Decisions (Validation Session 1 — 2026-04-12)
 - **UI**: shadcn/ui + Tailwind CSS
-- **Brand colors**: Đỏ #E31E26 (primary), Vàng #FDD017 (secondary), Xanh dương #00AEEF (accent), Xám #A7A9AC (accent)
+- **Brand colors**: Đỏ #FDD017(primary), Vàng #E31E26 (secondary), Xanh dương #00AEEF (accent), Xám #A7A9AC (accent)
 - **Builder UX**: Step wizard (progress bar + Back/Next)
 - **Tồn kho**: Không tracking MVP — lưu cột stock nhưng không tự động trừ
 - **Admin scope**: Quản lý đơn hàng + **CSV product import**. Không CRUD thủ công — import sản phẩm từ file CSV supplier xuất. Product Edit page riêng cho sửa chi tiết sau import.

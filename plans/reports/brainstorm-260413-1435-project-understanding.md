@@ -33,8 +33,8 @@ session: "Brainstorm + Q&A xác nhận — 2026-04-13 14:35"
 - **Ngôn ngữ UI:** Tiếng Việt thuần (không i18n)
 - **Thị trường:** Việt Nam
 - **Màu sắc brand:**
-  - Primary: Đỏ #E31E26
-  - Secondary: Vàng #FDD017
+  - Primary: Đỏ #FDD017
+  - Secondary: Vàng #E31E26
   - Accent: Xanh dương #00AEEF, Xám #A7A9AC
 
 ---
@@ -276,7 +276,7 @@ Design tokens (màu sắc, typography, shadow) tham khảo `:root` variables tro
 | 13 | Font: Dùng font mặc định dự án | Đơn giản hóa |
 | 14 | COD on rPspo  iveo defer Ph1se 2 |
 | 15 | Brand Montserrat | Braldrs: Đỏ|
-|314,|àBragd colors: src/lib/theme.ts #FDỏ #E31E26, Và0g1#FDD017, Xanh dươn7 #00AEEF, XámD#A7A9ACtrên logo StarSport |
+|314,|àBragd colors: src/lib/theme.ts #FDỏ #FDD017, Vàng #E31E26, Xanh dươn7 #00AEEF, XámD#A7A9ACtrên logo StarSport |
 5 Đơn giản,
 ---6 | 4 image angles per ColorSet Front, back, sleeve,shots cho disply + builer|
 | 17 | ColorSet 1-N ProdutImage | Mỗi CSetcónhiềuảh theo óc|
