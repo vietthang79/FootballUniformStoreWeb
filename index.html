@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nền Tảng Bán Đồ Bóng Đá Chuyên Nghiệp - Football Uniform Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FDD017;
+            --secondary: #E31E26;
+            --accent-blue: #00AEEF;
+            --accent-gray: #A7A9AC;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-600: #4a4a4a;
+            --gray-800: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            color: var(--light);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--gray-800) 100%);
+            color: var(--light);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--gray-200);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: var(--secondary);
+            color: var(--light);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--gray-100);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray-600);
+            font-size: 16px;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray-600);
+            font-size: 15px;
+        }
+
+        /* Benefits */
+        .benefits {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #0088cc 100%);
+            color: var(--light);
+        }
+
+        .benefits .section-title,
+        .benefits .section-subtitle {
+            color: var(--light);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .benefit-item h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .benefit-item p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        /* Target Customers */
+        .customers {
+            padding: 80px 0;
+            background: var(--gray-100);
+        }
+
+        .customer-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .customer-card {
+            background: var(--light);
+            padding: 35px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .customer-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .customer-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .customer-card li {
+            padding: 8px 0;
+            color: var(--gray-600);
+            font-size: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .customer-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: var(--dark);
+            color: var(--light);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: var(--gray-200);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section .cta-button {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-800);
+            color: var(--light);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray-200);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .features-grid,
+            .steps,
+            .benefits-grid,
+            .customer-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">Football<span>Uniform</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Tính Năng</a></li>
+                    <li><a href="#how-it-works">Cách Hoạt Động</a></li>
+                    <li><a href="#benefits">Lợi Ích</a></li>
+                    <li><a href="#customers">Khách Hàng</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Nền Tảng Bán Đồ Bóng Đá<br><span>Chuyên Nghiệp & Đa Dạng</span></h1>
+            <p>Giải pháp toàn diện cho đội bóng, câu lạc bộ và người yêu thích thể thao. Tự thiết kế đồng phục theo ý muốn, quản lý đơn hàng dễ dàng, giao hàng toàn quốc.</p>
+            <a href="#contact" class="cta-button">Liên Hệ Ngay</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Tính Năng Nổi Bật</h2>
+            <p class="section-subtitle">Trải nghiệm mua sắm và thiết kế đồng phục bóng đá chuyên nghiệp, tiện lợi và an toàn</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Tự Thiết Kế Mockup</h3>
+                    <p>Khách hàng tự do thêm logo, tên đội, số áo vào vị trí tùy ý trên ảnh sản phẩm thật. Xem trước kết quả thời gian thực trước khi đặt hàng.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Sản Phẩm Đa Dạng</h3>
+                    <p>Áo đấu, quần short, bộ đồng phục hoàn chỉnh, giày đá bóng và phụ kiện thể thao. Nhiều mẫu mã, màu sắc và size cho mọi lứa tuổi.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Đặt Hàng Theo Đội</h3>
+                    <p>Hỗ trợ đặt hàng theo đội với danh sách cầu thủ chi tiết. Tự động tính phí in ấn, xuất file Excel quản lý đơn hàng.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
+                    <h3>Giao Hàng Toàn Quốc</h3>
+                    <p>Mạng lưới giao hàng rộng khắp, đảm bảo hàng đến tay khách hàng nhanh chóng và an toàn. Thanh toán khi nhận hàng.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Giá Cả Hợp Lý</h3>
+                    <p>Chính sách giá cạnh tranh, ưu đãi cho đơn hàng số lượng lớn. Phí in ấn giảm dần theo số lượng bộ đặt.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>An Toàn & Tin Cậy</h3>
+                    <p>Hệ thống bảo mật thông tin khách hàng. Quy trình đặt hàng minh bạch, hỗ trợ khách hàng 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Quy Trình Đặt Hàng</h2>
+            <p class="section-subtitle">Đơn giản, nhanh chóng, chỉ với vài bước cơ bản</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Chọn Sản Phẩm</h3>
+                    <p>Tìm và chọn mẫu đồng phục ưng ý từ danh sách sản phẩm đa dạng</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Tùy Chỉnh Thiết Kế</h3>
+                    <p>Thêm logo, tên đội, số áo vào vị trí mong muốn trên sản phẩm</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Nhập Thông Tin</h3>
+                    <p>Điền danh sách cầu thủ, size, số áo cho từng thành viên</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Xác Nhận & Giao Hàng</h3>
+                    <p>Kiểm tra lại thông tin, xác nhận đơn hàng và chờ giao hàng</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <h2 class="section-title">Lợi Ích Cho Khách Hàng</h2>
+            <p class="section-subtitle">Tại sao chọn nền tảng của chúng tôi?</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">⏱️</div>
+                    <div>
+                        <h4>Tiết Kiệm Thời Gian</h4>
+                        <p>Quy trình đặt hàng tự động hóa, không cần liên hệ qua điện thoại hay email nhiều lần</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div>
+                        <h4>Chính Xác & Minh Bạch</h4>
+                        <p>Xem trước thiết kế trước khi in, tránh sai sót. Mọi thông tin đơn hàng được lưu trữ rõ ràng</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">📈</div>
+                    <div>
+                        <h4>Quản Lý Dễ Dàng</h4>
+                        <p>Theo dõi trạng thái đơn hàng, lịch sử mua sắm, xuất báo cáo Excel cho đội bóng</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎁</div>
+                    <div>
+                        <h4>Ưu Đãi Số Lượng</h4>
+                        <p>Giảm phí in ấn cho đơn hàng từ 6 bộ trở lên. Miễn phí in cho đơn hàng 10 bộ+</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div>
+                        <h4>Bảo Hành Chất Lượng</h4>
+                        <p>Cam kết chất lượng in ấn, hỗ trợ đổi trả nếu có lỗi từ nhà sản xuất</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🤝</div>
+                    <div>
+                        <h4>Hỗ Trợ Chuyên Nghiệp</h4>
+                        <p>Đội ngũ tư vấn nhiệt tình, giải đáp thắc mắc và hỗ trợ thiết kế nếu cần</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Customers -->
+    <section class="customers" id="customers">
+        <div class="container">
+            <h2 class="section-title">Đối Tác Khách Hàng</h2>
+            <p class="section-subtitle">Phù hợp với nhiều nhóm khách hàng khác nhau</p>
+            
+            <div class="customer-types">
+                <div class="customer-card">
+                    <h3>🏆 Đội Bóng Chuyên Nghiệp</h3>
+                    <ul>
+                        <li>Đặt hàng số lượng lớn</li>
+                        <li>Tùy chỉnh thiết kế chuyên sâu</li>
+                        <li>Quản lý danh sách cầu thủ</li>
+                        <li>Xuất báo cáo Excel quản lý</li>
+                    </ul>
+                </div>
+
+                <div class="customer-card">
+                    <h3>👨‍👩‍👧‍👦 Đội Bóng Phong Trào</h3>
+                    <ul>
+                        <li>Giá cả hợp lý</li>
+                        <li>Quy trình đặt hàng đơn giản</li>
+                        <li>Hỗ trợ thiết kế cơ bản</li>
+                        <li>Giao hàng nhanh chóng</li>
+                    </ul>
+                </div>
+
+                <div class="customer-card">
+                    <h3>🏫 Câu Lạc Bộ Trường Học</h3>
+                    <ul>
+                        <li>Gói ưu đãi cho giáo dục</li>
+                        <li>Đa dạng size cho học sinh</li>
+                        <li>Thiết kế logo trường</li>
+                        <li>Hóa đơn VAT đầy đủ</li>
+                    </ul>
+                </div>
+
+                <div class="customer-card">
+                    <h3>👤 Cá Nhân Yêu Thể Thao</h3>
+                    <ul>
+                        <li>Mua lẻ sản phẩm</li>
+                        <li>Đa dạng mẫu mã</li>
+                        <li>Thanh toán COD tiện lợi</li>
+                        <li>Giao hàng toàn quốc</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2>Sẵn Sàng Bắt Đầu?</h2>
+            <p>Liên hệ ngay để nhận tư vấn miễn phí và báo giá chi tiết cho đội bóng của bạn</p>
+            <a href="mailto:contact@footballuniform.vn" class="cta-button">Liên Hệ Ngay</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Football Uniform Store. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+</body>
+</html>
