@@ -1,13 +1,16 @@
-# Phase 11: Data Scraper Tool
+# Phase 11: Data Scraper Tool (Local Dev Seed)
 
 **Context:** [Brainstorm Report](../reports/brainstorm-260414-1022-data-scraper-tool.md) | [Plan](./plan.md)
+
+<!-- Session 10 (2026-04-17): LOCAL-ONLY one-shot tool. Run from dev machine once to seed initial data. NOT deployed. NO cron/schedule. Legal risk acceptable as personal research. Output CSV feeds admin import wizard (Phase 8) manually. -->
 
 ## Overview
 
 - **Priority:** P1 (Session 9: upgraded — cần data thật trước launch; start song song với Phase 1)
 - **Status:** pending
 - **Effort:** ~4d
-- **Goal:** Scrape product data from 4 Vietnamese football sites → CSV → dùng để seed dev/test data (độc lập với admin CSV import wizard)
+- **Deployment:** **LOCAL ONLY** (Session 10) — chạy từ máy dev, không deploy production, không cron schedule
+- **Goal:** Scrape product data from 4 Vietnamese football sites → CSV → dùng để seed dev/test data (độc lập với admin CSV import wizard). Output CSV được shop admin upload thủ công qua Phase 8 import wizard.
 
 ## Requirements
 

@@ -89,15 +89,16 @@ packages/
 |---|-------|--------|--------|------|
 | 1 | Project Setup + DB Schema | pending | 3d | [phase-01](./phase-01-project-setup.md) |
 | 2 | Auth — Login / Register / Forgot Password | pending | 2d | [phase-02](./phase-02-auth.md) |
-| 3 | Homepage (Marketing Landing Page) | pending | 2d | [phase-03](./phase-03-homepage.md) |
+| 3 | Homepage (Marketing Landing Page Only) | pending | 1.5d | [phase-03](./phase-03-homepage.md) |
 | 4 | Custom Mockup Builder UI + Logic | pending | 5d | [phase-04](./phase-04-custom-builder.md) |
 | 5 | Admin Preview Component | pending | 1d | [phase-05](./phase-05-mockup-preview.md) |
 | 6 | Order Processing + Email + Excel | pending | 4d | [phase-06](./phase-06-order-processing.md) |
 | 7 | Payment Integration (COD only) | pending | 1d | [phase-07](./phase-07-payment.md) |
 | 8 | Admin + Order Management + Product Import | pending | 5d | [phase-08](./phase-08-admin.md) |
 | 9 | Polish, SEO, Deploy | pending | 3d | [phase-09](./phase-09-polish-deploy.md) |
-| 10 | Product Catalog + Normal E-Commerce | pending | 5d | [phase-10](./phase-10-product-catalog.md) |
-| 11 | Data Scraper Tool (Dev Seed) | pending | 4d | [phase-11](./phase-11-data-scraper.md) |
+| 10 | Product Catalog + Cart + Checkout | pending | 6d | [phase-10](./phase-10-product-catalog.md) |
+| 11 | Data Scraper Tool (Local Dev Seed) | pending | 4d | [phase-11](./phase-11-data-scraper.md) |
+| 12 | Payment Gateways (VNPay/MoMo) — Post-MVP | deferred | TBD | [phase-12](./phase-12-payment-gateways.md) |
 
 ## Dependencies
 - Phase 2 depends on Phase 1
@@ -111,12 +112,16 @@ packages/
 - Phase 10 depends on all
 
 ## Key Architecture Decisions
-1. **Cart = Zustand + localStorage** — no server-side cart, sync to DB only at checkout
+1. **Cart = Zustand + localStorage + DB sync on login** — guest browse with localStorage, merge to server `CartItem` table upon login (Session 10)
 2. **Mockup order = bundle cart item** — 1 cart item = 1 team order with N players
-3. **Custom Mockup = Click-thả real-time** — khách tự do thêm mockup vào vị trí bất kỳ, không giới hạn vị trí cố định
-4. **Excel paste = native Clipboard API** — no table library
-5. **Logos uploaded to Cloudinary** — URLs stored in cart/order, originals preserved for print
-6. **Mandatory login** — Better Auth emailAndPassword + admin plugins; no anonymous/guest checkout
+3. **Custom Mockup = `react-moveable` overlay** (Session 10 override) — drag + resize + rotate + snap. Coords % (0-1) to scale across ColorSet switches
+4. **Image slots = dynamic tabs** (Session 10) — tabs generated từ `ProductImage.sortOrder`, không cứng 4 góc
+5. **Excel paste = native Clipboard API** — no table library
+6. **Logos uploaded to Cloudinary** — per CustomCartItem scope, không persist cross-session. Quality badge nếu < 300x300px
+7. **Stock = display only** — không validate/decrement, admin quản lý thủ công (Session 1 + 10)
+8. **Email = fire-and-forget** — trust Resend, không retry/log (Session 10)
+9. **Mandatory login** — Better Auth emailAndPassword + admin plugins; no anonymous/guest checkout
+10. **Admin user = seed script** — đọc ADMIN_EMAIL/PASSWORD từ `.env` lần đầu deploy (Session 10)
 
 ## Reports
 - [Brainstorm](../reports/brainstorm-260412-1321-football-uniform-ecommerce.md)
@@ -318,6 +323,58 @@ packages/
 - plan.md: Admin scope updated; phase-08 effort 5d (product import + edit)
 - phase-08: major expansion — thêm product import + product edit routes/files/steps
 - phase-01: seed.ts vẫn giữ cho dev/test data; không còn là primary product management method
+
+### Session 10 — 2026-04-17
+**Trigger:** Pre-implementation gap resolution — review toàn bộ plan + 25 gaps phát hiện
+**Questions asked:** 20
+
+#### Confirmed Decisions
+
+**A. Builder & Canvas (Phase 4)**
+1. **[Library]** Override Session 9 → **`react-moveable`** (drag + resize + rotate + snap), không dùng `react-draggable`
+2. **[ColorSet switch]** Overlay coords dạng `%` (x/y/w/h 0-1), giữ nguyên khi switch — scale tự động theo dimensions ảnh mới
+3. **[Image slots]** **Dynamic tabs** theo `ProductImage.sortOrder`, 2-10 ảnh đều OK. Override Phase 5 assumption 4 góc
+4. **[Logo library]** Scope **per CustomCartItem** only — đóng tab mất logos. Không user-persist
+5. **[Logo quality]** Auto-detect `width < 300 OR height < 300` → badge "⚠ Chất lượng thấp" + note
+
+**B. Stock & Order Flow**
+6. **[Stock]** Display only — UI disable size khi stock=0, KHÔNG validate/decrement khi order
+7. **[Cart sync]** Thêm `CartItem` table. Merge localStorage + server cart khi login (union)
+8. **[Order number]** Retry 3 lần → fail = return 500, client hiện "Thử lại sau"
+9. **[Print fee]** Skip edge case recalc — pricing rules stable MVP
+
+**C. Admin & CSV Import (Phase 8)**
+10. **[Admin setup]** Seed script đọc `ADMIN_EMAIL` + `ADMIN_PASSWORD` từ `.env` — tự tạo lần đầu deploy
+11. **[CSV invalid]** Preview step highlight bad rows + inline editable — admin fix manual trước confirm
+12. **[CSV stock]** Wizard step cuối: admin nhập stock per (ColorSet × size) manual trong table
+
+**D. Email & Failure (Phase 6)**
+13. **[Email fail]** Fire-and-forget — không retry/log/dashboard. Trust Resend
+14. **[Cancel email]** Shop only (current). Khách thấy status `cancelled` trong profile
+15. **[Excel URL]** Public Cloudinary URL + UUID slug — accept low security risk
+
+**E. Phase Structure**
+16. **[Phase 3]** Trim scope → **chỉ homepage** (hero, featured products, testimonials). Effort 2d → 1.5d
+17. **[Phase 11]** Local-only one-shot — không deploy, không cron
+18. **[Phase 12 NEW]** Payment gateways placeholder post-MVP (VNPay/MoMo/Bank)
+
+**F. Mobile & Cleanup**
+19. **[Mobile builder]** Giữ desktop-only < 768px (notice). Catalog/cart/checkout responsive
+20. **[Cleanup]** Xóa `index.html` + `components/custom-builder/` — Next.js clean slate
+
+#### Phase Impact
+- plan.md: Session 10 log, phase table update (Phase 3 1.5d, Phase 10 6d, Phase 12 new), Key Architecture Decisions rewritten
+- phase-01: add `CartItem` model, seed admin script, cleanup step
+- phase-03: remove cart/checkout/listing → chỉ marketing landing
+- phase-04: `react-moveable` override, dynamic tabs, logo quality check, % coords
+- phase-05: dynamic tabs (không hardcode 4 angles)
+- phase-06: remove email retry, order number fail = 500, Excel UUID upload
+- phase-08: CSV wizard stock-per-size step, bad rows highlight + inline fix
+- phase-10: expand scope (listing + filters + detail + cart + checkout + sync API), 5d → 6d
+- phase-11: mark local-only dev tool
+- phase-12: NEW placeholder file
+
+---
 
 ### Session 4 — 2026-04-13
 **Trigger:** Plan consistency check + clarification session

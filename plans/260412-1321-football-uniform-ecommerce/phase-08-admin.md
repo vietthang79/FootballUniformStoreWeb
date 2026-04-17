@@ -11,6 +11,12 @@ effort: 5d
 ## Context
 - Depends on Phase 6+7 (orders exist in DB)
 - [Brainstorm: CSV Import Flow](../reports/brainstorm-260413-1508-csv-product-import.md)
+
+<!-- Session 10 (2026-04-17):
+  - CSV invalid rows → preview step highlights bad rows (red border), inline editable (no fail whole import)
+  - CSV stock mapping → wizard Step 5 NEW: admin inputs stock per (ColorSet × size) manually (no auto-split from CSV)
+  - Admin user setup via seed script (Phase 1) reading ADMIN_EMAIL/PASSWORD from .env — no UI invite flow
+-->
 <!-- Session 8: Images free-form (sortOrder). Product edit FULL scope (info + images + ColorSet + stock per variant). Status PATCH sends customer email. -->
 
 ## Overview
@@ -48,16 +54,29 @@ Protected by Better Auth admin role (Phase 2).
     → ProductDraft[]: 1 Product = N ColorSets
         ↓
 [4] Preview Table (grouped, all fields shown, inline editable)
+    Session 10: Invalid rows (negative price, empty name, bad size) highlighted with red border.
+    Admin fixes inline directly in table — import only proceeds when 0 invalid rows.
     ▼ Áo CLB A  [category] [description]  [☑ Cho phép tùy chỉnh mockup]  ← isCustomizable toggle
-      Xanh Navy | vốn:[__] | bán:[__] | stock:[__] | 🖼 [Upload ảnh...] (tự do sortOrder)
-      Đỏ Trắng  | vốn:[__] | bán:[250k]| stock:[8]  | 🖼 [thumb][thumb][+]
+      Xanh Navy | vốn:[__] | bán:[__] | 🖼 [Upload ảnh...] (tự do sortOrder)
+      Đỏ Trắng  | vốn:[__] | bán:[250k]| 🖼 [thumb][thumb][+]
     ▼ Giày Nike  [category] [description]  [☐ Cho phép tùy chỉnh mockup]
-      Đen/Trắng | vốn:[__] | bán:[__] | stock:[5]  | 🖼 [Upload ảnh...]
+      Đen/Trắng | vốn:[__] | bán:[__] | 🖼 [Upload ảnh...]
         ↓
-[5] Confirm
+[5] Stock per variant (Session 10 — NEW STEP)
+    Table input: rows × cols = ColorSet × Size
+    ┌─────────────┬────┬────┬────┬────┬─────┐
+    │ ColorSet    │ S  │ M  │ L  │ XL │ XXL │
+    ├─────────────┼────┼────┼────┼────┼─────┤
+    │ Xanh Navy   │[5] │[10]│[10]│[8] │ [3] │
+    │ Đỏ Trắng    │[0] │[5] │[8] │[5] │ [0] │
+    └─────────────┴────┴────┴────┴────┴─────┘
+    Admin inputs each cell manually. Default 0. No auto-split from CSV `so_luong`.
+    Separate table for jersey vs shorts type if product has both.
+        ↓
+[6] Confirm
     → Upload imageFiles[] per ColorSet → Cloudinary (parallel, blob URLs locally until here)
-    → POST /api/admin/products/import (với isCustomizable per product)
-    → prisma.$transaction → Product[] + ColorSet[] + ProductImage[] (free-form sortOrder)
+    → POST /api/admin/products/import (với isCustomizable per product, stock matrix per variant)
+    → prisma.$transaction → Product[] + ColorSet[] + ProductImage[] (sortOrder) + ProductVariant[] (per ColorSet × size)
     → Redirect /admin/products
 ```
 
@@ -86,6 +105,8 @@ Protected by Better Auth admin role (Phase 2).
 - `src/components/admin/csv-import/preview-table.tsx`
 - `src/components/admin/csv-import/product-group-row.tsx`
 - `src/components/admin/csv-import/colorset-row.tsx`
+- `src/components/admin/csv-import/invalid-row-indicator.tsx` — Session 10: red border + validation hints per bad cell
+- `src/components/admin/csv-import/stock-matrix-step.tsx` — Session 10: Step 5 stock-per-variant input grid
 - `src/components/admin/product-image-uploader.tsx`
 - `src/app/api/admin/products/import/route.ts`
 - `src/app/api/admin/products/[id]/route.ts`
@@ -111,15 +132,16 @@ Protected by Better Auth admin role (Phase 2).
 9. `column-mapping-step.tsx` — CSV col → DB field mapping UI
 10. `colorset-row.tsx` — inline edit + free-form image upload (sortOrder-based)
 11. `product-group-row.tsx` — expandable product group + `isCustomizable` toggle
-12. `preview-table.tsx` — grouped product table with state mutations
-13. `import/page.tsx` — wizard: upload → mapping → preview → confirm
-14. `api/admin/products/import/route.ts` — bulk create Products + ColorSets + ProductImages + ProductVariants
-15. **`products/[id]/edit/page.tsx`** — FULL scope:
+12. `preview-table.tsx` — grouped product table with state mutations; **Session 10**: validation engine flags invalid rows (red border, tooltip error), disables Next button until 0 invalid
+13. `stock-matrix-step.tsx` — **Session 10 NEW Step 5**: grid input for stock per (ColorSet × size) manually, default 0, no auto-split
+14. `import/page.tsx` — wizard: upload → mapping → preview → **stock matrix** → confirm (6 steps)
+15. `api/admin/products/import/route.ts` — bulk create Products + ColorSets + ProductImages + ProductVariants (stock from matrix step, not CSV)
+16. **`products/[id]/edit/page.tsx`** — FULL scope:
     - Product info (name, category, price, description)
     - Image management: reorder/add/delete per ColorSet (free-form sortOrder)
     - ColorSet management: add/remove/rename
     - Stock per (ColorSet + size) variant
-16. **`api/admin/products/[id]/route.ts`** — GET + PUT for all fields above
+17. **`api/admin/products/[id]/route.ts`** — GET + PUT for all fields above
 
 ## Todo
 
@@ -136,9 +158,10 @@ Protected by Better Auth admin role (Phase 2).
 - [ ] Column mapping step UI
 - [ ] Colorset row UI (free-form image upload, sortOrder)
 - [ ] Product group row UI
-- [ ] Preview table UI
-- [ ] Import wizard page
-- [ ] Bulk import API
+- [ ] Preview table UI with **invalid row validation + inline fix** (Session 10)
+- [ ] **Stock matrix step** (Session 10 — new step 5, per ColorSet × size grid)
+- [ ] Import wizard page (6 steps)
+- [ ] Bulk import API (ProductVariants from stock matrix, not CSV)
 - [ ] Product list page with stock display
 - [ ] **Product edit page (FULL SCOPE)**:
   - [ ] Product info form

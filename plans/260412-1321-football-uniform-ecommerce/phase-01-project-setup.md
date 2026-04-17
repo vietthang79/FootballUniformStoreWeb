@@ -29,6 +29,12 @@ Bootstrap Next.js 15 project, configure Prisma + PostgreSQL, setup Better Auth, 
 <!-- Updated: Session 1 - shadcn/ui added to stack; stock field kept in schema but no auto-decrement logic -->
 <!-- Updated: Session 4 - Montserrat font, brand colors theme, mobile responsive from Phase 1 -->
 <!-- Updated: Session 8 - ProductVariant FK to colorSetId, ProductImage sortOrder-based (free-form), Player single size field, User shipping fields -->
+<!-- Updated: Session 10 - Add CartItem model (cart sync on login); admin seed via ENV; cleanup legacy index.html + components/custom-builder/ -->
+
+## Session 10 Changes
+- **CartItem model** added — persists cart server-side for cross-device sync after login (guest uses localStorage only)
+- **Admin seed script** reads `ADMIN_EMAIL` + `ADMIN_PASSWORD` from `.env` — creates admin user on first deploy
+- **Cleanup step**: delete legacy `index.html` + `components/custom-builder/` folder before init Next.js
 
 ## DB Schema Design
 
@@ -59,6 +65,7 @@ model Product {
   colorSets     ColorSet[]
   orderItems    OrderItem[]
   customOrders  CustomOrder[]
+  cartItems     CartItem[]  // Session 10: server-side cart sync
 }
 
 model ProductVariant {
@@ -199,11 +206,34 @@ model Player {
 
   @@index([customOrderId])
 }
+
+// Session 10: Server-side cart for cross-device sync after login
+// Guest uses localStorage only; on login, client POSTs localStorage → /api/cart/merge
+// merge = union (client items + server items, de-duped by productId+colorSetId+size+type)
+model CartItem {
+  id              Int      @id @default(autoincrement())
+  userId          String
+  productId       Int
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  colorSetId      Int?
+  size            String?  // for normal items
+  quantity        Int      @default(1)
+  // Custom items store full builder state as JSON (mirrors CustomOrder.printConfigJson)
+  // NULL for normal items, populated for custom items
+  customConfigJson Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
 ```
 
 ## Implementation Steps
 
-### Monorepo Setup (do first)
+### Cleanup (do first — Session 10)
+0. Delete legacy files: `rm index.html` + `rm -rf components/custom-builder/` — these are old mockups, not used. Next.js init clean slate.
+
+### Monorepo Setup
 1. Init workspace root: create `package.json` (name: `football-uniform-store`, private, engines node≥20 pnpm≥9) + `pnpm-workspace.yaml` (`packages: ['apps/*', 'packages/*']`)
 2. Create `packages/shared-types/` — `package.json` (name: `@football-store/shared-types`) + `src/index.ts` exporting `ProductCategory`, `ScrapedProduct`, `ScrapedColorSet`, `CsvRow`, `SiteConfig`, `SiteScraper` interfaces
 3. Create `apps/web/` dir — run `npx create-next-app@latest apps/web` with TypeScript, Tailwind, App Router, src/ directory; update its `package.json` name to `@football-store/web`, add dep `@football-store/shared-types: workspace:*`
@@ -219,8 +249,8 @@ model Player {
 11. Configure Prisma client — `src/lib/db.ts`
 12. Configure Cloudinary — `src/lib/cloudinary.ts`
 13. Create `src/lib/constants.ts` — sizes, categories, printing fee tiers
-14. Seed script — `prisma/seed.ts` with sample products + color sets (dev/test only — production products managed via CSV import in Phase 8)
-15. Verify: `pnpm dev` (from root) → homepage renders, DB connected, mobile responsive
+14. Seed script — `prisma/seed.ts` with sample products + color sets (dev/test only — production products managed via CSV import in Phase 8). **Session 10**: additionally reads `ADMIN_EMAIL` + `ADMIN_PASSWORD` from `.env`, creates admin user via Better Auth `signUpEmail` API, then updates `role='admin'`. Idempotent — skip if admin exists.
+15. Verify: `pnpm dev` (from root) → homepage renders, DB connected, mobile responsive; seed creates admin user successfully
 
 ## Files to Create
 
@@ -231,6 +261,10 @@ model Player {
 **packages/shared-types:**
 - `packages/shared-types/package.json`
 - `packages/shared-types/src/index.ts` — exported interfaces
+
+**Files to Delete (Session 10 cleanup):**
+- `index.html` (legacy mockup, not used)
+- `components/custom-builder/` (empty legacy folder)
 
 **apps/web:**
 - `apps/web/src/app/layout.tsx` — root layout (with Montserrat font, mobile responsive)
@@ -243,9 +277,10 @@ model Player {
 - `apps/web/tailwind.config.ts` — update with Montserrat font + brand colors
 - `apps/web/prisma/schema.prisma` — full schema
 - `apps/web/prisma/seed.ts` — sample data
-- `apps/web/.env.example`
+- `apps/web/.env.example` — includes `DATABASE_URL`, `BETTER_AUTH_SECRET`, `CLOUDINARY_*`, `RESEND_API_KEY`, and Session 10: `ADMIN_EMAIL`, `ADMIN_PASSWORD` for seed admin user
 
 ## Todo
+- [ ] Delete legacy `index.html` + `components/custom-builder/` (Session 10 cleanup)
 - [ ] Create pnpm workspace root (package.json + pnpm-workspace.yaml)
 - [ ] Create packages/shared-types with exported TS interfaces
 - [ ] Create Next.js 15 project in apps/web/
@@ -259,7 +294,9 @@ model Player {
 - [ ] Setup Cloudinary SDK
 - [ ] Create base layout (header + footer + nav, mobile responsive)
 - [ ] Create seed script with 5-10 sample products
+- [ ] Add admin user seed logic in `prisma/seed.ts` (reads ADMIN_EMAIL/ADMIN_PASSWORD from .env)
 - [ ] Verify dev server runs clean + mobile responsive
+- [ ] Verify admin user created in DB after seed
 
 ## Success Criteria
 - `npm run dev` works

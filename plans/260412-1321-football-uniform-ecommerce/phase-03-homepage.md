@@ -1,17 +1,18 @@
 ---
 phase: 3
-title: "Homepage (Marketing Landing Page)"
+title: "Homepage (Marketing Landing Page Only)"
 status: pending
 priority: P1
-effort: 2d
+effort: 1.5d
 ---
 
-# Phase 3: Homepage (Marketing Landing Page)
+# Phase 3: Homepage (Marketing Landing Page Only)
 
 ## Context
 - Depends on Phase 1 (DB for featured products query) + Phase 2 (auth for nav header user state)
 - Brand colors: Vàng #FDD017 (primary), Đỏ #E31E26 (secondary), Xanh dương #00AEEF (accent)
 - Created: Session 8 brainstorm — "làm mới hoàn toàn, không dùng index.html làm reference"
+- **Session 10 confirmation**: Phase 3 scope **exclusively homepage marketing** — cart, checkout, listing, product detail all belong to Phase 10. Effort reduced 2d → 1.5d.
 
 ## Overview
 Marketing landing page tại `/`. Server-fetched featured products from DB. Static sections (features, testimonials) hardcoded. Nav header reads auth session for user state (login/logout).
@@ -61,8 +62,8 @@ src/app/page.tsx  (RSC — server component)
 - `src/components/home/featured-products-section.tsx` — server component, Prisma fetch + grid
 - `src/components/home/testimonials-section.tsx` — hardcoded reviews grid
 
-### Depends on (Phase 4 will create)
-- `src/components/product/product-card.tsx` — if Phase 3 (catalog) not yet done, create a minimal version here and update in Phase 4
+### Depends on (Phase 10 will create full version)
+- `src/components/product/product-card.tsx` — create **minimal version** in Phase 3 (name, image, price, link). Phase 10 enriches (stock badge, color chips, variants hover preview)
 
 ## Implementation Steps
 

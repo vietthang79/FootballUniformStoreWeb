@@ -14,13 +14,14 @@ effort: 5d
 - [Brainstorm — Project Understanding](../reports/brainstorm-260413-1435-project-understanding.md)
 <!-- Updated: Session 5 (2026-04-14) — Complete rewrite. Wizard removed. Builder is sections embedded in /products/[slug] -->
 <!-- Session 8: Player size field required, overlay structure uses overlays: OverlayElement[][] (indexed by image slot) -->
+<!-- Session 10 (2026-04-17): OVERRIDE Session 9 — use `react-moveable` (drag+resize+rotate+snap, not react-draggable). Dynamic tabs by ProductImage count (not hardcoded 4). Logo quality check < 300px. Per-CustomCartItem logo scope. ColorSet switch preserves % coords (auto-scales). -->
 
 ## Overview
 Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/[slug]` khi sản phẩm có `customizable = true`. Không có wizard, không có route riêng. Khách tương tác theo thứ tự bất kỳ, add to cart từ nút cuối trang.
 
 **Desktop-only**: Trên mobile < 768px, thay toàn bộ builder bằng thông báo "Vui lòng dùng máy tính để thiết kế đồng phục". Catalog, cart, checkout vẫn responsive bình thường.
 
-**Builder tech**: `react-draggable` library — logo/text là `absolute` div đè lên ảnh sản phẩm thật. Drag handled by `<Draggable />` component. (Session 9: confirmed react-draggable, not react-moveable)
+**Builder tech**: `react-moveable` library (Session 10 override) — logo/text là `absolute` div đè lên ảnh sản phẩm thật. `<Moveable draggable resizable rotatable />` cung cấp drag + resize (corner handles) + rotate (top handle, snap 0/90/180/270°). All positions stored as percentage (0-1) of canvas dimensions → auto-scale across ColorSet switches and screen sizes.
 
 ## Page Layout (scroll-through sections)
 
@@ -46,20 +47,25 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
 ├── [Section 4] Thiết kế mockup (CORE)
 │               Layout: [Logo Panel bên trái | Canvas + Tabs]
 │               Logo Panel: danh sách logos từ library — drag logo vào canvas
-│               Tab switcher: tabs for each image slot, labeled by ProductImage.label (Session 9)
+│               Tab switcher: **dynamic tabs** (Session 10) — one tab per ProductImage,
+│                 ordered by sortOrder, labeled by ProductImage.label
+│                 (2-10 tabs depending on admin upload count, not fixed 4 angles)
 │               Mỗi tab:
 │                 - Ảnh sản phẩm thật làm nền
-│                 - Drag logo từ panel thả vào canvas → xuất hiện element
+│                 - Drag logo từ panel thả vào canvas → xuất hiện element (react-moveable)
 │                 - Drag text overlay (tên đội): giống logo
 │                 - Mỗi element: corner handles resize, top handle rotate (snap 0/90/180/270°)
 │                 - Nhiều logos có thể trên cùng 1 tab (club logo + sponsor logo + số nhỏ...)
-│               Positions lưu per-image-slot + per-element (x%, y%, width%, rotation)
-│               **Switching ColorSet: giữ nguyên element positions**
+│               Positions: **percentage coords** (x/y/w/h ∈ [0,1])
+│                 lưu per-image-slot + per-element (rotation in degrees)
+│               **Switching ColorSet** (Session 10): giữ nguyên overlays[][].
+│                 Tabs re-rendered for new ColorSet's images. Tab thừa ẩn (data preserved).
+│                 % coords auto-scale to new image dimensions.
 │               Shared <MockupCanvas /> component (interactive mode)
 │
 ├── [Section 5] Danh sách cầu thủ
 │               Luôn hiển thị, mặc định 1 dòng
-│               Columns: STT | Tên cầu thủ* | Số áo* | Size áo (required) | Size quần*
+│               Columns: STT | Tên cầu thủ* | Số áo* | Size (required — áo + quần cùng size, Session 8)
 │               (* optional — nếu trống → áo trơn không in)
 │               [+ Thêm cầu thủ] | [Paste từ Excel]
 │               Real-time print fee calculation theo số dòng
@@ -74,9 +80,9 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
 ## Architecture
 
 ```
-/products/[slug]/page.tsx (RSC)
-  ├── ProductGallery           (Phase 3 — images by slot)
-  ├── ColorSetSelector         (Phase 3 — swap images)
+/products/[slug]/page.tsx (RSC)  — owned by Phase 10 (product catalog)
+  ├── ProductGallery           (Phase 10 — dual-mode: grid + tabs)
+  ├── ColorSetSelector         (Phase 10 — swap images)
   ├── [if !customizable]
   │   ├── SizeSelector
   │   └── AddToCartButton (normal)
@@ -84,10 +90,10 @@ Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/
       ├── MobileBuilderNotice  (< 768px only)
       ├── [hidden on mobile]
       │   ├── LogoUploader     — Phase 4
-      │   ├── MockupCanvas     — Phase 4 (interactive)
-      │   │   └── Tabs: one per image slot
+      │   ├── MockupCanvas     — Phase 4 (interactive, react-moveable, % coords)
+      │   │   └── Dynamic tabs: one per ProductImage (Session 10)
       │   ├── PlayerListEditor — Phase 4
-      │   ├── PrintFeeNudge    — Phase 3 (reused)
+      │   ├── PrintFeeNudge    — Phase 4 (owned here, reused in cart Phase 10)
       │   └── AddToCartButton  (custom)
 ```
 
@@ -102,17 +108,17 @@ interface LogoItem {
   qualityNote?: string  // auto-set nếu width < 300px
 }
 
-// Per-image-slot overlay element
+// Per-image-slot overlay element (Session 10: all coords are percentages in [0,1])
 interface OverlayElement {
   id: string
   type: 'logo' | 'text'
   logoId?: string        // reference logos[].id (khi type='logo')
   text?: string          // giá trị text (khi type='text')
-  x: number             // % of canvas width (left edge)
-  y: number             // % of canvas height (top edge)
-  width: number         // % of canvas width
-  height: number        // % of canvas height (maintain aspect ratio)
-  rotation: number      // degrees
+  x: number             // 0-1 of canvas width (left edge)
+  y: number             // 0-1 of canvas height (top edge)
+  width: number         // 0-1 of canvas width
+  height: number        // 0-1 of canvas height (maintain aspect ratio)
+  rotation: number      // degrees [0-360], snap at 0/90/180/270
   zIndex: number
 }
 
@@ -191,7 +197,7 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 - `src/components/custom-builder/overlay-element.tsx` — single draggable/resizable/rotatable element (references LogoItem)
 - `src/components/custom-builder/image-tab-switcher.tsx` — tabs for each image slot
 - `src/components/custom-builder/player-list-editor.tsx` — table với useFieldArray + paste
-- `src/components/custom-builder/player-row.tsx` — 1 row: tên, số, size (required dropdown from ProductVariant), size quần
+- `src/components/custom-builder/player-row.tsx` — 1 row: tên, số, size (required dropdown from ProductVariant) — single size field (Session 8)
 - `src/components/custom-builder/mobile-builder-notice.tsx` — notice for < 768px
 - `src/lib/printing-fee.ts` — fee calculation per CustomOrder (shared with Phase 6 server-side)
 - `src/lib/clipboard-parser.ts` — Excel TSV paste: auto-detect columns (pattern matching), fallback mapping dialog
@@ -206,7 +212,8 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 
 ## Implementation Steps
 
-1. Create `src/lib/svg-sanitizer.ts` — strip `<script>`, event attrs (on*), `href=javascript:` from SVG string; return sanitized SVG
+0. Install builder deps (apps/web): `pnpm add react-moveable isomorphic-dompurify uuid`
+1. Create `src/lib/svg-sanitizer.ts` — strip `<script>`, event attrs (on*), `href=javascript:` from SVG string; return sanitized SVG (use `isomorphic-dompurify` under the hood)
 2. Create `src/app/api/upload/logo/route.ts` — validate MIME (image/jpeg, image/png, image/svg+xml), max 5MB; sanitize SVG before upload; return Cloudinary URL
 3. Create `clipboard-parser.ts`:
    - Parse TSV from `navigator.clipboard.readText()`
@@ -217,12 +224,12 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 5. Create `logo-uploader.tsx` — dropzone; PNG/JPG/SVG max 5MB; SVG → sanitize via `svg-sanitizer.ts`; dimension check → qualityNote if < 300px; quality warning badge + auto-note; returns `LogoItem`
 6. Create `logo-library-panel.tsx` — sidebar showing uploaded `LogoItem[]`; thumbnail grid; [+ Upload] button; [×] remove; drag source (`draggable` attr) for canvas drop
 7. Create `overlay-element.tsx` — absolute-positioned div; interactive: mousedown drag, corner handles resize, top handle rotate (snap 0/90°/180°/270°); readonly: static; references `logoId` or renders `text`
-8. Create `mockup-canvas.tsx` — container (position:relative) with product image + overlay elements; `onDrop` receives logoId from panel drag; mode prop switches interactivity; positions stay on ColorSet switch
-9. Create `image-tab-switcher.tsx` — tabs for each image slot; switching saves/restores elements per slot (state keyed by slot index)
+8. Create `mockup-canvas.tsx` — container (position:relative) with product image + overlay elements (absolute positioned via `left: ${x*100}%; top: ${y*100}%; width: ${w*100}%` etc); `onDrop` receives logoId from panel drag; mode prop switches interactivity; positions as % (0-1) stay on ColorSet switch (auto-scale)
+9. Create `image-tab-switcher.tsx` — **dynamic tabs** generated from `productImages.filter(img => img.colorSetId === currentColorSetId).sort(sortOrder)` (Session 10); labels from `ProductImage.label` or fallback "Ảnh N"; state keyed by slot index (overlays[slotIndex]); on ColorSet switch tabs re-render but overlays data preserved
 10. Create `player-list-editor.tsx`:
     - useFieldArray for dynamic rows
     - Default 1 row on mount
-    - Columns: STT (auto), Tên (optional), Số áo (optional), Size áo (required dropdown from ProductVariant.sizes — disabled if stock=0), Size quần (optional)
+    - Columns: STT (auto), Tên (optional), Số áo (optional), Size (required dropdown from ProductVariant.sizes — disabled if stock=0, Session 10: display-only check, no order-time validation)
     - Add row button; remove per row
     - Paste handler: call `clipboard-parser`; if confident → append rows directly; else → show `<ColumnMappingDialog />`
     - Emit player count → parent for print fee recalculation

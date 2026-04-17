@@ -11,13 +11,18 @@ effort: 4d
 ## Context
 - Depends on Phase 4+5 (custom order data)
 - [Tech Stack Research — Email + Excel](../reports/researcher-260412-1321-tech-stack.md)
+- **Session 10 overrides**:
+  - Email = fire-and-forget (no retry, no dashboard badge, no logging failure state)
+  - Order number retry = 3 attempts max. Fail → throw 500 (client shows "Thử lại sau")
+  - Excel Cloudinary upload uses **UUID public_id** (public URL, random slug) — accept low security risk
+  - POST /api/orders **owned by Phase 10** (checkout page there). Phase 6 = API handlers, email/Excel only.
 
 ## Overview
 Server-side order creation, Excel player list generation, email to shop with all order details + attachments. Customer sees success notification on screen. Status updates trigger customer emails from Phase 8 admin.
 
 ## Requirements
-- POST `/api/orders` — **extends Phase 3 route** to handle both normal OrderItems + CustomOrders in 1 transaction. Cart can mix both types; result = 1 Order.
-- Generate unique order number: `ORD-YYYYMMDD-NNN` — **NNN resets to 001 daily** (COUNT orders today + 1)
+- POST `/api/orders` — single route (owned by Phase 10) to handle both normal OrderItems + CustomOrders in 1 transaction. Cart can mix both types; result = 1 Order.
+- Generate unique order number: `ORD-YYYYMMDD-NNN` — **NNN resets to 001 daily** (COUNT orders today + 1); retry max 3 → throw 500 (Session 10)
 - For custom orders: generate **2-sheet Excel** (Sheet 1: order info; Sheet 2: player list)
 - Server-side **print fee validation** — recalculate per CustomOrder from `players.length`, don't trust client. Each CustomOrder calculated independently.
 - Email to shop: order info + Excel download link + **all logo URLs** (from `logos[]` array in printConfigJson)
@@ -100,15 +105,15 @@ Headers styled: bold white text, blue background (#00AEEF). Auto-width columns.
 
 ## Implementation Steps
 
-1. Create `order-number.ts` — COUNT today's orders in DB, return `ORD-YYYYMMDD-{NNN padded to 3 digits}` (resets daily). Wrap order creation in try/catch: on unique constraint violation for orderNumber → retry up to 3 times with incremented count.
-2. Create `excel-generator.ts` — ExcelJS 2-sheet workbook (Sheet 1: order info, Sheet 2: players) with styled headers, returns Buffer. Update structure reference to use `overlays: OverlayElement[][]` if applicable.
+1. Create `order-number.ts` — COUNT today's orders in DB, return `ORD-YYYYMMDD-{NNN padded to 3 digits}` (resets daily). Wrap order creation in try/catch: on unique constraint violation for orderNumber → retry up to 3 times with incremented count. **Session 10**: after 3 failures, throw HTTP 500 — client displays "Đặt hàng thất bại, vui lòng thử lại sau". No UUID fallback, no pool.
+2. Create `excel-generator.ts` — ExcelJS 2-sheet workbook (Sheet 1: order info, Sheet 2: players, single `size` column per Session 8) with styled headers, returns Buffer. Column order per Session 8: Mã đơn | Sản phẩm | Màu | Tên CT | Số áo | Size (không có size quần riêng).
 3. Extend `POST /api/orders` (Phase 3 route):
    - Validate request body (zod schema — both normal items + custom items)
    - Get userId from session
    - Transaction: create Order → OrderItems (normal) → CustomOrder + Players (custom)
    - For each CustomOrder: **server-side recalculate print fee independently** from `players.length` using `printing-fee.ts`
    - Save `printConfigJson` (incl. `logos[]`) from builder state into CustomOrder
-   - Generate 2-sheet Excel per custom order → upload to Cloudinary as **raw resource** → store URL in `CustomOrder.excelFileUrl`
+   - Generate 2-sheet Excel per custom order → upload to Cloudinary as **raw resource with UUID v4 public_id** (Session 10: `cloudinary.uploader.upload_stream({ resource_type: 'raw', public_id: `orders/${uuid.v4()}` })`) → store URL in `CustomOrder.excelFileUrl`. Public URL acceptable risk.
    - Return orderId
 4. Create `PATCH /api/orders/[id]/cancel`:
    - Verify `userId` from session matches `order.userId`
@@ -128,7 +133,7 @@ Headers styled: bold white text, blue background (#00AEEF). Auto-width columns.
 10. Create `send-shop-notification.ts` — Resend API call; email body includes **download link** to `excelFileUrl` (Cloudinary raw URL) + logo URLs. No Excel attachment.
 11. Create `send-shop-cancel-notification.ts` — Resend API call for cancel alert
 12. Create `send-customer-status-notification.ts` — Resend API call for shipping/delivered (template selection based on status)
-13. Trigger emails after order creation/cancel (non-blocking, log errors but don't block)
+13. Trigger emails after order creation/cancel (**fire-and-forget per Session 10** — `.catch(() => {})` silent, no logging, no dashboard badge, no retry. Trust Resend reliability for MVP.)
 14. Create order confirmation page — shows order number, summary, success notification on screen
 15. Update checkout page to call `/api/orders` → redirect to confirmation
 
@@ -143,7 +148,8 @@ Headers styled: bold white text, blue background (#00AEEF). Auto-width columns.
 - [ ] Shop cancel alert email
 - [ ] Order confirmation page (success notification on screen)
 - [ ] Wire checkout form → API → confirmation redirect
-- [ ] Error handling (email failed → log, don't block order)
+- [ ] Email fire-and-forget wrapper (`.catch(() => {})` — no retry/log per Session 10)
+- [ ] Order number retry 3x → throw 500 with user-friendly error message
 - [ ] PATCH /api/admin/orders/[id]/status API (auth guard — Phase 8 UI will consume this)
 - [ ] Customer status email templates (shipping/delivered) + send function
 
