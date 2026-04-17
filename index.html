@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StarSport — Custom Football Uniform Platform | Business Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #FDD017;
+      --primary-dark: #E5BC10;
+      --secondary: #E31E26;
+      --secondary-dark: #B8181F;
+      --accent: #00AEEF;
+      --accent-dark: #008FC7;
+      --gray: #A7A9AC;
+      --dark: #111827;
+      --dark-2: #1F2937;
+      --light: #F9FAFB;
+      --border: #E5E7EB;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--dark);
+      background: #FFFFFF;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 96px 0;
+      position: relative;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #4B5563;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid;
+      place-items: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(227, 30, 38, 0.25);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: #4B5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary);
+    }
+
+    .nav-cta {
+      background: var(--secondary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(227, 30, 38, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* Hero */
+    .hero {
+      padding: 160px 0 120px;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(253, 208, 23, 0.15), transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 174, 239, 0.12), transparent 50%),
+        linear-gradient(180deg, #FFFFFF 0%, #FFF9E5 100%);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(227, 30, 38, 0.08);
+      color: var(--secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(227, 30, 38, 0.15);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .hl {
+      color: var(--secondary);
+      position: relative;
+    }
+
+    .hero h1 .hl::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 4px;
+      height: 10px;
+      background: var(--primary);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    .hero p.lead {
+      font-size: 1.15rem;
+      color: #374151;
+      margin-bottom: 32px;
+      max-width: 540px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: white;
+      box-shadow: 0 10px 24px rgba(227, 30, 38, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: var(--secondary-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--dark);
+    }
+
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 1/1;
+      max-width: 480px;
+      margin-left: auto;
+    }
+
+    .hero-card {
+      position: absolute;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(17, 24, 39, 0.15);
+      border: 1px solid var(--border);
+    }
+
+    .hero-card-main {
+      inset: 0;
+      background: linear-gradient(135deg, #1F2937, #111827);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .jersey {
+      align-self: center;
+      width: 60%;
+      aspect-ratio: 4/5;
+      background:
+        linear-gradient(180deg, transparent 0%, transparent 25%, var(--secondary) 25%, var(--secondary) 100%),
+        var(--primary);
+      position: relative;
+      border-radius: 12px 12px 20px 20px;
+      clip-path: polygon(15% 0, 35% 0, 50% 8%, 65% 0, 85% 0, 100% 18%, 92% 25%, 100% 100%, 0 100%, 8% 25%, 0 18%);
+      box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .jersey::before {
+      content: '10';
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: 900;
+      font-size: 3rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .jersey::after {
+      content: '';
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 30%;
+      aspect-ratio: 1;
+      background: radial-gradient(circle, var(--accent), var(--accent-dark));
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat .v {
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .stat .l {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+
+    .hero-card-float {
+      background: white;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 14px;
+    }
+
+    .hero-card-1 {
+      top: -8%;
+      right: -8%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero-card-2 {
+      bottom: 5%;
+      left: -10%;
+      animation: float 6s ease-in-out infinite 3s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .hero-card-float .ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: white;
+    }
+
+    .hero-card-float .txt {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .hero-card-float .sub {
+      font-size: 0.7rem;
+      color: #6B7280;
+      font-weight: 400;
+    }
+
+    .trust-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #4B5563;
+    }
+
+    .trust-item i {
+      color: var(--accent);
+    }
+
+    /* Section headers */
+    .section-head {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 64px;
+    }
+
+    .section-head .eyebrow {
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+      border-color: rgba(0, 174, 239, 0.2);
+    }
+
+    .section-head p {
+      font-size: 1.05rem;
+    }
+
+    /* Overview */
+    .overview {
+      background: var(--light);
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .pillar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pillar {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .pillar:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .pillar-ico {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .pillar h3 {
+      margin-bottom: 10px;
+    }
+
+    .pillar p {
+      font-size: 0.95rem;
+    }
+
+    /* Objectives */
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .objectives-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .obj-card {
+      display: flex;
+      gap: 20px;
+      padding: 28px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .obj-num {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--primary), #F5B800);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: var(--dark);
+    }
+
+    .obj-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .obj-card p {
+      font-size: 0.92rem;
+    }
+
+    /* Features */
+    .features {
+      background: var(--light);
+    }
+
+    .category-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .cat-1 {
+      background: rgba(227, 30, 38, 0.1);
+      color: var(--secondary);
+    }
+
+    .cat-2 {
+      background: rgba(253, 208, 23, 0.2);
+      color: #8A6D00;
+    }
+
+    .cat-3 {
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+    }
+
+    .cat-4 {
+      background: rgba(17, 24, 39, 0.08);
+      color: var(--dark);
+    }
+
+    .feature-group {
+      margin-bottom: 64px;
+    }
+
+    .feature-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-group-head {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .feature:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+    }
+
+    .feature h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* Flow */
+    .flow-container {
+      position: relative;
+    }
+
+    .flow-line {
+      position: absolute;
+      left: 32px;
+      top: 32px;
+      bottom: 32px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+      border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .flow-line {
+        left: 24px;
+      }
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .flow-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-step-num {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      background: white;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--secondary);
+      z-index: 1;
+      box-shadow: 0 8px 20px rgba(253, 208, 23, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .flow-step-num {
+        width: 48px;
+        height: 48px;
+        font-size: 1rem;
+      }
+    }
+
+    .flow-step-content {
+      flex: 1;
+      padding: 20px 24px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .flow-step h4 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .flow-step p {
+      font-size: 0.92rem;
+    }
+
+    /* Value */
+    .value {
+      background: linear-gradient(180deg, var(--dark) 0%, var(--dark-2) 100%);
+      color: white;
+    }
+
+    .value h2,
+    .value .section-head p {
+      color: white;
+    }
+
+    .value .section-head p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .value .section-head .eyebrow {
+      background: rgba(253, 208, 23, 0.15);
+      color: var(--primary);
+      border-color: rgba(253, 208, 23, 0.3);
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .value-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+
+    .value-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .value-ico {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(253, 208, 23, 0.15);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .value-card h3 {
+      color: white;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .value-card p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.92rem;
+    }
+
+    .value-card ul {
+      list-style: none;
+      margin-top: 14px;
+    }
+
+    .value-card ul li {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 5px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .value-card ul li i {
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 4px;
+      font-size: 0.75rem;
+    }
+
+    /* Roadmap */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .roadmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rm-stage {
+      background: white;
+      border-radius: 14px;
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .rm-stage:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .rm-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--light);
+      color: var(--gray);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .rm-stage.active .rm-badge {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .rm-stage h3 {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .rm-stage ul {
+      list-style: none;
+      margin-top: 12px;
+    }
+
+    .rm-stage ul li {
+      font-size: 0.84rem;
+      color: #4B5563;
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .rm-stage ul li i {
+      color: var(--accent);
+      font-size: 0.7rem;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Future */
+    .future {
+      background: var(--light);
+    }
+
+    .future-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .future-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .future-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .future-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .future-item i {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
+
+    .future-item h4 {
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .future-item p {
+      font-size: 0.88rem;
+    }
+
+    .future-visual {
+      aspect-ratio: 1/1;
+      max-width: 440px;
+      margin: 0 auto;
+      background:
+        radial-gradient(circle at 30% 30%, var(--primary), transparent 50%),
+        radial-gradient(circle at 70% 70%, var(--secondary), transparent 50%),
+        radial-gradient(circle at 50% 50%, var(--accent), transparent 40%);
+      border-radius: 50%;
+      filter: blur(0);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .future-visual::before {
+      content: '';
+      position: absolute;
+      inset: 20%;
+      background: white;
+      border-radius: 50%;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.05);
+    }
+
+    .future-visual i {
+      position: relative;
+      font-size: 4rem;
+      color: var(--secondary);
+      z-index: 1;
+    }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, var(--secondary) 0%, #C81820 50%, #8B0F15 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(253, 208, 23, 0.25), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0, 174, 239, 0.18), transparent 40%);
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .cta h2 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+    }
+
+    .cta p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      margin-bottom: 36px;
+    }
+
+    .cta .btn-primary {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .cta .btn-primary:hover {
+      background: white;
+    }
+
+    .cta .btn-outline {
+      background: transparent;
+      color: white;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .cta .btn-outline:hover {
+      border-color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    footer .logo {
+      justify-content: center;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    /* Fade in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-mark"><i class="fa-solid fa-futbol"></i></div>
+        <span>StarSport</span>
+      </div>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#flow">Experience</a>
+        <a href="#value">Value</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <a href="#cta" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Next-Generation Team Uniform Experience</span>
+        <h1>Design Your Team's <span class="hl">Identity Online</span> — Order in Minutes</h1>
+        <p class="lead">
+          A complete e-commerce platform that lets football teams, clubs, and organizations design fully personalized
+          uniforms on real product photos — with their own logos, player names, and numbers — then order the entire team
+          kit in one seamless checkout.
+        </p>
+        <div class="btn-row">
+          <a href="#cta" class="btn btn-primary">Explore the Proposal <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#features" class="btn btn-outline">See Key Features</a>
+        </div>
+        <div class="trust-row">
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Real product photo mockups</div>
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Team-scale bulk orders</div>
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Fully branded storefront</div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card hero-card-main">
+          <div style="font-size:0.8rem; opacity:0.7; text-transform:uppercase; letter-spacing:0.1em;">Live Mockup
+            Preview</div>
+          <div class="jersey"></div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="v">22</div>
+              <div class="l">Players</div>
+            </div>
+            <div class="stat">
+              <div class="v">3</div>
+              <div class="l">Logos</div>
+            </div>
+            <div class="stat">
+              <div class="v">4</div>
+              <div class="l">Angles</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-float hero-card-1">
+          <div class="ico" style="background: var(--secondary);"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div>
+            <div class="txt">Order Confirmed</div>
+            <div class="sub">Team kit ready</div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-float hero-card-2">
+          <div class="ico" style="background: var(--accent);"><i class="fa-solid fa-shirt"></i></div>
+          <div>
+            <div class="txt">Custom Design</div>
+            <div class="sub">Logo placed perfectly</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="overview" id="overview">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-lightbulb"></i> Project Overview</span>
+        <h2>A Modern Digital Storefront for Team Sports Apparel</h2>
+        <p>We are building an online platform where teams can browse real uniforms, visually customize every detail on
+          genuine product photos, manage their whole squad, and complete the purchase — all in one place.</p>
+      </div>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--secondary);"><i class="fa-solid fa-bullseye"></i></div>
+          <h3>What It Is</h3>
+          <p>A custom football uniform e-commerce platform combining online shopping with a design-your-own mockup tool,
+            built specifically for the needs of teams ordering in bulk.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--primary); color: var(--dark);"><i
+              class="fa-solid fa-circle-question"></i></div>
+          <h3>Problem It Solves</h3>
+          <p>Today, ordering team uniforms means endless messages, confusing sample photos, and manual player lists. Our
+            platform replaces all that with a self-service experience that is visual, accurate, and fast.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--accent);"><i class="fa-solid fa-users"></i></div>
+          <h3>Who It Is For</h3>
+          <p>Amateur football clubs, corporate teams, school squads, sports academies, and community groups — anyone who
+            needs matching custom uniforms delivered to their door.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Objectives -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-flag"></i> Business Objectives</span>
+        <h2>Clear Goals. Measurable Outcomes.</h2>
+        <p>Every decision in this project is anchored on five strategic business outcomes that together transform how
+          team apparel is sold.</p>
+      </div>
+      <div class="objectives-grid">
+        <div class="obj-card">
+          <div class="obj-num">01</div>
+          <div>
+            <h3>Expand the Sales Channel</h3>
+            <p>Convert an offline messaging-based workflow into a 24/7 online store that captures orders any time, from
+              any device.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">02</div>
+          <div>
+            <h3>Deliver Confidence Through Visualization</h3>
+            <p>Let customers see exactly what they will receive by placing their logos, names, and numbers directly on
+              real product photos before they pay.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">03</div>
+          <div>
+            <h3>Shorten the Order Cycle</h3>
+            <p>Automate player lists, pricing, printing fees, and order documents — reducing customer service time and
+              eliminating miscommunication errors.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">04</div>
+          <div>
+            <h3>Build a Recognizable Brand</h3>
+            <p>Establish a polished, trustworthy brand presence that sets the business apart from the typical
+              social-media-only competitor.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">05</div>
+          <div>
+            <h3>Enable Data-Driven Growth</h3>
+            <p>Capture every order, customer, and product in a structured system to unlock insights on top sellers,
+              revenue trends, and customer behavior.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">06</div>
+          <div>
+            <h3>Scale Operations Without Chaos</h3>
+            <p>Give the shop a single control center to manage products, orders, and statuses — ready to grow from tens
+              to thousands of orders.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-star"></i> Key Features</span>
+        <h2>Built Around What Teams Actually Need</h2>
+        <p>From browsing to designing to tracking the delivery — every step is covered by focused, purposeful
+          capabilities.</p>
+      </div>
+
+      <!-- Group 1: Shopping Experience -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-1">For Customers · Shopping</span>
+          <h3>A Beautiful, Effortless Shopping Experience</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-store"></i></div>
+            <h4>Welcoming Homepage</h4>
+            <p>A branded marketing landing page that highlights featured products, customer stories, and the unique
+              value of custom team uniforms.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h4>Product Catalog & Search</h4>
+            <p>Browse the full uniform collection with intelligent search, category filters, and instant results —
+              finding the right style takes seconds.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-images"></i></div>
+            <h4>Rich Product Galleries</h4>
+            <p>Each product shows multiple real photos across different angles and colorways, so customers always see
+              the real thing.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-palette"></i></div>
+            <h4>Color Variant Selection</h4>
+            <p>Customers choose from curated colorways. Switching colors instantly updates every preview while keeping
+              their design intact.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-cart-plus"></i></div>
+            <h4>Smart Shopping Cart</h4>
+            <p>A persistent cart that remembers what customers added — even across devices — so they can pick up where
+              they left off.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-credit-card"></i></div>
+            <h4>Simple Secure Checkout</h4>
+            <p>A clean, guided checkout with saved shipping details and cash-on-delivery for launch — ready to plug in
+              online payments later.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 2: Design Studio -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-2">The Differentiator · Design Studio</span>
+          <h3>The Visual Design Studio — Our Signature Feature</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-object-ungroup"></i></div>
+            <h4>Real Photo Mockup Canvas</h4>
+            <p>Customers design directly on real product photos, not generic templates, so what they see is truly what
+              they get.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-layer-group"></i></div>
+            <h4>Multi-Logo Library</h4>
+            <p>Upload several logos — club badge, sponsors, league patches — and drag them freely onto the uniform from
+              any angle.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-arrows-up-down-left-right"></i></div>
+            <h4>Drag, Resize & Rotate</h4>
+            <p>Each design element can be moved, scaled, and rotated with natural controls — just like working in a real
+              design tool.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-camera-rotate"></i></div>
+            <h4>Multi-Angle Preview</h4>
+            <p>Design the front, back, sleeves, and shorts independently — every angle stored and ready for the
+              production team.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-shield-halved"></i></div>
+            <h4>Quality Guardrails</h4>
+            <p>The platform detects low-quality logos and gently warns the customer, reducing disappointment after
+              delivery.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-calculator"></i></div>
+            <h4>Instant Price Updates</h4>
+            <p>Total cost, printing fees, and volume discounts recalculate live as the customer adjusts the design and
+              player count.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 3: Team Management -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-3">For Team Captains · Roster</span>
+          <h3>Team Management Made Simple</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-list-check"></i></div>
+            <h4>Player Roster Builder</h4>
+            <p>Add each player's name, jersey number, and size in one organized list — one uniform set per player, one
+              clean summary for the shop.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-table-cells"></i></div>
+            <h4>Excel Paste Import</h4>
+            <p>Coaches can paste their roster straight from a spreadsheet — the platform recognizes columns
+              automatically and saves hours.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-tag"></i></div>
+            <h4>Volume Discount Nudges</h4>
+            <p>Friendly prompts suggest adding a few more sets to unlock better pricing — increasing average order size
+              naturally.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 4: Admin Power -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-4">For the Shop · Admin Center</span>
+          <h3>A Complete Control Center for the Shop</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-gauge-high"></i></div>
+            <h4>Orders Dashboard</h4>
+            <p>See every order at a glance, filter by status, and drill into the exact design, roster, and customer
+              details for each one.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-truck-fast"></i></div>
+            <h4>Status Updates & Notifications</h4>
+            <p>Move orders through processing, shipping, and delivered — customers automatically receive email updates
+              at the right moments.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-file-arrow-up"></i></div>
+            <h4>Bulk Product Import</h4>
+            <p>Import entire supplier catalogs through a guided upload wizard — no technical skill required.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-pen-to-square"></i></div>
+            <h4>Full Product Editing</h4>
+            <p>Update product info, pictures, colorways, and stock levels through an intuitive admin interface.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-envelope-circle-check"></i></div>
+            <h4>Production-Ready Order Files</h4>
+            <p>Every custom order generates a ready-to-print player list and bundles all logo files — saving the
+              production team real time.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-chart-line"></i></div>
+            <h4>Business Analytics</h4>
+            <p>Track revenue, popular products, and order trends to make smarter buying, marketing, and stocking
+              decisions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flow -->
+  <section id="flow">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-route"></i> User Experience Flow</span>
+        <h2>From First Visit to Delivered Kit</h2>
+        <p>The customer journey is designed to feel intuitive, reassuring, and fast — guiding every visitor from
+          discovery to order confirmation.</p>
+      </div>
+      <div class="flow-container">
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-content">
+            <h4>Discover</h4>
+            <p>Customers land on a warm, visual homepage that showcases popular uniforms, builds trust through
+              testimonials, and makes the next step obvious.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-content">
+            <h4>Browse & Select</h4>
+            <p>They explore the catalog with filters and search, tap a product, and see full galleries, real photos, and
+              available color options.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-content">
+            <h4>Sign In Securely</h4>
+            <p>A simple email account keeps their designs, team info, and past orders safe and easy to revisit next
+              time.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-content">
+            <h4>Customize the Design</h4>
+            <p>Customers upload their logos, position them exactly where they want, and watch the design come to life on
+              the real jersey — from every angle.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          <div class="flow-step-content">
+            <h4>Add the Team</h4>
+            <p>They fill in the player roster with names, numbers, and sizes — typing directly or pasting from a
+              spreadsheet in seconds.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">6</div>
+          <div class="flow-step-content">
+            <h4>Review & Checkout</h4>
+            <p>A clean cart shows the complete order, total price, and any printing fees — with friendly nudges to
+              unlock better discounts.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">7</div>
+          <div class="flow-step-content">
+            <h4>Confirmation & Updates</h4>
+            <p>Customers receive a confirmation on screen, and automatic email updates follow as the order moves toward
+              their doorstep.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">8</div>
+          <div class="flow-step-content">
+            <h4>Delivered & Delighted</h4>
+            <p>The kit arrives exactly as visualized online — building loyalty, word-of-mouth, and repeat team orders
+              season after season.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value -->
+  <section class="value" id="value">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-arrow-trend-up"></i> Business Value & Benefits</span>
+        <h2>A Platform That Pays for Itself</h2>
+        <p>The project is not a cost center — it is a revenue engine, an efficiency booster, and a brand differentiator
+          in one.</p>
+      </div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-sack-dollar"></i></div>
+          <h3>Revenue Opportunities</h3>
+          <p>Turn one-off inquiries into a predictable sales channel that sells while the shop sleeps.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Open 24/7 to capture orders any time</li>
+            <li><i class="fa-solid fa-circle"></i> Higher order values through design upsells</li>
+            <li><i class="fa-solid fa-circle"></i> Bulk-order discounts that drive larger kits</li>
+            <li><i class="fa-solid fa-circle"></i> Repeat sales from saved team accounts</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-gauge"></i></div>
+          <h3>Efficiency Improvements</h3>
+          <p>Replace hours of back-and-forth messages with a streamlined, automated operation.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> No more manual price calculations</li>
+            <li><i class="fa-solid fa-circle"></i> Player lists ready for production instantly</li>
+            <li><i class="fa-solid fa-circle"></i> Logo files organized and delivered automatically</li>
+            <li><i class="fa-solid fa-circle"></i> Dramatically fewer order mistakes</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-trophy"></i></div>
+          <h3>Competitive Advantages</h3>
+          <p>Stand out in a market where competitors still rely on social-media chats and static catalogs.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Industry-leading visual design experience</li>
+            <li><i class="fa-solid fa-circle"></i> Professional brand perception and trust</li>
+            <li><i class="fa-solid fa-circle"></i> Data to make smarter stocking decisions</li>
+            <li><i class="fa-solid fa-circle"></i> A platform ready to scale far beyond launch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-map"></i> Implementation Roadmap</span>
+        <h2>A Clear Path From Concept to Launch</h2>
+        <p>The project is delivered in four well-defined stages — each stage produces visible progress and tangible
+          business value.</p>
+      </div>
+      <div class="roadmap-grid">
+        <div class="rm-stage active">
+          <span class="rm-badge">Stage 1</span>
+          <h3>Foundation</h3>
+          <p style="font-size:0.9rem;">Establish the technical foundation, user accounts, and visual brand identity.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Project setup</li>
+            <li><i class="fa-solid fa-circle"></i> Secure sign-up & login</li>
+            <li><i class="fa-solid fa-circle"></i> Marketing homepage</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Stage 2</span>
+          <h3>Core Experience</h3>
+          <p style="font-size:0.9rem;">Build the signature design studio and full shopping journey from browsing to
+            checkout.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Product catalog</li>
+            <li><i class="fa-solid fa-circle"></i> Custom design studio</li>
+            <li><i class="fa-solid fa-circle"></i> Cart & checkout</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Stage 3</span>
+          <h3>Operations</h3>
+          <p style="font-size:0.9rem;">Empower the shop with tools to process, track, and fulfill every incoming order.
+          </p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Order processing</li>
+            <li><i class="fa-solid fa-circle"></i> Admin dashboard</li>
+            <li><i class="fa-solid fa-circle"></i> Product catalog import</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Stage 4</span>
+          <h3>Launch & Grow</h3>
+          <p style="font-size:0.9rem;">Polish the experience, optimize for discoverability, and deploy to real
+            customers.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Performance polish</li>
+            <li><i class="fa-solid fa-circle"></i> Search engine ready</li>
+            <li><i class="fa-solid fa-circle"></i> Live deployment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Future -->
+  <section class="future">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-rocket"></i> Scalability & Future Potential</span>
+        <h2>Built to Grow With the Business</h2>
+        <p>The platform is designed so that every new capability — from payments to international markets — can be added
+          without rebuilding the foundation.</p>
+      </div>
+      <div class="future-grid">
+        <div class="future-list">
+          <div class="future-item">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <div>
+              <h4>Full Mobile Experience</h4>
+              <p>Extend the design studio to tablets and phones, capturing customers who shop on the go.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-wallet"></i>
+            <div>
+              <h4>Online Payment Gateways</h4>
+              <p>Integrate local and international payment providers to accelerate checkout and reduce no-shows.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-shirt"></i>
+            <div>
+              <h4>New Product Categories</h4>
+              <p>Expand beyond football into basketball, volleyball, running, and corporate apparel using the same
+                engine.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-handshake-angle"></i>
+            <div>
+              <h4>"Bring Your Own Uniform" Printing Service</h4>
+              <p>Offer printing on customer-supplied uniforms as an additional, higher-margin service.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-globe"></i>
+            <div>
+              <h4>International & Multi-Language</h4>
+              <p>Open new markets by adding language and currency options on top of the existing platform.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-users-gear"></i>
+            <div>
+              <h4>Loyalty & Team Accounts</h4>
+              <p>Reward repeat team captains, enable multi-season reorders, and unlock referral-powered growth.</p>
+            </div>
+          </div>
+        </div>
+        <div class="future-visual">
+          <i class="fa-solid fa-earth-asia"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="cta">
+    <div class="container cta-inner">
+      <span class="eyebrow"
+        style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3);"><i
+          class="fa-solid fa-flag-checkered"></i> Ready to Move Forward</span>
+      <h2>Transform Team Uniform Shopping Into a Signature Brand Experience</h2>
+      <p>This project turns a traditionally offline, manual business into a modern, scalable digital operation —
+        delivering new revenue, operational efficiency, and a defensible competitive edge from day one.</p>
+      <div class="btn-row" style="justify-content: center;">
+        <a href="#" class="btn btn-primary">Approve This Proposal <i class="fa-solid fa-check"></i></a>
+        <a href="#overview" class="btn btn-outline">Review Again</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="logo">
+        <div class="logo-mark"><i class="fa-solid fa-futbol"></i></div>
+        <span>StarSport</span>
+      </div>
+      <div>Custom Football Uniform E-Commerce Platform · Business Proposal</div>
+      <div style="margin-top:8px; opacity:0.5;">&copy; 2026 · Prepared for stakeholder review</div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('section > .container > *').forEach(el => {
+      el.classList.add('fade-in');
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+
+</html>

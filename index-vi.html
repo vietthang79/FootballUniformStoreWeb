@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StarSport — Nền Tảng Đồ Bóng Đá Tùy Chỉnh | Đề Xuất Kinh Doanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #FDD017;
+      --primary-dark: #E5BC10;
+      --secondary: #E31E26;
+      --secondary-dark: #B8181F;
+      --accent: #00AEEF;
+      --accent-dark: #008FC7;
+      --gray: #A7A9AC;
+      --dark: #111827;
+      --dark-2: #1F2937;
+      --light: #F9FAFB;
+      --border: #E5E7EB;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--dark);
+      background: #FFFFFF;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 96px 0;
+      position: relative;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #4B5563;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid;
+      place-items: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(227, 30, 38, 0.25);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: #4B5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary);
+    }
+
+    .nav-cta {
+      background: var(--secondary);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(227, 30, 38, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* Hero */
+    .hero {
+      padding: 160px 0 120px;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(253, 208, 23, 0.15), transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 174, 239, 0.12), transparent 50%),
+        linear-gradient(180deg, #FFFFFF 0%, #FFF9E5 100%);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(227, 30, 38, 0.08);
+      color: var(--secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(227, 30, 38, 0.15);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .hl {
+      color: var(--secondary);
+      position: relative;
+    }
+
+    .hero h1 .hl::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 4px;
+      height: 10px;
+      background: var(--primary);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    .hero p.lead {
+      font-size: 1.15rem;
+      color: #374151;
+      margin-bottom: 32px;
+      max-width: 540px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: white;
+      box-shadow: 0 10px 24px rgba(227, 30, 38, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: var(--secondary-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--dark);
+    }
+
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 1/1;
+      max-width: 480px;
+      margin-left: auto;
+    }
+
+    .hero-card {
+      position: absolute;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(17, 24, 39, 0.15);
+      border: 1px solid var(--border);
+    }
+
+    .hero-card-main {
+      inset: 0;
+      background: linear-gradient(135deg, #1F2937, #111827);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .jersey {
+      align-self: center;
+      width: 60%;
+      aspect-ratio: 4/5;
+      background:
+        linear-gradient(180deg, transparent 0%, transparent 25%, var(--secondary) 25%, var(--secondary) 100%),
+        var(--primary);
+      position: relative;
+      border-radius: 12px 12px 20px 20px;
+      clip-path: polygon(15% 0, 35% 0, 50% 8%, 65% 0, 85% 0, 100% 18%, 92% 25%, 100% 100%, 0 100%, 8% 25%, 0 18%);
+      box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .jersey::before {
+      content: '10';
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: 900;
+      font-size: 3rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .jersey::after {
+      content: '';
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 30%;
+      aspect-ratio: 1;
+      background: radial-gradient(circle, var(--accent), var(--accent-dark));
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat .v {
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .stat .l {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+
+    .hero-card-float {
+      background: white;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 14px;
+    }
+
+    .hero-card-1 {
+      top: -8%;
+      right: -8%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero-card-2 {
+      bottom: 5%;
+      left: -10%;
+      animation: float 6s ease-in-out infinite 3s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .hero-card-float .ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: white;
+    }
+
+    .hero-card-float .txt {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .hero-card-float .sub {
+      font-size: 0.7rem;
+      color: #6B7280;
+      font-weight: 400;
+    }
+
+    .trust-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #4B5563;
+    }
+
+    .trust-item i {
+      color: var(--accent);
+    }
+
+    /* Section headers */
+    .section-head {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 64px;
+    }
+
+    .section-head .eyebrow {
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+      border-color: rgba(0, 174, 239, 0.2);
+    }
+
+    .section-head p {
+      font-size: 1.05rem;
+    }
+
+    /* Overview */
+    .overview {
+      background: var(--light);
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .pillar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pillar {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .pillar:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .pillar-ico {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .pillar h3 {
+      margin-bottom: 10px;
+    }
+
+    .pillar p {
+      font-size: 0.95rem;
+    }
+
+    /* Objectives */
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .objectives-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .obj-card {
+      display: flex;
+      gap: 20px;
+      padding: 28px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .obj-num {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--primary), #F5B800);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: var(--dark);
+    }
+
+    .obj-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .obj-card p {
+      font-size: 0.92rem;
+    }
+
+    /* Features */
+    .features {
+      background: var(--light);
+    }
+
+    .category-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .cat-1 {
+      background: rgba(227, 30, 38, 0.1);
+      color: var(--secondary);
+    }
+
+    .cat-2 {
+      background: rgba(253, 208, 23, 0.2);
+      color: #8A6D00;
+    }
+
+    .cat-3 {
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+    }
+
+    .cat-4 {
+      background: rgba(17, 24, 39, 0.08);
+      color: var(--dark);
+    }
+
+    .feature-group {
+      margin-bottom: 64px;
+    }
+
+    .feature-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-group-head {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .feature:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .feature-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      background: rgba(0, 174, 239, 0.1);
+      color: var(--accent-dark);
+    }
+
+    .feature h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* Flow */
+    .flow-container {
+      position: relative;
+    }
+
+    .flow-line {
+      position: absolute;
+      left: 32px;
+      top: 32px;
+      bottom: 32px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+      border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .flow-line {
+        left: 24px;
+      }
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .flow-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-step-num {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      background: white;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--secondary);
+      z-index: 1;
+      box-shadow: 0 8px 20px rgba(253, 208, 23, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .flow-step-num {
+        width: 48px;
+        height: 48px;
+        font-size: 1rem;
+      }
+    }
+
+    .flow-step-content {
+      flex: 1;
+      padding: 20px 24px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .flow-step h4 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .flow-step p {
+      font-size: 0.92rem;
+    }
+
+    /* Value */
+    .value {
+      background: linear-gradient(180deg, var(--dark) 0%, var(--dark-2) 100%);
+      color: white;
+    }
+
+    .value h2,
+    .value .section-head p {
+      color: white;
+    }
+
+    .value .section-head p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .value .section-head .eyebrow {
+      background: rgba(253, 208, 23, 0.15);
+      color: var(--primary);
+      border-color: rgba(253, 208, 23, 0.3);
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .value-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+
+    .value-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .value-ico {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(253, 208, 23, 0.15);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .value-card h3 {
+      color: white;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .value-card p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.92rem;
+    }
+
+    .value-card ul {
+      list-style: none;
+      margin-top: 14px;
+    }
+
+    .value-card ul li {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 5px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .value-card ul li i {
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 4px;
+      font-size: 0.75rem;
+    }
+
+    /* Roadmap */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .roadmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rm-stage {
+      background: white;
+      border-radius: 14px;
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .rm-stage:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .rm-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--light);
+      color: var(--gray);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .rm-stage.active .rm-badge {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .rm-stage h3 {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .rm-stage ul {
+      list-style: none;
+      margin-top: 12px;
+    }
+
+    .rm-stage ul li {
+      font-size: 0.84rem;
+      color: #4B5563;
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .rm-stage ul li i {
+      color: var(--accent);
+      font-size: 0.7rem;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Future */
+    .future {
+      background: var(--light);
+    }
+
+    .future-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .future-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .future-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .future-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .future-item i {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
+
+    .future-item h4 {
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .future-item p {
+      font-size: 0.88rem;
+    }
+
+    .future-visual {
+      aspect-ratio: 1/1;
+      max-width: 440px;
+      margin: 0 auto;
+      background:
+        radial-gradient(circle at 30% 30%, var(--primary), transparent 50%),
+        radial-gradient(circle at 70% 70%, var(--secondary), transparent 50%),
+        radial-gradient(circle at 50% 50%, var(--accent), transparent 40%);
+      border-radius: 50%;
+      filter: blur(0);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .future-visual::before {
+      content: '';
+      position: absolute;
+      inset: 20%;
+      background: white;
+      border-radius: 50%;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.05);
+    }
+
+    .future-visual i {
+      position: relative;
+      font-size: 4rem;
+      color: var(--secondary);
+      z-index: 1;
+    }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, var(--secondary) 0%, #C81820 50%, #8B0F15 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(253, 208, 23, 0.25), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0, 174, 239, 0.18), transparent 40%);
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .cta h2 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+    }
+
+    .cta p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      margin-bottom: 36px;
+    }
+
+    .cta .btn-primary {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .cta .btn-primary:hover {
+      background: white;
+    }
+
+    .cta .btn-outline {
+      background: transparent;
+      color: white;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .cta .btn-outline:hover {
+      border-color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    footer .logo {
+      justify-content: center;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    /* Fade in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* User Roles */
+    .user-roles {
+      background: var(--light);
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+
+    @media (max-width: 900px) {
+      .role-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .role-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .role-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+      border-color: var(--accent);
+    }
+
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .role-ico {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .role-info h3 {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .role-info .role-type {
+      font-size: 0.85rem;
+      color: #6B7280;
+      font-weight: 500;
+    }
+
+    .role-description {
+      font-size: 0.95rem;
+      color: #4B5563;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    .role-responsibilities {
+      margin-top: 16px;
+    }
+
+    .role-responsibilities h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    .role-responsibilities ul {
+      list-style: none;
+    }
+
+    .role-responsibilities li {
+      font-size: 0.88rem;
+      color: #4B5563;
+      padding: 6px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .role-responsibilities li i {
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 4px;
+      font-size: 0.7rem;
+    }
+
+    /* Flow Diagrams */
+    .flow-diagrams {
+      margin-top: 48px;
+    }
+
+    .flow-diagram {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .flow-diagram:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-diagram h3 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .flow-diagram h3 i {
+      color: var(--secondary);
+    }
+
+    .mermaid {
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    .flow-steps {
+      margin-top: 20px;
+    }
+
+    .flow-steps h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    .flow-steps ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .flow-steps ul {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .flow-steps li {
+      font-size: 0.88rem;
+      color: #4B5563;
+      padding: 8px 12px;
+      background: var(--light);
+      border-radius: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .flow-steps li .step-num {
+      font-weight: 700;
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-mark"><i class="fa-solid fa-futbol"></i></div>
+        <span>StarSport</span>
+      </div>
+      <div class="nav-links">
+        <a href="#overview">Tổng Quan</a>
+        <a href="#features">Tính Năng</a>
+        <a href="#flow">Trải Nghiệm</a>
+        <a href="#value">Giá Trị</a>
+        <a href="#roadmap">Lộ Trình</a>
+        <a href="#user-roles">Vai Trò</a>
+      </div>
+      <a href="#cta" class="nav-cta">Bắt Đầu</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Trải Nghiệm Đồ Bóng Đá Thế Hệ Mới</span>
+        <h1>Thiết Kế <span class="hl">Bản Sắc Đội</span> Của Bạn Trực Tuyến — Đặt Hàng Trong Vài Phút</h1>
+        <p class="lead">
+          Một nền tảng thương mại điện tử hoàn chỉnh cho phép các đội bóng, câu lạc bộ và tổ chức thiết kế đồng phục
+          được cá nhân hóa hoàn toàn trên ảnh sản phẩm thật — với logo riêng, tên cầu thủ và số áo — sau đó đặt toàn bộ
+          bộ đồ cho đội trong một lần thanh toán liền mạch.
+        </p>
+        <div class="btn-row">
+          <a href="#cta" class="btn btn-primary">Khám Phá Đề Xuất <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#features" class="btn btn-outline">Xem Tính Năng Chính</a>
+        </div>
+        <div class="trust-row">
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Mẫu ảnh sản phẩm thật</div>
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Đặt hàng số lượng lớn cho đội</div>
+          <div class="trust-item"><i class="fa-solid fa-check-circle"></i> Cửa hàng thương hiệu đầy đủ</div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card hero-card-main">
+          <div style="font-size:0.8rem; opacity:0.7; text-transform:uppercase; letter-spacing:0.1em;">Xem Trước Mẫu
+            Trực Tiếp</div>
+          <div class="jersey"></div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="v">22</div>
+              <div class="l">Cầu Thủ</div>
+            </div>
+            <div class="stat">
+              <div class="v">3</div>
+              <div class="l">Logo</div>
+            </div>
+            <div class="stat">
+              <div class="v">4</div>
+              <div class="l">Góc Nhìn</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-float hero-card-1">
+          <div class="ico" style="background: var(--secondary);"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div>
+            <div class="txt">Đã Xác Nhận Đơn</div>
+            <div class="sub">Bộ đồ đội đã sẵn sàng</div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-float hero-card-2">
+          <div class="ico" style="background: var(--accent);"><i class="fa-solid fa-shirt"></i></div>
+          <div>
+            <div class="txt">Thiết Kế Tùy Chỉnh</div>
+            <div class="sub">Logo đặt vị trí hoàn hảo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="overview" id="overview">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-lightbulb"></i> Tổng Quan Dự Án</span>
+        <h2>Một Cửa Hàng Số Hiện Đại Cho Đồ Thể Thao Đội</h2>
+        <p>Chúng tôi đang xây dựng một nền tảng trực tuyến nơi các đội có thể xem đồng phục thật, tùy chỉnh mọi chi tiết
+          trực quan trên ảnh sản phẩm thật, quản lý toàn bộ đội hình và hoàn tất mua sắm — tất cả trong một nơi.</p>
+      </div>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--secondary);"><i class="fa-solid fa-bullseye"></i></div>
+          <h3>Là Gì</h3>
+          <p>Một nền tảng thương mại điện tử đồng phục bóng đá tùy chỉnh kết hợp mua sắm trực tuyến với công cụ thiết kế
+            mẫu, được xây dựng đặc biệt cho nhu cầu đặt hàng số lượng lớn của các đội.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--primary); color: var(--dark);"><i
+              class="fa-solid fa-circle-question"></i></div>
+          <h3>Vấn Đề Giải Quyết</h3>
+          <p>Ngày nay, đặt đồng phục đội đồng nghĩa với hàng loạt tin nhắn, ảnh mẫu nhầm lẫn và danh sách cầu thủ thủ
+            công.
+            Nền tảng của chúng tôi thay thế tất cả bằng trải nghiệm tự phục vụ trực quan, chính xác và nhanh chóng.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-ico" style="background: var(--accent);"><i class="fa-solid fa-users"></i></div>
+          <h3>Dành Cho Ai</h3>
+          <p>Câu lạc bộ bóng đá nghiệp dư, đội doanh nghiệp, đội trường học, học viện thể thao và các nhóm cộng đồng —
+            bất kỳ
+            ai cần đồng phục tùy chỉnh phù hợp được giao đến tận cửa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Objectives -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-flag"></i> Mục Tiêu Kinh Doanh</span>
+        <h2>Mục Tiêu Rõ Ràng. Kết Quả Đo Lường Được.</h2>
+        <p>Mọi quyết định trong dự án này dựa trên năm kết quả kinh doanh chiến lược cùng nhau chuyển đổi cách bán
+          đồ thể thao đội.</p>
+      </div>
+      <div class="objectives-grid">
+        <div class="obj-card">
+          <div class="obj-num">01</div>
+          <div>
+            <h3>Mở Rộng Kênh Bán Hàng</h3>
+            <p>Chuyển quy trình làm việc qua tin nhắn ngoại tuyến thành cửa hàng trực tuyến 24/7 nhận đơn hàng bất kỳ
+              lúc nào,
+              từ bất kỳ thiết bị nào.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">02</div>
+          <div>
+            <h3>Giao Sự Tự Tin Thông Qua Trực Quan Hóa</h3>
+            <p>Cho khách hàng xem chính xác những gì họ sẽ nhận được bằng cách đặt logo, tên và số áo trực tiếp lên ảnh
+              sản
+              phẩm thật trước khi thanh toán.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">03</div>
+          <div>
+            <h3>Rút Ngắn Chu Kỳ Đặt Hàng</h3>
+            <p>Tự động hóa danh sách cầu thủ, giá cả, phí in và tài liệu đơn hàng — giảm thời gian dịch vụ khách hàng và
+              loại bỏ lỗi giao tiếp.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">04</div>
+          <div>
+            <h3>Xây Dựng Thương Hiệu Nhận Diện Được</h3>
+            <p>Thiết lập sự hiện diện thương hiệu bóng bẩy, đáng tin cậy giúp doanh nghiệp khác biệt với đối thủ chỉ
+              dùng
+              mạng xã hội.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">05</div>
+          <div>
+            <h3>Cho Phép Tăng Trưởng Dựa Trên Dữ Liệu</h3>
+            <p>Ghi lại mọi đơn hàng, khách hàng và sản phẩm trong hệ thống có cấu trúc để mở khóa thông tin về sản phẩm
+              bán
+              chạy, xu hướng doanh thu và hành vi khách hàng.</p>
+          </div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-num">06</div>
+          <div>
+            <h3>Mở Rộng Vận Hành Không Hỗn Loạn</h3>
+            <p>Cung cấp cho cửa hàng một trung tâm điều khiển duy nhất để quản lý sản phẩm, đơn hàng và trạng thái — sẵn
+              sàng
+              tăng trưởng từ hàng chục đến hàng ngàn đơn hàng.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-star"></i> Tính Năng Chính</span>
+        <h2>Xây Dựng Xung Quang Những Gì Đội Thực Sự Cần</h2>
+        <p>Từ xem đến thiết kế đến theo dõi giao hàng — mỗi bước đều được bao phủ bởi các khả năng tập trung, có mục
+          đích.</p>
+      </div>
+
+      <!-- Group 1: Shopping Experience -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-1">Cho Khách Hàng · Mua Sắm</span>
+          <h3>Trải Nghiệm Mua Sắm Đẹp Mắt, Dễ Dàng</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-store"></i></div>
+            <h4>Trang Chủ Chào Đón</h4>
+            <p>Trang đích marketing thương hiệu nổi bật sản phẩm nổi bật, câu chuyện khách hàng và giá trị độc đáo của
+              đồng
+              phục đội tùy chỉnh.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h4>Danh Sách Sản Phẩm & Tìm Kiếm</h4>
+            <p>Xem toàn bộ bộ sưu tập đồng phục với tìm kiếm thông minh, bộ lọc danh mục và kết quả tức thì — tìm phong
+              cách
+              phù hợp chỉ mất vài giây.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-images"></i></div>
+            <h4>Thư Viện Sản Phẩm Phong Phú</h4>
+            <p>Mỗi sản phẩm hiển thị nhiều ảnh thật từ các góc độ và màu sắc khác nhau, để khách hàng luôn thấy sản phẩm
+              thật.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-palette"></i></div>
+            <h4>Chọn Biến Thể Màu Sắc</h4>
+            <p>Khách hàng chọn từ các màu được tuyển chọn. Chuyển màu cập nhật ngay lập tức mọi bản xem trước trong khi
+              giữ
+              nguyên thiết kế.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-cart-plus"></i></div>
+            <h4>Giỏ Hàng Thông Minh</h4>
+            <p>Giỏ hàng liên tục ghi nhớ những gì khách hàng đã thêm — ngay cả trên các thiết bị khác — để họ có thể
+              tiếp tục
+              nơi họ dừng lại.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-credit-card"></i></div>
+            <h4>Thanh Toán Đơn Giản An Toàn</h4>
+            <p>Quy trình thanh toán sạch sẽ, có hướng dẫn với chi tiết giao hàng đã lưu và thanh toán khi nhận hàng cho
+              ra
+              mắt — sẵn sàng tích hợp thanh toán trực tuyến sau.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 2: Design Studio -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-2">Điểm Khác Biệt · Studio Thiết Kế</span>
+          <h3>Studio Thiết Kế Trực Quan — Tính Năng Chữ Ký Của Chúng Tôi</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-object-ungroup"></i></div>
+            <h4>Khung Mẫu Ảnh Thật</h4>
+            <p>Khách hàng thiết kế trực tiếp trên ảnh sản phẩm thật, không phải mẫu chung, nên những gì họ thấy thực sự
+              là
+              những gì họ nhận được.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-layer-group"></i></div>
+            <h4>Thư Viện Đa Logo</h4>
+            <p>Tải lên nhiều logo — huy hiệu câu lạc bộ, nhà tài trợ, miếng vá giải đấu — và kéo chúng tự do lên đồng
+              phục từ
+              bất kỳ góc nào.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-arrows-up-down-left-right"></i></div>
+            <h4>Kéo, Thay Đổi Kích Thước & Xoay</h4>
+            <p>Mỗi yếu tố thiết kế có thể di chuyển, thay đổi tỷ lệ và xoay với điều khiển tự nhiên — giống như làm việc
+              trong
+              công cụ thiết kế thật.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-camera-rotate"></i></div>
+            <h4>Xem Trước Đa Góc</h4>
+            <p>Thiết kế mặt trước, mặt sau, tay áo và quần độc lập — mỗi góc được lưu và sẵn sàng cho đội sản xuất.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-shield-halved"></i></div>
+            <h4>Bảo Vệ Chất Lượng</h4>
+            <p>Nền tảng phát hiện logo chất lượng thấp và cảnh báo nhẹ nhàng khách hàng, giảm thất vọng sau giao hàng.
+            </p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(253,208,23,0.2); color: #8A6D00;"><i
+                class="fa-solid fa-calculator"></i></div>
+            <h4>Cập Nhật Giá Tức Thì</h4>
+            <p>Tổng chi phí, phí in và giảm giá số lượng tính toán lại trực tiếp khi khách hàng điều chỉnh thiết kế và
+              số
+              lượng cầu thủ.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 3: Team Management -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-3">Cho Đội Trưởng · Danh Sách</span>
+          <h3>Quản Lý Đội Đơn Giản Hóa</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-list-check"></i></div>
+            <h4>Xây Dựng Danh Sách Cầu Thủ</h4>
+            <p>Thêm tên, số áo và kích cỡ của từng cầu thủ trong một danh sách có tổ chức — một bộ đồng phục mỗi cầu
+              thủ, một
+              tóm tắt sạch cho cửa hàng.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-table-cells"></i></div>
+            <h4>Nhập Từ Excel</h4>
+            <p>Huấn luyện viên có thể dán danh sách đội trực tiếp từ bảng tính — nền tảng nhận dạng cột tự động và tiết
+              kiệm
+              hàng giờ.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico"><i class="fa-solid fa-tag"></i></div>
+            <h4>Gợi Ý Giảm Giá Số Lượng</h4>
+            <p>Nhắc nhở thân thiện gợi ý thêm vài bộ để mở khóa giá tốt hơn — tăng kích thước đơn hàng trung bình một
+              cách tự
+              nhiên.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 4: Admin Power -->
+      <div class="feature-group">
+        <div class="feature-group-head">
+          <span class="category-tag cat-4">Cho Cửa Hàng · Trung Tâm Quản Trị</span>
+          <h3>Một Trung Tâm Điều Khiển Hoàn Chỉnh Cho Cửa Hàng</h3>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-gauge-high"></i></div>
+            <h4>Bảng Điều Khiển Đơn Hàng</h4>
+            <p>Xem mọi đơn hàng cùng lúc, lọc theo trạng thái và đi sâu vào thiết kế chính xác, danh sách và chi tiết
+              khách
+              hàng cho từng đơn.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-truck-fast"></i></div>
+            <h4>Cập Nhật Trạng Thái & Thông Báo</h4>
+            <p>Di chuyển đơn hàng qua xử lý, vận chuyển và đã giao — khách hàng tự động nhận cập nhật email đúng lúc.
+            </p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-file-arrow-up"></i></div>
+            <h4>Nhập Sản Phẩm Số Lượng Lớn</h4>
+            <p>Nhập toàn bộ danh mục nhà cung cấp qua trình hướng dẫn tải lên — không cần kỹ thuật kỹ thuật.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-pen-to-square"></i></div>
+            <h4>Chỉnh Sửa Sản Phẩm Đầy Đủ</h4>
+            <p>Cập nhật thông tin sản phẩm, hình ảnh, màu sắc và mức tồn kho qua giao diện quản trị trực quan.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-envelope-circle-check"></i></div>
+            <h4>Tệp Đơn Hàng Sẵn Sàng Sản Xuất</h4>
+            <p>Mỗi đơn tùy chỉnh tạo danh sách cầu thủ sẵn sàng in và đóng gói tất cả tệp logo — tiết kiệm thời gian
+              thật cho đội
+              sản xuất.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-ico" style="background: rgba(17,24,39,0.08); color: var(--dark);"><i
+                class="fa-solid fa-chart-line"></i></div>
+            <h4>Phân Tích Kinh Doanh</h4>
+            <p>Theo dõi doanh thu, sản phẩm phổ biến và xu hướng đơn hàng để đưa ra quyết định mua hàng, marketing và
+              tồn kho
+              thông minh hơn.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flow -->
+  <section id="flow">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-route"></i> Quy Trình Trải Nghiệm Người Dùng</span>
+        <h2>Từ Lần Truy Cập Đầu Tiên Đến Bộ Đồ Được Giao</h2>
+        <p>Hành trình khách hàng được thiết kế để cảm thấy trực quan, trấn an và nhanh chóng — hướng dẫn mỗi khách truy
+          cập từ
+          khám phá đến xác nhận đơn hàng.</p>
+      </div>
+      <div class="flow-container">
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-content">
+            <h4>Khám Phá</h4>
+            <p>Khách hàng đến trang chủ trực quan ấm cúng nổi bật đồng phục phổ biến, xây dựng niềm tin qua đánh giá và
+              làm
+              rõ bước tiếp theo.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-content">
+            <h4>Xem & Chọn</h4>
+            <p>Họ khám phá danh mục với bộ lọc và tìm kiếm, nhấn sản phẩm và xem thư viện đầy đủ, ảnh thật và tùy chọn
+              màu
+              có sẵn.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-content">
+            <h4>Đăng Nhập An Toàn</h4>
+            <p>Tài khoản email đơn giản giữ thiết kế, thông tin đội và đơn hàng quá khứ an toàn và dễ truy cập lần sau.
+            </p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-content">
+            <h4>Tùy Chỉnh Thiết Kế</h4>
+            <p>Khách hàng tải lên logo, đặt chúng chính xác nơi họ muốn và xem thiết kế sống động trên áo thật — từ mọi
+              góc.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          <div class="flow-step-content">
+            <h4>Thêm Đội</h4>
+            <p>Họ điền danh sách cầu thủ với tên, số và kích cỡ — gõ trực tiếp hoặc dán từ bảng tính trong vài giây.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">6</div>
+          <div class="flow-step-content">
+            <h4>Xem Lại & Thanh Toán</h4>
+            <p>Giỏ hàng sạch hiển thị đơn hàng hoàn chỉnh, tổng giá và phí in — với nhắc nhở thân thiện để mở khóa giảm
+              giá tốt
+              hơn.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">7</div>
+          <div class="flow-step-content">
+            <h4>Xác Nhận & Cập Nhật</h4>
+            <p>Khách hàng nhận xác nhận trên màn hình và cập nhật email tự động theo khi đơn hàng di chuyển đến cửa nhà
+              họ.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">8</div>
+          <div class="flow-step-content">
+            <h4>Đã Giao & Hài Lòng</h4>
+            <p>Bộ đồ đến chính xác như trực quan hóa trực tuyến — xây dựng lòng trung thành, truyền miệng và đơn hàng
+              đội lặp lại
+              mùa sau mùa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value -->
+  <section class="value" id="value">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-arrow-trend-up"></i> Giá Trị Kinh Doanh & Lợi Ích</span>
+        <h2>Một Nền Tảng Tự Trả Vốn</h2>
+        <p>Dự án không phải là trung tâm chi phí — nó là động cơ doanh thu, bộ tăng cường hiệu quả và điểm khác biệt
+          thương
+          hiệu trong một.</p>
+      </div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-sack-dollar"></i></div>
+          <h3>Cơ Hội Doanh Thu</h3>
+          <p>Chuyển yêu cầu một lần thành kênh bán hàng có thể dự đoán bán trong khi cửa hàng ngủ.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Mở 24/7 để nhận đơn hàng bất kỳ lúc nào</li>
+            <li><i class="fa-solid fa-circle"></i> Giá trị đơn hàng cao hơn qua bán thêm thiết kế</li>
+            <li><i class="fa-solid fa-circle"></i> Giảm giá số lượng lớn thúc đẩy bộ đồ lớn hơn</li>
+            <li><i class="fa-solid fa-circle"></i> Bán hàng lặp lại từ tài khoản đội đã lưu</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-gauge"></i></div>
+          <h3>Cải Thiện Hiệu Suất</h3>
+          <p>Thay thế hàng giờ tin nhắn qua lại bằng quy trình tự động, hợp lý.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Không còn tính giá thủ công</li>
+            <li><i class="fa-solid fa-circle"></i> Danh sách cầu thủ sẵn sàng sản xuất ngay lập tức</li>
+            <li><i class="fa-solid fa-circle"></i> Tệp logo được tổ chức và giao tự động</li>
+            <li><i class="fa-solid fa-circle"></i> Ít lỗi đơn hàng đáng kể</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-ico"><i class="fa-solid fa-trophy"></i></div>
+          <h3>Lợi Thế Cạnh Tranh</h3>
+          <p>Nổi bật trong thị trường nơi đối thủ vẫn dựa vào trò chuyện mạng xã hội và danh mục tĩnh.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Trải nghiệm thiết kế trực quan hàng đầu ngành</li>
+            <li><i class="fa-solid fa-circle"></i> Nhận thức thương hiệu chuyên nghiệp và niềm tin</li>
+            <li><i class="fa-solid fa-circle"></i> Dữ liệu để đưa ra quyết định tồn kho thông minh hơn</li>
+            <li><i class="fa-solid fa-circle"></i> Nền tảng sẵn sàng mở rộng xa hơn ra mắt</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-map"></i> Lộ Trình Triển Khai</span>
+        <h2>Con Đường Rõ Ràng Từ Khái Niệm Đến Ra Mắt</h2>
+        <p>Dự án được giao trong bốn giai đoạn được xác định rõ — mỗi giai đoạn tạo ra tiến độ hữu hình và giá trị kinh
+          doanh
+          hữu hình.</p>
+      </div>
+      <div class="roadmap-grid">
+        <div class="rm-stage active">
+          <span class="rm-badge">Giai Đoạn 1</span>
+          <h3>Nền Tảng</h3>
+          <p style="font-size:0.9rem;">Thiết lập nền tảng kỹ thuật, tài khoản người dùng và bản sắc thương hiệu trực
+            quan.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Thiết lập dự án</li>
+            <li><i class="fa-solid fa-circle"></i> Đăng ký & đăng nhập an toàn</li>
+            <li><i class="fa-solid fa-circle"></i> Trang chủ marketing</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Giai Đoạn 2</span>
+          <h3>Trải Nghiệm Cốt Lõi</h3>
+          <p style="font-size:0.9rem;">Xây dựng studio thiết kế chữ ký và hành trình mua sắm đầy đủ từ xem đến thanh
+            toán.</p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Danh mục sản phẩm</li>
+            <li><i class="fa-solid fa-circle"></i> Studio thiết kế tùy chỉnh</li>
+            <li><i class="fa-solid fa-circle"></i> Giỏ hàng & thanh toán</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Giai Đoạn 3</span>
+          <h3>Vận Hành</h3>
+          <p style="font-size:0.9rem;">Trao quyền cho cửa hàng với công cụ để xử lý, theo dõi và hoàn thành mọi đơn hàng
+            đến.
+          </p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Xử lý đơn hàng</li>
+            <li><i class="fa-solid fa-circle"></i> Bảng điều khiển quản trị</li>
+            <li><i class="fa-solid fa-circle"></i> Nhập danh mục sản phẩm</li>
+          </ul>
+        </div>
+        <div class="rm-stage">
+          <span class="rm-badge">Giai Đoạn 4</span>
+          <h3>Ra Mắt & Tăng Trưởng</h3>
+          <p style="font-size:0.9rem;">Làm bóng trải nghiệm, tối ưu hóa để khám phá và triển khai cho khách hàng thật.
+          </p>
+          <ul>
+            <li><i class="fa-solid fa-circle"></i> Làm bóng hiệu suất</li>
+            <li><i class="fa-solid fa-circle"></i> Sẵn sàng công cụ tìm kiếm</li>
+            <li><i class="fa-solid fa-circle"></i> Triển khai trực tiếp</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Future -->
+  <section class="future">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-rocket"></i> Khả Năng Mở Rộng & Tiềm Năng Tương Lai</span>
+        <h2>Xây Dựng Để Tăng Trưởng Cùng Doanh Nghiệp</h2>
+        <p>Nền tảng được thiết kế để mọi khả năng mới — từ thanh toán đến thị trường quốc tế — có thể thêm mà không cần
+          xây
+          lại nền tảng.</p>
+      </div>
+      <div class="future-grid">
+        <div class="future-list">
+          <div class="future-item">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <div>
+              <h4>Trải Nghiệm Di Động Đầy Đủ</h4>
+              <p>Mở rộng studio thiết kế sang máy tính bảng và điện thoại, thu hút khách hàng mua sắm khi di chuyển.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-wallet"></i>
+            <div>
+              <h4>Cổng Thanh Toán Trực Tuyến</h4>
+              <p>Tích hợp nhà cung cấp thanh toán địa phương và quốc tế để tăng tốc thanh toán và giảm không đến.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-shirt"></i>
+            <div>
+              <h4>Danh Mục Sản Phẩm Mới</h4>
+              <p>Mở rộng ngoài bóng đá sang bóng rổ, bóng chuyền, chạy và đồ doanh nghiệp sử dụng cùng động cơ.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-handshake-angle"></i>
+            <div>
+              <h4>Dịch Vụ In "Mang Đồng Phụ Riêng"</h4>
+              <p>Cung cấp in trên đồng phục của khách hàng như dịch vụ bổ sung, biên lợi nhuận cao hơn.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-globe"></i>
+            <div>
+              <h4>Quốc Tế & Đa Ngôn Ngữ</h4>
+              <p>Mở thị trường mới bằng thêm tùy chọn ngôn ngữ và tiền tệ trên nền tảng hiện có.</p>
+            </div>
+          </div>
+          <div class="future-item">
+            <i class="fa-solid fa-users-gear"></i>
+            <div>
+              <h4>Lòng Trung Thành & Tài Khoản Đội</h4>
+              <p>Thưởng đội trưởng lặp lại, cho phép đặt hàng lại nhiều mùa và mở khóa tăng trưởng dựa trên giới thiệu.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="future-visual">
+          <i class="fa-solid fa-earth-asia"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Roles -->
+  <section class="user-roles" id="user-roles">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><i class="fa-solid fa-users"></i> Vai Trò Người Dùng</span>
+        <h2>Ai Sẽ Sử Dụng Nền Tảng Này?</h2>
+        <p>Nền tảng phục vụ ba nhóm người dùng chính, mỗi nhóm có nhu cầu và quy trình làm việc riêng biệt nhưng được kết nối
+          chặt chẽ.</p>
+      </div>
+
+      <div class="role-grid">
+        <!-- Role 1: Customer -->
+        <div class="role-card">
+          <div class="role-header">
+            <div class="role-ico" style="background: var(--secondary);"><i class="fa-solid fa-user"></i></div>
+            <div class="role-info">
+              <h3>Khách Hàng / Đội Trưởng</h3>
+              <div class="role-type">Người đặt hàng</div>
+            </div>
+          </div>
+          <p class="role-description">
+            Đội trưởng câu lạc bộ bóng đá, huấn luyện viên, hoặc người đại diện của đội cần đặt đồng phục tùy chỉnh cho đội của
+            họ. Họ thiết kế, quản lý danh sách cầu thủ và đặt hàng trực tuyến.
+          </p>
+          <div class="role-responsibilities">
+            <h4>Nhiệm Vụ Chính:</h4>
+            <ul>
+              <li><i class="fa-solid fa-circle"></i> Tạo tài khoản và đăng nhập</li>
+              <li><i class="fa-solid fa-circle"></i> Xem và chọn sản phẩm đồng phục</li>
+              <li><i class="fa-solid fa-circle"></i> Tải lên và đặt logo trên đồng phục</li>
+              <li><i class="fa-solid fa-circle"></i> Quản lý danh sách cầu thủ (tên, số, kích cỡ)</li>
+              <li><i class="fa-solid fa-circle"></i> Xem giá và phí in theo thời gian thực</li>
+              <li><i class="fa-solid fa-circle"></i> Đặt hàng và thanh toán</li>
+              <li><i class="fa-solid fa-circle"></i> Theo dõi trạng thái đơn hàng</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Role 2: Shop Admin -->
+        <div class="role-card">
+          <div class="role-header">
+            <div class="role-ico" style="background: var(--primary); color: var(--dark);"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="role-info">
+              <h3>Quản Trị Viên Cửa Hàng</h3>
+              <div class="role-type">Người vận hành</div>
+            </div>
+          </div>
+          <p class="role-description">
+            Người quản lý cửa hàng đồng phục bóng đá, chịu trách nhiệm quản lý sản phẩm, xử lý đơn hàng, và điều phối toàn bộ
+            hoạt động kinh doanh trên nền tảng.
+          </p>
+          <div class="role-responsibilities">
+            <h4>Nhiệm Vụ Chính:</h4>
+            <ul>
+              <li><i class="fa-solid fa-circle"></i> Quản lý danh mục sản phẩm</li>
+              <li><i class="fa-solid fa-circle"></i> Thêm/sửa/xóa sản phẩm và ảnh</li>
+              <li><i class="fa-solid fa-circle"></i> Xem và xử lý đơn hàng đến</li>
+              <li><i class="fa-solid fa-circle"></i> Cập nhật trạng thái đơn hàng</li>
+              <li><i class="fa-solid fa-circle"></i> Gửi thông báo cho khách hàng</li>
+              <li><i class="fa-solid fa-circle"></i> Xem báo cáo và phân tích kinh doanh</li>
+              <li><i class="fa-solid fa-circle"></i> Quản lý tài khoản khách hàng</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Role 3: Production Team -->
+        <div class="role-card">
+          <div class="role-header">
+            <div class="role-ico" style="background: var(--accent);"><i class="fa-solid fa-users-gear"></i></div>
+            <div class="role-info">
+              <h3>Đội Sản Xuất</h3>
+              <div class="role-type">Người thực hiện</div>
+            </div>
+          </div>
+          <p class="role-description">
+            Đội ngũ in ấn và đóng gói chịu trách nhiệm sản xuất đồng phục dựa trên thiết kế của khách hàng, đảm bảo chất lượng
+            và giao hàng đúng hạn.
+          </p>
+          <div class="role-responsibilities">
+            <h4>Nhiệm Vụ Chính:</h4>
+            <ul>
+              <li><i class="fa-solid fa-circle"></i> Nhận thông tin đơn hàng và thiết kế</li>
+              <li><i class="fa-solid fa-circle"></i> Tải xuống tệp logo và danh sách cầu thủ</li>
+              <li><i class="fa-solid fa-circle"></i> In ấn đồng phục theo thiết kế</li>
+              <li><i class="fa-solid fa-circle"></i> Kiểm tra chất lượng sản phẩm</li>
+              <li><i class="fa-solid fa-circle"></i> Đóng gói và chuẩn bị giao hàng</li>
+              <li><i class="fa-solid fa-circle"></i> Cập nhật tiến độ sản xuất</li>
+              <li><i class="fa-solid fa-circle"></i> Giao hàng hoặc chuyển cho đơn vị vận chuyển</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow Diagrams -->
+      <div class="flow-diagrams">
+        <div class="section-head">
+          <span class="eyebrow"><i class="fa-solid fa-diagram-project"></i> Quy Trình Chi Tiết</span>
+          <h2>Flow Hoạt Động Của Từng Người Dùng</h2>
+          <p>Mỗi người dùng có quy trình làm việc riêng, được tối ưu hóa cho nhu cầu cụ thể của họ.</p>
+        </div>
+
+        <!-- Customer Flow -->
+        <div class="flow-diagram">
+          <h3><i class="fa-solid fa-user"></i> Flow Khách Hàng / Đội Trưởng</h3>
+          <div class="mermaid">
+            <pre class="mermaid">
+flowchart TD
+    A[Truy cập trang chủ] --> B{Đã đăng nhập?}
+    B -->|Chưa| C[Đăng ký / Đăng nhập]
+    B -->|Rồi| D[Xem danh mục sản phẩm]
+    C --> D
+    D --> E[Chọn sản phẩm đồng phục]
+    E --> F[Xem chi tiết và gallery ảnh]
+    F --> G[Chọn màu sắc]
+    G --> H[Truy cập Studio Thiết Kế]
+    H --> I[Tải lên logo]
+    I --> J[Đặt logo trên đồng phục]
+    J --> K[Xem trước đa góc]
+    K --> L{Hài lòng với thiết kế?}
+    L -->|Chưa| J
+    L -->|Rồi| M[Nhập danh sách cầu thủ]
+    M --> N[Gõ thủ công hoặc dán từ Excel]
+    N --> O[Xem tổng giá và phí in]
+    O --> P{Đồng ý giá?}
+    P -->|Chưa| M
+    P -->|Rồi| Q[Thêm vào giỏ hàng]
+    Q --> R[Xem giỏ hàng]
+    R --> S[Xem lại đơn hàng]
+    S --> T[Chọn phương thức thanh toán]
+    T --> U[Thanh toán COD hoặc Online]
+    U --> V[Nhận xác nhận đơn hàng]
+    V --> W[Nhận email cập nhật]
+    W --> X[Theo dõi trạng thái]
+    X --> Y[Nhận đồng phục]
+    Y --> Z[Đánh giá và đặt lại]
+
+    style A fill:#FDD017,stroke:#E5BC10,color:#000
+    style V fill:#E31E26,stroke:#B8181F,color:#FFF
+    style Y fill:#00AEEF,stroke:#008FC7,color:#FFF
+            </pre>
+          </div>
+          <div class="flow-steps">
+            <h4>Các Bước Chính:</h4>
+            <ul>
+              <li><span class="step-num">1</span> Khám phá và chọn sản phẩm</li>
+              <li><span class="step-num">2</span> Tùy chỉnh thiết kế với logo</li>
+              <li><span class="step-num">3</span> Quản lý danh sách cầu thủ</li>
+              <li><span class="step-num">4</span> Xem giá theo thời gian thực</li>
+              <li><span class="step-num">5</span> Đặt hàng và thanh toán</li>
+              <li><span class="step-num">6</span> Theo dõi và nhận hàng</li>
+              <li><span class="step-num">7</span> Đánh giá và đặt hàng lại</li>
+              <li><span class="step-num">8</span> Lưu thông tin cho mùa sau</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Shop Admin Flow -->
+        <div class="flow-diagram">
+          <h3><i class="fa-solid fa-user-shield"></i> Flow Quản Trị Viên Cửa Hàng</h3>
+          <div class="mermaid">
+            <pre class="mermaid">
+flowchart TD
+    A[Đăng nhập Admin Dashboard] --> B[Xem tổng quan đơn hàng]
+    B --> C{Có đơn hàng mới?}
+    C -->|Có| D[Xem chi tiết đơn hàng]
+    C -->|Không| E[Quản lý sản phẩm]
+    D --> F[Kiểm tra thiết kế và logo]
+    F --> G[Kiểm tra danh sách cầu thủ]
+    G --> H[Xác nhận đơn hàng]
+    H --> I[Cập nhật trạng thái: Đã xác nhận]
+    I --> J[Gửi email xác nhận khách]
+    J --> K[Chuyển cho đội sản xuất]
+    K --> L[Theo dõi tiến độ sản xuất]
+    L --> M{Đã hoàn thành?}
+    M -->|Chưa| L
+    M -->|Rồi| N[Cập nhật: Đã giao cho vận chuyển]
+    N --> O[Gửi email thông báo giao hàng]
+    O --> P[Xem báo cáo doanh thu]
+    P --> Q[Phân tích xu hướng bán hàng]
+    Q --> R[Cập nhật sản phẩm]
+    R --> S[Thêm sản phẩm mới]
+    S --> T[Quản lý tồn kho]
+    T --> U[Quản lý tài khoản khách]
+    U --> V[Xem lại tổng quan]
+
+    style A fill:#FDD017,stroke:#E5BC10,color:#000
+    style H fill:#E31E26,stroke:#B8181F,color:#FFF
+    style N fill:#00AEEF,stroke:#008FC7,color:#FFF
+            </pre>
+          </div>
+          <div class="flow-steps">
+            <h4>Các Bước Chính:</h4>
+            <ul>
+              <li><span class="step-num">1</span> Xem tổng quan dashboard</li>
+              <li><span class="step-num">2</span> Xử lý đơn hàng mới</li>
+              <li><span class="step-num">3</span> Kiểm tra và xác nhận đơn</li>
+              <li><span class="step-num">4</span> Chuyển cho đội sản xuất</li>
+              <li><span class="step-num">5</span> Theo dõi tiến độ</li>
+              <li><span class="step-num">6</span> Cập nhật trạng thái</li>
+              <li><span class="step-num">7</span> Quản lý sản phẩm</li>
+              <li><span class="step-num">8</span> Xem báo cáo kinh doanh</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Production Team Flow -->
+        <div class="flow-diagram">
+          <h3><i class="fa-solid fa-users-gear"></i> Flow Đội Sản Xuất</h3>
+          <div class="mermaid">
+            <pre class="mermaid">
+flowchart TD
+    A[Nhận thông tin đơn hàng] --> B[Tải xuống tệp thiết kế]
+    B --> C[Tải xuống tệp logo]
+    C --> D[Tải xuống danh sách cầu thủ]
+    D --> E[Kiểm tra chất lượng logo]
+    E --> F{Logo đủ chất lượng?}
+    F -->|Không| G[Yêu cầu khách hàng gửi lại]
+    F -->|Có| H[Chuẩn bị máy in]
+    H --> I[In áo theo thiết kế]
+    I --> J[In số và tên]
+    J --> K[Kiểm tra chất lượng in]
+    K --> L{Đạt chất lượng?}
+    L -->|Không| I
+    L -->|Rồi| M[In quần và phụ kiện]
+    M --> N[Đóng gói theo cầu thủ]
+    N --> O[Dán nhãn thông tin]
+    O --> P[Kiểm tra tổng quan đơn]
+    P --> Q{Hoàn tất?}
+    Q -->|Chưa| M
+    Q -->|Rồi| R[Cập nhật: Đã hoàn thành]
+    R --> S[Thông báo cho Admin]
+    S --> T[Chuẩn bị giao hàng]
+    T --> U[Giao cho đơn vị vận chuyển]
+    U --> V[Cập nhật: Đã giao]
+    V --> W[Nhận đơn hàng tiếp theo]
+
+    style A fill:#FDD017,stroke:#E5BC10,color:#000
+    style H fill:#E31E26,stroke:#B8181F,color:#FFF
+    style R fill:#00AEEF,stroke:#008FC7,color:#FFF
+            </pre>
+          </div>
+          <div class="flow-steps">
+            <h4>Các Bước Chính:</h4>
+            <ul>
+              <li><span class="step-num">1</span> Nhận và tải xuống thông tin</li>
+              <li><span class="step-num">2</span> Kiểm tra chất lượng logo</li>
+              <li><span class="step-num">3</span> Chuẩn bị và in ấn</li>
+              <li><span class="step-num">4</span> Kiểm tra chất lượng sản phẩm</li>
+              <li><span class="step-num">5</span> Đóng gói theo cầu thủ</li>
+              <li><span class="step-num">6</span> Kiểm tra tổng quan</li>
+              <li><span class="step-num">7</span> Cập nhật tiến độ</li>
+              <li><span class="step-num">8</span> Giao hàng</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="cta">
+    <div class="container cta-inner">
+      <span class="eyebrow"
+        style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3);"><i
+          class="fa-solid fa-flag-checkered"></i> Sẵn Sàng Tiến Tới</span>
+      <h2>Chuyển Đổi Mua Sắm Đồng Phục Đội Thành Trải Nghiệm Thương Hiệu Chữ Ký</h2>
+      <p>Dự án này biến doanh nghiệp thủ công ngoại tuyến truyền thống thành hoạt động kỹ thuật hiện đại, có thể mở rộng
+        —
+        mang lại doanh thu mới, hiệu quả vận hành và lợi thế cạnh tranh có thể bảo vệ từ ngày đầu.</p>
+      <div class="btn-row" style="justify-content: center;">
+        <a href="#" class="btn btn-primary">Phê Duyệt Đề Xuất Này <i class="fa-solid fa-check"></i></a>
+        <a href="#overview" class="btn btn-outline">Xem Lại</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="logo">
+        <div class="logo-mark"><i class="fa-solid fa-futbol"></i></div>
+        <span>StarSport</span>
+      </div>
+      <div>Nền Tảng Thương Mại Điện Tử Đồng Phục Bóng Đá Tùy Chỉnh · Đề Xuất Kinh Doanh</div>
+      <div style="margin-top:8px; opacity:0.5;">&copy; 2026 · Chuẩn bị cho xem xét cổ đông</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('section > .container > *').forEach(el => {
+      el.classList.add('fade-in');
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+
+</html>
