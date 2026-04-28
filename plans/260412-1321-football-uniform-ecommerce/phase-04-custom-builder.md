@@ -154,18 +154,42 @@ interface CustomCartItem {
 
 ## Print Fee Logic
 
+**Rule (Session 12):** Phí in CHỈ tính khi thực sự có thứ để in. Đặt áo trơn (không logo, không tên/số, không tên đội) → đơn custom hợp lệ nhưng phí in = 0.
+
+**Trigger điều kiện in (≥1 đủ):**
+- Có overlay (logo hoặc text) thả vào canvas (`overlays.some(slot => slot.length > 0)`)
+- Có ít nhất 1 cầu thủ nhập tên HOẶC số áo
+- Có nhập tên đội (teamName)
+
 ```typescript
 // src/lib/printing-fee.ts
-export function calculatePrintFee(playerCount: number, subtotal: number) {
-  if (playerCount >= 10) return { rate: 0, amount: 0, nudge: null }
-  if (playerCount >= 6) {
-    return { rate: 0.1, amount: subtotal * 0.1,
-      nudge: `Them ${10 - playerCount} bo de mien phi in!` }
+import type { CustomConfig } from '~types/custom-config'
+
+export function hasPrintingWork(config: CustomConfig): boolean {
+  const hasOverlays   = config.overlays.some(slot => slot.length > 0)
+  const hasPlayerText = config.players.some(p => p.playerName?.trim() || p.playerNumber?.trim())
+  const hasTeamName   = !!config.teamName?.trim()
+  return hasOverlays || hasPlayerText || hasTeamName
+}
+
+export function calculatePrintFee(config: CustomConfig, subtotal: number) {
+  // KHÔNG IN GÌ → KHÔNG PHÍ IN (Session 12)
+  if (!hasPrintingWork(config)) {
+    return { rate: 0, amount: 0, nudge: null, label: 'Không có in' }
   }
-  return { rate: 0.2, amount: subtotal * 0.2,
-    nudge: `Them ${6 - playerCount} bo de giam phi in xuong 10%` }
+  const count = config.players.length
+  if (count >= 10) return { rate: 0,    amount: 0,                nudge: null,                                                  label: 'Miễn phí in' }
+  if (count >= 6)  return { rate: 0.10, amount: subtotal * 0.10,  nudge: `Thêm ${10 - count} bộ để miễn phí in`,                label: 'Phí in +10%' }
+  return                  { rate: 0.20, amount: subtotal * 0.20,  nudge: `Thêm ${6 - count} bộ để giảm phí in xuống 10%`,       label: 'Phí in +20%' }
 }
 ```
+
+**UX behavior trong Section 6 (PrintFeeNudge):**
+- `!hasPrintingWork` → card neutral (xám nhạt) "Không có in — phí in: 0₫. Bạn đang đặt áo trơn."
+- `hasPrintingWork && count < 6` → card amber "Phí in +20% (XX,XXX₫). Thêm N bộ để giảm còn 10%"
+- `count 6-9` → card amber nhẹ "Phí in +10%. Thêm N bộ để miễn phí in"
+- `count ≥ 10` → card green "Miễn phí in 🎉"
+- Real-time recompute khi: thêm/xóa overlay, edit player name/number, edit teamName, thêm/xóa player row
 
 ## MockupCanvas Component (shared)
 
@@ -182,11 +206,136 @@ export function calculatePrintFee(playerCount: number, subtotal: number) {
 - Read-only mode (admin Phase 5, order confirmation): display only
 
 **Drag interaction** (`react-moveable`, desktop only):
-- Wrap each element with `<Moveable draggable resizable rotatable />`
-- `onDrag` → update x, y (clamped to canvas bounds)
-- `onResize` → update width/height (maintain aspect ratio via keepRatio)
-- `onRotate` → update rotation (snap at 0°/90°/180°/270° via throttleRotate)
+- Wrap each element with `<Moveable draggable resizable rotatable container={canvasRef.current} keepRatio={true} />`
+- `onDrag` → mutate DOM directly (`e.target.style.transform = translate3d(...)`), commit state ở `onDragEnd`
+- `onResize` → update width/height (maintain aspect ratio via `keepRatio`), mutate DOM during, commit on end
+- `onRotate` → update rotation, snap 0/90/180/270/360° (custom: nếu `|rotation % 90| < 5` → lock exact)
 - Click outside → deselect (clear `target` ref)
+
+### CRITICAL — Coordinate accuracy (logo MUST follow cursor exactly)
+
+Sai 1 px trong conversion math = logo drift, lệch tỉ lệ. Setup đúng từ đầu để tránh debug khó.
+
+**Canvas DOM structure (mandatory):**
+```tsx
+// mockup-canvas.tsx
+<div ref={canvasRef}
+  className="relative w-full select-none"
+  style={{ aspectRatio: `${imgNaturalW}/${imgNaturalH}` }}>  {/* aspect-ratio = ảnh natural */}
+  <img src={activeImage.url}
+       className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+       alt="" />
+  {overlays[activeSlot].map(el => (
+    <OverlayElement key={el.id} element={el} canvasRef={canvasRef} />
+  ))}
+</div>
+```
+
+**Overlay positioning (mandatory — ALL coords là %, KHÔNG mix px):**
+```tsx
+// overlay-element.tsx
+<div ref={ref}
+  className="absolute will-change-transform"
+  style={{
+    left:   `${el.x * 100}%`,
+    top:    `${el.y * 100}%`,
+    width:  `${el.width * 100}%`,
+    height: `${el.height * 100}%`,
+    transform: `rotate(${el.rotation}deg) translate3d(0,0,0)`,  // GPU layer
+    transformOrigin: 'center center',                           // rotate around center
+  }}>
+  <img src={logo.url} className="w-full h-full object-contain pointer-events-none" />
+</div>
+```
+
+**Coord conversion (CRITICAL — sai sẽ drift):**
+```typescript
+// pixel ↔ percent
+function pixelToPercent(clientX: number, clientY: number, canvas: HTMLElement) {
+  const rect = canvas.getBoundingClientRect()  // viewport-aware, scroll-aware
+  return {
+    x: (clientX - rect.left) / rect.width,    // 0-1 of canvas width
+    y: (clientY - rect.top)  / rect.height,   // 0-1 of canvas height
+  }
+}
+
+// react-moveable onDrag — mutate DOM directly (perf), commit on dragEnd
+const handleDrag = useCallback((e) => {
+  const rect = canvasRef.current!.getBoundingClientRect()
+  const xPct = e.left / rect.width
+  const yPct = e.top  / rect.height
+  e.target.style.left = `${xPct * 100}%`
+  e.target.style.top  = `${yPct * 100}%`
+}, [])
+const handleDragEnd = useCallback((e) => {
+  const rect = canvasRef.current!.getBoundingClientRect()
+  setOverlays(prev => updateOverlay(prev, activeSlot, el.id, {
+    x: e.lastEvent.left / rect.width,
+    y: e.lastEvent.top  / rect.height,
+  }))
+}, [activeSlot, el.id])
+```
+
+**TUYỆT ĐỐI tránh:**
+- `window.innerWidth` thay `canvasRect.width`
+- Quên trừ `canvasRect.left/top` khi convert clientX/Y
+- Mix `px + %` trong cùng element
+- Bỏ qua scroll offset (dùng `clientX` chứ KHÔNG `pageX`)
+- `position: fixed` cho overlay (đứng yên khi scroll)
+- `transform-origin: top left` (rotate "dance" quanh corner thay center)
+
+### Drag performance (must implement)
+
+react-moveable mặc định setState mỗi mousemove → re-render React tree → lag. Optimize:
+
+1. **GPU**: `transform: translate3d(x,y,0)` (NOT `top/left` for animation), `will-change: transform` khi active drag
+2. **Ref during, state on end**: `onDrag` mutate `e.target.style.transform` trực tiếp; `setState` CHỈ ở `onDragEnd`
+3. **Memoize**: `React.memo` cho `<Moveable>` + targets, `useCallback` cho callbacks
+4. **rAF throttle** nếu vẫn lag: bọc handler trong `requestAnimationFrame`
+5. **Validate**: Chrome DevTools Performance → record drag → scripting frames < 16ms (60fps)
+
+### Rotate snap (mandatory)
+
+```typescript
+// react-moveable config
+<Moveable
+  throttleRotate={15}                    // smooth 15° increments
+  onRotate={(e) => {
+    let r = e.rotation
+    if (Math.abs(r % 90) < 5) r = Math.round(r / 90) * 90  // snap to 0/90/180/270
+    if (r === 360) r = 0                                    // modulo cleanup
+    e.target.style.transform = `rotate(${r}deg)`
+  }}
+/>
+```
+
+- Snap angles: 0/90/180/270/360° (360 = 0)
+- Visual feedback khi snap: border flash #FDD017 (200ms) + angle badge "90°"
+- Default rotation = 0°
+
+### ColorSet → Image driver (single source of truth)
+
+```typescript
+// product-detail-store.ts (Zustand or React state)
+interface ProductDetailState {
+  activeColorSetId: number          // single source of truth
+  activeImageSlot: number           // tab index within active ColorSet
+}
+
+// Initial state on page load:
+// activeColorSetId = colorSets[0].id (first ColorSet by sortOrder/createdAt)
+// activeImageSlot = 0 (first image of that ColorSet)
+
+// Khi user click ColorSet:
+setActiveColorSet(id) → {
+  // Gallery (normal mode): main image = newColorSet.images[0]
+  // Builder (custom mode): tabs re-render = newColorSet.images, activeImageSlot reset to 0 NẾU ngoài range
+  // overlays[][] giữ nguyên — % coords auto-scale to new image dimensions
+  // Tab thừa nếu newColorSet ít ảnh hơn → ẩn (data preserved trong overlays array)
+}
+```
+
+**Cả 2 chế độ (normal + custom)** dùng chung `<ColorSetSelector />` + `<ProductGallery />` — chỉ khác phần dưới (size picker vs builder sections).
 
 ## Related Code Files
 

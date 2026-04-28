@@ -24,7 +24,7 @@ Server-side order creation, Excel player list generation, email to shop with all
 - POST `/api/orders` — single route (owned by Phase 10) to handle both normal OrderItems + CustomOrders in 1 transaction. Cart can mix both types; result = 1 Order.
 - Generate unique order number: `ORD-YYYYMMDD-NNN` — **NNN resets to 001 daily** (COUNT orders today + 1); retry max 3 → throw 500 (Session 10)
 - For custom orders: generate **2-sheet Excel** (Sheet 1: order info; Sheet 2: player list)
-- Server-side **print fee validation** — recalculate per CustomOrder from `players.length`, don't trust client. Each CustomOrder calculated independently.
+- Server-side **print fee validation** — recalculate per CustomOrder via `calculatePrintFee(config, subtotal)` từ `printing-fee.ts`, không trust client. Mỗi CustomOrder tính độc lập. **Session 12 rule**: nếu `!hasPrintingWork(config)` → phí in = 0 (đặt áo trơn không in gì → không tính phí).
 - Email to shop: order info + Excel download link + **all logo URLs** (from `logos[]` array in printConfigJson)
 - KHÔNG gửi email to customer — only shop email. Customer thấy thông báo trên màn hình
 - Customer status emails: gửi từ Phase 8 admin PATCH status API khi status → "shipping" hoặc "delivered"
@@ -111,7 +111,7 @@ Headers styled: bold white text, blue background (#00AEEF). Auto-width columns.
    - Validate request body (zod schema — both normal items + custom items)
    - Get userId from session
    - Transaction: create Order → OrderItems (normal) → CustomOrder + Players (custom)
-   - For each CustomOrder: **server-side recalculate print fee independently** from `players.length` using `printing-fee.ts`
+   - For each CustomOrder: **server-side recalculate print fee independently** via `calculatePrintFee(printConfigJson, subtotal)` from `printing-fee.ts` — Session 12: zero fee nếu `!hasPrintingWork(config)` (no overlay + no player text + no teamName)
    - Save `printConfigJson` (incl. `logos[]`) from builder state into CustomOrder
    - Generate 2-sheet Excel per custom order → upload to Cloudinary as **raw resource with UUID v4 public_id** (Session 10: `cloudinary.uploader.upload_stream({ resource_type: 'raw', public_id: `orders/${uuid.v4()}` })`) → store URL in `CustomOrder.excelFileUrl`. Public URL acceptable risk.
    - Return orderId

@@ -85,34 +85,36 @@ packages/
 
 ## Phases
 
+> **Session 11 (2026-04-28) restructure**: Phase 3 (Homepage) + Phase 4 (Builder) + Phase 10 (Catalog/Cart/Checkout) **merged** → new Phase 3 "Storefront". Subsequent phases renumbered. File consolidation deferred to start of new Phase 3 implementation (links below still point to old files until then).
+
 | # | Phase | Status | Effort | File |
 |---|-------|--------|--------|------|
-| 1 | Project Setup + DB Schema | pending | 3d | [phase-01](./phase-01-project-setup.md) |
+| 1 | Project Setup + Cleanup + DB Schema | pending | 3d | [phase-01](./phase-01-project-setup.md) |
 | 2 | Auth — Login / Register / Forgot Password | pending | 2d | [phase-02](./phase-02-auth.md) |
-| 3 | Homepage (Marketing Landing Page Only) | pending | 1.5d | [phase-03](./phase-03-homepage.md) |
-| 4 | Custom Mockup Builder UI + Logic | pending | 5d | [phase-04](./phase-04-custom-builder.md) |
-| 5 | Admin Preview Component | pending | 1d | [phase-05](./phase-05-mockup-preview.md) |
-| 6 | Order Processing + Email + Excel | pending | 4d | [phase-06](./phase-06-order-processing.md) |
-| 7 | Payment Integration (COD only) | pending | 1d | [phase-07](./phase-07-payment.md) |
-| 8 | Admin + Order Management + Product Import | pending | 5d | [phase-08](./phase-08-admin.md) |
-| 9 | Polish, SEO, Deploy | pending | 3d | [phase-09](./phase-09-polish-deploy.md) |
-| 10 | Product Catalog + Cart + Checkout | pending | 6d | [phase-10](./phase-10-product-catalog.md) |
-| 11 | Data Scraper Tool (Local Dev Seed) | pending | 4d | [phase-11](./phase-11-data-scraper.md) |
-| 12 | Payment Gateways (VNPay/MoMo) — Post-MVP | deferred | TBD | [phase-12](./phase-12-payment-gateways.md) |
+| 3 | **Storefront** (Home + Listing + Detail + Builder + Cart + Checkout) | pending | 11d | merge of [phase-03](./phase-03-homepage.md) + [phase-04](./phase-04-custom-builder.md) + [phase-10](./phase-10-product-catalog.md) |
+| 4 | Admin Preview Component (was Phase 5) | pending | 1d | [phase-05](./phase-05-mockup-preview.md) |
+| 5 | Order Processing + Email + Excel (was Phase 6) | pending | 4d | [phase-06](./phase-06-order-processing.md) |
+| 6 | Payment Integration (COD only) (was Phase 7) | pending | 1d | [phase-07](./phase-07-payment.md) |
+| 7 | Admin + Order Management + Product Import (was Phase 8) | pending | 5d | [phase-08](./phase-08-admin.md) |
+| 8 | Polish, SEO, Deploy (was Phase 9) | pending | 3d | [phase-09](./phase-09-polish-deploy.md) |
+| 9 | Data Scraper Tool (Local Dev Seed) (was Phase 11) | pending | 4d | [phase-11](./phase-11-data-scraper.md) |
+| 10 | Payment Gateways (VNPay/MoMo) — Post-MVP (was Phase 12) | deferred | TBD | [phase-12](./phase-12-payment-gateways.md) |
+
+**Total effort:** 34d ≈ 6.8w (was ~7w; -0.5d cart sync removal).
 
 ## Dependencies
 - Phase 2 depends on Phase 1
-- Phase 3 depends on Phase 1+2 (DB for featured products, auth for nav user state)
-- Phase 4 depends on Phase 2 (auth required for checkout)
-- Phase 5 depends on Phase 4 (product data)
-- Phase 6 depends on Phase 5 (builder state)
-- Phase 7 depends on Phase 5+6 (custom order data)
-- Phase 8 depends on Phase 7 (order flow)
-- Phase 9 depends on Phase 7+8
-- Phase 10 depends on all
+- Phase 3 (Storefront) depends on Phase 1+2 (DB schema + auth for checkout/nav state)
+- Phase 4 (Admin Preview) depends on Phase 3 (reuses MockupCanvas read-only)
+- Phase 5 (Order Processing) depends on Phase 3+4 (cart → order flow + custom config)
+- Phase 6 (Payment COD) depends on Phase 5
+- Phase 7 (Admin) depends on Phase 6 (full order flow exists)
+- Phase 8 (Polish/Deploy) depends on Phase 7
+- Phase 9 (Scraper) — independent, runs parallel with Phase 1-2 (pre-launch data)
+- Phase 10 (Payment Gateways) — deferred, post-MVP
 
 ## Key Architecture Decisions
-1. **Cart = Zustand + localStorage + DB sync on login** — guest browse with localStorage, merge to server `CartItem` table upon login (Session 10)
+1. **Cart = Zustand + localStorage only** (Session 11 override) — guest browse with localStorage; checkout requires login but cart submitted directly từ localStorage → `POST /api/orders`. KHÔNG có `CartItem` table, KHÔNG có `/api/cart/merge`. Cross-device cart sync defer post-MVP.
 2. **Mockup order = bundle cart item** — 1 cart item = 1 team order with N players
 3. **Custom Mockup = `react-moveable` overlay** (Session 10 override) — drag + resize + rotate + snap. Coords % (0-1) to scale across ColorSet switches
 4. **Image slots = dynamic tabs** (Session 10) — tabs generated từ `ProductImage.sortOrder`, không cứng 4 góc
@@ -128,6 +130,7 @@ packages/
 - [Tech Stack Research](../reports/researcher-260412-1321-tech-stack.md)
 - [Custom Builder Research](../reports/researcher-260412-1321-custom-builder.md)
 - [Auth Feature Brainstorm](../reports/brainstorm-260413-1553-auth-feature.md)
+- [Session 11: Cleanup + Readiness](../reports/brainstorm-260428-1526-project-cleanup-readiness.md)
 
 ## Validation Log
 
@@ -400,3 +403,71 @@ packages/
 - phase-05: update to full UI implementation (not just component)
 - phase-08: add stock display in product list/edit, manual image upload (4 angles) per ColorSet trong wizard preview step
 - Total effort: -2d (7w+2d → 7w) due to COD only simplification
+
+---
+
+### Session 11 — 2026-04-28
+**Trigger:** Pre-implementation cleanup + readiness validation (post-10-session freeze gate)
+**Questions asked:** 10
+
+#### Confirmed Decisions
+
+**A. Project cleanup**
+1. **[Cleanup]** Xóa boilerplate residue: `docs/project-overview-pdr.md`, `docs/codebase-summary.md`, `AGENTS.md` (tất cả vẫn nội dung "ClaudeKit Engineer", không liên quan football store). Tạo README.md project-specific.
+2. **[Cleanup]** `index.html` (1690 LOC) + `index-vi.html` (2158 LOC) → move sang `docs/references/` (giữ làm design reference). Override Phase 1 step 0 "rm index.html".
+3. **[Cleanup]** `prisma/` directory rỗng ở root → xóa (Prisma schema sẽ ở `apps/web/prisma/`).
+
+**B. Phase structure**
+4. **[Phase merge]** Phase 3 (Homepage 1.5d) + Phase 4 (Builder 5d) + Phase 10 (Catalog/Cart/Checkout 6d) → **gộp thành Phase 3 "Storefront"** (~11d). Lý do: cùng đụng layout/header/Zustand store/auth state + tránh vòng tròn dependency Phase 4 ↔ Phase 10. Renumber Phase 5-12 → Phase 4-10.
+
+**C. Cart simplification**
+5. **[Cart override]** Bỏ `CartItem` table + `/api/cart/merge` endpoint (override Session 10). Guest dùng localStorage; checkout bắt login → cart submit thẳng từ localStorage vào `POST /api/orders`. Cross-device sync defer post-MVP. KISS/YAGNI.
+
+**D. Risk acceptance (no change from prior sessions)**
+6. **[Builder]** Tin react-moveable, không POC trước.
+7. **[Admin CSV]** Giữ wizard full 5d.
+8. **[Scraper]** Giữ P1, parallel với Phase 1-2.
+9. **[Cloudinary]** Chấp nhận orphan logos cho MVP, monitor.
+
+**E. Plan freeze**
+10. **[Freeze]** Đóng băng plan sau Session 11. Bắt đầu Phase 1 implementation.
+
+#### Phase Impact
+- plan.md: Session 11 log, phase table 12 → 10 phases (gộp 3+4+10), Key Architecture Decision #1 (cart sync) rewrite, total effort 7w → 6.8w
+- phase-01: cleanup steps update (xóa 3 boilerplate doc files, move HTML → docs/references/, xóa prisma/ rỗng, tạo README.md); **bỏ `CartItem` model** khỏi schema; bỏ `/api/cart/merge` khỏi files-to-create
+- phase-03 + phase-04 + phase-10: đánh dấu MERGED → consolidate thành `phase-03-storefront.md` khi bắt đầu Phase 3 work (file ops deferred — plan.md links vẫn point tới file cũ tạm thời)
+- phase-05 → phase-09 renumber (file ops deferred cùng lúc consolidate)
+
+#### Risks accepted
+- Phase 3 (new) effort 11d — phase nặng nhất, cần stage tốt
+- react-moveable không POC — fallback drag-only nếu hit edge case
+- Admin CSV wizard 5d nặng nhưng cần thiết hậu launch
+
+---
+
+### Session 12 — 2026-04-28
+**Trigger:** Implementation detail clarifications during prompt review (post-freeze surgical fixes, không phải re-architecture)
+
+#### Confirmed Decisions
+
+**A. Builder UX (phase-04)**
+1. **[Performance]** react-moveable drag MUST optimize: GPU `translate3d`, `will-change: transform`, ref-based DOM mutation trong `onDrag`, setState chỉ ở `onDragEnd`, `React.memo` + `useCallback`, rAF throttle nếu cần. Validate 60fps trong Chrome DevTools Performance panel.
+2. **[Rotate snap]** Snap angles 0/90/180/270/360° (360 = 0 modulo). `throttleRotate={15}` + custom logic: `|rotation % 90| < 5` → lock exact angle. Visual: border flash #FDD017 (200ms) + angle badge.
+3. **[Validation]** Player roster: default 1 row (KHÔNG 6 pre-fill, KHÔNG empty). NO minimum quantity — đơn 1 cầu thủ vẫn submit được. `size` REQUIRED, `playerName`/`playerNumber` OPTIONAL. Print fee tiers là DISCOUNT TIERS, không phải requirement.
+
+**B. Print fee logic (phase-04 + phase-06) — MAJOR rule**
+4. **[Print fee]** Phí in CHỈ tính khi thực sự có in. Trigger điều kiện in (≥1 đủ): có overlay logo/text trên canvas, HOẶC có ≥1 player với name/number, HOẶC có teamName. Nếu `!hasPrintingWork(config)` → phí in = 0 BẤT KỂ số bộ (đặt áo trơn không in gì → không tính phí). Section 6 nudge có 4 states: A (Không có in, neutral), B (<6 +20%), C (6-9 +10%), D (≥10 free).
+5. **[teamName]** teamName được in lên áo (combo "Tên đội + Số" hoặc "Tên đội + Tên CT + Số" theo brainstorm gốc) → trigger phí in.
+
+**C. Canvas coordinate accuracy + ColorSet driver (phase-04)**
+6. **[Coord accuracy]** Logo MUST follow cursor exactly — DOM structure mandatory: `aspect-ratio` container + `object-contain` image + overlay `position: absolute` với `left/top/width/height` ALL `%` (KHÔNG mix px), `transform-origin: center center`. Coord conversion qua `getBoundingClientRect()` (viewport+scroll aware), trừ `rect.left/top`, chia `rect.width/height`. Tránh `window.innerWidth`, `pageX/Y`, `position: fixed`, `transform-origin: top left`.
+7. **[ColorSet driver]** `activeColorSetId` là single source of truth cho cả 2 chế độ (normal + custom). Initial: `colorSets[0]`, image slot 0. Click ColorSet → gallery main image swap + builder canvas tabs re-render, overlays giữ nguyên % (auto-scale theo image dimensions mới), tab thừa ẩn (data preserved). Cả normal detail + custom detail dùng chung `<ColorSetSelector />` + `<ProductGallery />`.
+
+#### Phase Impact
+- phase-04: rewrite `calculatePrintFee()` signature (nhận `CustomConfig` thay `playerCount`); thêm `hasPrintingWork()` helper; thêm "CRITICAL — Drag performance" section + "Rotate snap" section + validation rules trong Section 5
+- phase-06: server-side validation update — gọi `calculatePrintFee(printConfigJson, subtotal)` thay tính từ `players.length`
+- ui-prompt: Section 3 (Mockup Canvas) thêm performance + snap; Section 4 (Player roster) thêm validation rules; Section 5 (Print Fee Nudge) rewrite 4 states với State A "Không có in"
+
+#### Notes
+- Đây là implementation clarifications, KHÔNG phải re-architecture. Plan vẫn frozen post-Session-11.
+- Session 12 chỉ làm rõ rules implicit ở các session trước, fix bug logic phí in (chỉ check `playerCount` mà không check có in thật hay không).
