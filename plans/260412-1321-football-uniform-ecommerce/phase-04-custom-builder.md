@@ -15,6 +15,7 @@ effort: 5d
 <!-- Updated: Session 5 (2026-04-14) — Complete rewrite. Wizard removed. Builder is sections embedded in /products/[slug] -->
 <!-- Session 8: Player size field required, overlay structure uses overlays: OverlayElement[][] (indexed by image slot) -->
 <!-- Session 10 (2026-04-17): OVERRIDE Session 9 — use `react-moveable` (drag+resize+rotate+snap, not react-draggable). Dynamic tabs by ProductImage count (not hardcoded 4). Logo quality check < 300px. Per-CustomCartItem logo scope. ColorSet switch preserves % coords (auto-scales). -->
+<!-- Session 13 (2026-04-29): Builder UX polish. (a) Auto-select overlay sau khi drop từ panel — handles xuất hiện ngay không cần click thêm. (b) Magnetic rotation snap có dwell 100ms tại 0/90/180/270° (cảm giác "khựng lại 1 tí"). (c) Keyboard shortcuts cho selected overlay: Delete/Backspace = remove, Escape = deselect, Arrow = nudge 1% (Shift = 5%), [/] = zIndex. (d) Selected state visual: [data-selected="true"] dashed brand-blue outline 2px trên overlay. -->
 
 ## Overview
 Builder là các **sections cuộn dọc** trực tiếp trên trang `/products/[slug]` khi sản phẩm có `customizable = true`. Không có wizard, không có route riêng. Khách tương tác theo thứ tự bất kỳ, add to cart từ nút cuối trang.
@@ -206,11 +207,27 @@ export function calculatePrintFee(config: CustomConfig, subtotal: number) {
 - Read-only mode (admin Phase 5, order confirmation): display only
 
 **Drag interaction** (`react-moveable`, desktop only):
-- Wrap each element with `<Moveable draggable resizable rotatable container={canvasRef.current} keepRatio={true} />`
+- Wrap each element with `<Moveable draggable resizable rotatable container={canvasRef.current} keepRatio={true} throttleRotate={3} />`
 - `onDrag` → mutate DOM directly (`e.target.style.transform = translate3d(...)`), commit state ở `onDragEnd`
 - `onResize` → update width/height (maintain aspect ratio via `keepRatio`), mutate DOM during, commit on end
-- `onRotate` → update rotation, snap 0/90/180/270/360° (custom: nếu `|rotation % 90| < 5` → lock exact)
-- Click outside → deselect (clear `target` ref)
+- `onRotate` → áp dụng `applyMagneticSnap` (xem mục **Rotate snap** bên dưới) — KHÔNG dùng instant snap đơn giản
+- Click outside → deselect (clear `target` ref + `setSelectedId(null)`)
+
+**Interaction flow (Session 13 — phải implement đủ 10 bước):**
+1. Drop logo từ panel → tạo OverlayElement → `requestAnimationFrame(() => setSelectedId(newId))` để Moveable handles render ngay frame kế
+2. Click overlay → `setSelectedId(el.id)` → Moveable wrap, hiện 8 corner handles + rotation knob
+3. Click vùng trống canvas → `setSelectedId(null)` → handles biến mất
+4. Selected state visual: overlay element gắn `data-selected="true"` → CSS rule `2px dashed #00AEEF` outline (TRÊN overlay, không phải wrapper — wrapper sẽ lệch coord)
+5. Drag thân overlay → di chuyển (% coords)
+6. Drag corner handle → resize với `keepRatio={true}`
+7. Drag rotation knob → magnetic snap (mục dưới)
+8. Keyboard (canvas wrapper `tabIndex={0}`, focus on mount):
+   - `Delete`/`Backspace` → remove overlay, deselect
+   - `Escape` → deselect
+   - Arrow → nudge 1% (Shift = 5%)
+   - `[`/`]` → zIndex back/forward
+9. Double-click overlay type='text' → inline edit
+10. Hover overlay khi chưa selected → `cursor: move` + faint brand-blue 1px outline opacity 50%
 
 ### CRITICAL — Coordinate accuracy (logo MUST follow cursor exactly)
 
@@ -294,23 +311,66 @@ react-moveable mặc định setState mỗi mousemove → re-render React tree �
 4. **rAF throttle** nếu vẫn lag: bọc handler trong `requestAnimationFrame`
 5. **Validate**: Chrome DevTools Performance → record drag → scripting frames < 16ms (60fps)
 
-### Rotate snap (mandatory)
+### Rotate snap — MAGNETIC + DWELL (mandatory, Session 13)
+
+Snap thường (instant) cho cảm giác cứng. Để có UX cao cấp như Figma/Canva, rotation phải **dính** lại tại 0/90/180/270° trong ~100ms khi user xoay vào vùng hấp dẫn — đây là cảm giác "khựng lại 1 tí" mà customer expect.
+
+Spec:
+- Snap angles: 0°, 90°, 180°, 270° (360° → 0° normalize)
+- Attraction zone: ±8° (rộng hơn 5° cũ — cảm giác nam châm rõ hơn)
+- Dwell: khi vào zone → lock đúng góc snap, giữ 100ms trước khi cho release. Trong 100ms đó dù cursor di chuyển trong zone hay không, angle vẫn dính tại snap value.
+- `throttleRotate={3}` cho rotation theo bước nhỏ mượt mà
 
 ```typescript
-// react-moveable config
+// src/components/custom-builder/use-magnetic-snap.ts (NEW utility hook)
+const SNAP_ANGLES = [0, 90, 180, 270]
+const SNAP_THRESHOLD = 8
+const DWELL_MS = 100
+
+export function useMagneticSnap() {
+  const lastSnapRef = useRef<{ angle: number; t: number } | null>(null)
+  const apply = useCallback((raw: number): { angle: number; isSnapped: boolean } => {
+    const norm = ((raw % 360) + 360) % 360
+    const hit = SNAP_ANGLES.find(s =>
+      Math.abs(norm - s) <= SNAP_THRESHOLD || Math.abs(norm - (s + 360)) <= SNAP_THRESHOLD
+    )
+    if (hit !== undefined) {
+      const now = performance.now()
+      if (!lastSnapRef.current || lastSnapRef.current.angle !== hit) {
+        lastSnapRef.current = { angle: hit, t: now }
+      }
+      return { angle: hit, isSnapped: true }
+    }
+    // Outside zone — nhưng nếu vừa snap trong DWELL_MS, giữ lock thêm
+    if (lastSnapRef.current && performance.now() - lastSnapRef.current.t < DWELL_MS) {
+      return { angle: lastSnapRef.current.angle, isSnapped: true }
+    }
+    lastSnapRef.current = null
+    return { angle: norm, isSnapped: false }
+  }, [])
+  return apply
+}
+
+// Usage in MockupCanvas
 <Moveable
-  throttleRotate={15}                    // smooth 15° increments
+  throttleRotate={3}
   onRotate={(e) => {
-    let r = e.rotation
-    if (Math.abs(r % 90) < 5) r = Math.round(r / 90) * 90  // snap to 0/90/180/270
-    if (r === 360) r = 0                                    // modulo cleanup
-    e.target.style.transform = `rotate(${r}deg)`
+    const { angle, isSnapped } = applyMagneticSnap(e.rotation)
+    e.target.style.transform = `rotate(${angle}deg)`
+    e.target.dataset.snapped = isSnapped ? 'true' : 'false'
+    if (isSnapped) showSnapBadge(angle)
+  }}
+  onRotateEnd={(e) => {
+    const { angle } = applyMagneticSnap(e.lastEvent.rotation)
+    updateOverlay(activeSlot, selectedId, { rotation: angle })
+    hideSnapBadge()
   }}
 />
 ```
 
-- Snap angles: 0/90/180/270/360° (360 = 0)
-- Visual feedback khi snap: border flash #FDD017 (200ms) + angle badge "90°"
+Visual feedback:
+- CSS: `[data-snapped="true"] { outline: 2px solid #FDD017; outline-offset: 2px; transition: outline-color 120ms ease; }`
+- Floating `<SnapBadge angle={angle} />`: position absolute trên overlay, text "0°"/"90°"/etc., bg-brand-yellow text-black px-2 py-0.5 rounded-full text-xs font-semibold; hide 200ms sau khi `isSnapped=false`
 - Default rotation = 0°
 
 ### ColorSet → Image driver (single source of truth)
@@ -343,7 +403,9 @@ setActiveColorSet(id) → {
 - `src/components/custom-builder/logo-library-panel.tsx` — sidebar panel: upload logos + display thumbnail grid + drag source
 - `src/components/custom-builder/logo-uploader.tsx` — dropzone + SVG sanitize + Cloudinary upload + quality warning badge
 - `src/components/custom-builder/mockup-canvas.tsx` — **shared CSS overlay component** (interactive + readonly modes)
-- `src/components/custom-builder/overlay-element.tsx` — single draggable/resizable/rotatable element (references LogoItem)
+- `src/components/custom-builder/overlay-element.tsx` — single draggable/resizable/rotatable element (references LogoItem); `[data-selected]` + `[data-snapped]` CSS hooks
+- `src/components/custom-builder/snap-badge.tsx` — floating angle badge (Session 13) — hiện khi rotation snap
+- `src/components/custom-builder/use-magnetic-snap.ts` — magnetic snap hook với dwell 100ms (Session 13)
 - `src/components/custom-builder/image-tab-switcher.tsx` — tabs for each image slot
 - `src/components/custom-builder/player-list-editor.tsx` — table với useFieldArray + paste
 - `src/components/custom-builder/player-row.tsx` — 1 row: tên, số, size (required dropdown from ProductVariant) — single size field (Session 8)
@@ -372,8 +434,15 @@ setActiveColorSet(id) → {
 4. Create `printing-fee.ts` — `calculatePrintFee(playerCount, subtotal)`: per-CustomOrder, returns `{ rate, amount, nudge }`
 5. Create `logo-uploader.tsx` — dropzone; PNG/JPG/SVG max 5MB; SVG → sanitize via `svg-sanitizer.ts`; dimension check → qualityNote if < 300px; quality warning badge + auto-note; returns `LogoItem`
 6. Create `logo-library-panel.tsx` — sidebar showing uploaded `LogoItem[]`; thumbnail grid; [+ Upload] button; [×] remove; drag source (`draggable` attr) for canvas drop
-7. Create `overlay-element.tsx` — absolute-positioned div; interactive: mousedown drag, corner handles resize, top handle rotate (snap 0/90°/180°/270°); readonly: static; references `logoId` or renders `text`
-8. Create `mockup-canvas.tsx` — container (position:relative) with product image + overlay elements (absolute positioned via `left: ${x*100}%; top: ${y*100}%; width: ${w*100}%` etc); `onDrop` receives logoId from panel drag; mode prop switches interactivity; positions as % (0-1) stay on ColorSet switch (auto-scale)
+7. Create `overlay-element.tsx` — absolute-positioned div; interactive: react-moveable wrap khi `selectedId === el.id`; `[data-selected="true"]` → 2px dashed brand-blue outline; `[data-snapped="true"]` → 2px solid brand-yellow outline; readonly: static; references `logoId` hoặc renders `text`
+7b. Create `use-magnetic-snap.ts` (Session 13) — hook trả về `applyMagneticSnap(raw) → { angle, isSnapped }` với dwell 100ms (xem code mẫu mục Rotate snap)
+7c. Create `snap-badge.tsx` (Session 13) — component nhỏ hiển thị "0°"/"90°"/etc. floating, fade out 200ms sau khi unsnap
+8. Create `mockup-canvas.tsx`:
+   - Container `position:relative` + product image + overlay elements (% coords)
+   - Wrapper `tabIndex={0}` + `onKeyDown` handler cho Delete/Escape/Arrow/[/] (chỉ active khi `selectedId !== null`)
+   - `onDrop` từ logo panel: tạo OverlayElement → `requestAnimationFrame(() => setSelectedId(newId))` (Session 13 — auto-select để handles xuất hiện ngay)
+   - Click empty area → `setSelectedId(null)`
+   - mode prop switches interactivity; positions as % (0-1) stay on ColorSet switch (auto-scale)
 9. Create `image-tab-switcher.tsx` — **dynamic tabs** generated from `productImages.filter(img => img.colorSetId === currentColorSetId).sort(sortOrder)` (Session 10); labels from `ProductImage.label` or fallback "Ảnh N"; state keyed by slot index (overlays[slotIndex]); on ColorSet switch tabs re-render but overlays data preserved
 10. Create `player-list-editor.tsx`:
     - useFieldArray for dynamic rows
@@ -398,8 +467,10 @@ setActiveColorSet(id) → {
 - [ ] Print fee calculation utility (per-CustomOrder)
 - [ ] LogoUploader (dropzone + SVG sanitize + Cloudinary + quality warning badge)
 - [ ] LogoLibraryPanel (thumbnail grid + drag source + remove)
-- [ ] OverlayElement component (drag/resize/rotate, references logoId)
-- [ ] MockupCanvas (interactive + readonly modes, onDrop from logo panel)
+- [ ] OverlayElement component (drag/resize/rotate, references logoId, [data-selected]+[data-snapped] CSS hooks)
+- [ ] `use-magnetic-snap.ts` hook (Session 13 — dwell 100ms tại 0/90/180/270°)
+- [ ] SnapBadge floating angle indicator (Session 13)
+- [ ] MockupCanvas (interactive + readonly modes, onDrop auto-select Session 13, keyboard handler Delete/Escape/Arrow/[/])
 - [ ] ImageTabSwitcher (tabs per slot, per-slot state, positions preserved on ColorSet switch)
 - [ ] PlayerListEditor (useFieldArray + paste + mapping dialog + fee emit, sizes from ProductVariant)
 - [ ] MobileBuilderNotice
@@ -412,10 +483,13 @@ setActiveColorSet(id) → {
 - Customizable product detail shows all builder sections on desktop
 - Mobile (< 768px) shows notice instead of builder
 - Multiple logos uploadable; all appear in logo panel sidebar
-- Drag logo from panel → drops on canvas; drag/resize/rotate works
+- Drag logo từ panel → drop trên canvas → overlay tự động selected (handles xuất hiện ngay không cần click thêm)
+- Selected overlay có dashed brand-blue outline 2px (visible cả khi không hover handles)
 - Switch between image tabs: each tab has independent elements
 - Switch ColorSet: element positions preserved
-- Resize (corner handles) + rotate (top handle, snap 0°/90°/180°/270°) work correctly
+- Resize (corner handles) hoạt động đúng aspect ratio
+- Rotate (top handle): magnetic snap với dwell 100ms tại 0°/90°/180°/270° — cảm giác rotation "khựng lại" tại các góc cardinal; brand-yellow outline + floating angle badge xuất hiện khi snapped
+- Keyboard với selected overlay: Delete remove, Escape deselect, Arrow nudge 1% (Shift 5%), [/] zIndex
 - Player list: paste 10 rows from Excel → auto-detect columns → populated; unclear format → mapping dialog
 - Size dropdown shows ProductVariant sizes; stock=0 size is disabled with tooltip
 - Size field required; name/number/shorts-size optional
